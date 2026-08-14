@@ -73,7 +73,7 @@ class RoleLoginController extends Controller
             'admin' => '/admin',
             'manager' => '/manager',
             'staff' => '/staff',
-            'customer' => '/customer',
+            'customer' => '/',
             'shipper' => '/shipper',
             'warehouse_staff' => '/warehouse',
             'supplier' => '/supplier',

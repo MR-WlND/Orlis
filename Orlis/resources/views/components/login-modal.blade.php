@@ -202,7 +202,7 @@
     }
 </style>
 
-<div class="login-overlay" id="loginModalOverlay" onclick="closeLoginModal(event)">
+<div class="login-overlay" id="loginModalOverlay">
     <div class="login-modal" onclick="event.stopPropagation()">
         <div class="close-btn" title="Đóng" onclick="toggleLoginModal()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -270,12 +270,6 @@
         }
     }
     
-    function closeLoginModal(e) {
-        if (e.target.id === 'loginModalOverlay') {
-            toggleLoginModal();
-        }
-    }
-
     @if($errors->any())
     // Auto-open modal if there are validation errors after submit
     document.addEventListener('DOMContentLoaded', function() {

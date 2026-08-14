@@ -11,11 +11,17 @@ Route::get('/cart', function () {
     return view('cart');
 })->name('cart');
 
+Route::get('/product/{id?}', function () {
+    return view('product');
+})->name('product');
+
 Route::get('/login/{role}', [RoleLoginController::class, 'showLoginForm'])->name('role.login');
 Route::post('/login/{role}', [RoleLoginController::class, 'login'])->name('role.login.post');
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin', fn() => 'Quản trị hệ thống');
-});
+Route::get('/admin', function () {
+    return view('admin.dashboard');
+})->name('admin.dashboard');
+
+Route::resource('admin/users', \App\Http\Controllers\Admin\UserController::class, ['as' => 'admin']);
 
 Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/manager', fn() => 'Quản lý vận hành');
