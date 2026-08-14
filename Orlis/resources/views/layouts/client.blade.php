@@ -112,11 +112,11 @@
                         <li>Trẻ em & Em bé <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></li>
                         <li>Thời trang cao cấp <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></li>
                         <li style="margin-top: 40px;">Liên hệ</li>
-                        <li><a href="{{ route('cart') }}">Giỏ hàng</a></li>
+                        <li><a href="{{ route('cart') }}" style="text-decoration: none; color: inherit; display: block; width: 100%;">Giỏ hàng</a></li>
                     </ul>
                     <ul class="menu-list" id="menu-beauty">
                         <li>Có gì mới?</li>
-                        <li>Nước hoa</li>
+                        <li><a href="{{ route('perfume') }}" style="text-decoration: none; color: inherit; display: block; width: 100%;">Nước hoa</a></li>
                         <li>Trang điểm</li>
                         <li>Chăm sóc da</li>
                     </ul>
