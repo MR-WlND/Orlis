@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dior Andise Zipped Bag - Orlis</title>
+@extends('layouts.client')
+
+@section('title', 'Dior Andise Zipped Bag - Orlis')
+
+@section('styles')
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Alata&family=Castoro:ital,wght@0,400;1,400&family=Charis+SIL:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
@@ -27,22 +26,7 @@
         }
         a { text-decoration: none; color: inherit; }
 
-        /* Header (White theme) */
-        header {
-            background-color: white;
-            padding: 20px 40px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid #eaeaea;
-        }
-        .header-left .menu-icon svg { width: 24px; height: 24px; stroke: #333; fill: none; }
-        .logo { font-family: var(--font-logo); font-size: 24px; font-weight: 600; letter-spacing: 2px; position: absolute; left: 50%; transform: translateX(-50%); }
-        .action-icons { display: flex; gap: 20px; align-items: center; }
-        .action-icons svg { width: 20px; height: 20px; stroke: #333; fill: none; stroke-width: 1.5; cursor: pointer; }
+
 
         /* Product Layout */
         .product-container {
@@ -263,30 +247,9 @@
             .footer-links { flex-direction: column; gap: 30px; }
         }
     </style>
-</head>
-<body>
+@endsection
 
-    <!-- Header -->
-    <header id="mainHeader">
-        <div class="header-left">
-            <a href="#" class="menu-icon">
-                <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-        </div>
-        
-        <a href="/" class="logo">Orlis</a>
-
-        <div class="action-icons">
-            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <a href="{{ route('cart') }}" title="Giỏ hàng">
-                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-            </a>
-            <a href="#" onclick="toggleLoginModal(event)" title="Đăng nhập">
-                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </a>
-        </div>
-    </header>
-
+@section('content')
     <!-- Product Layout -->
     <div class="product-container">
         <!-- Left: Images Stack -->
@@ -399,39 +362,4 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-links">
-            <div class="footer-col">
-                <h4>Client Services</h4>
-                <ul>
-                    <li><a href="#">Contact Us</a></li>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Track Your Order</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>The House of Orlis</h4>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Boutiques</h4>
-                <ul>
-                    <li><a href="#">Find a Boutique</a></li>
-                    <li><a href="#">Book an Appointment</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Orlis. All rights reserved.</p>
-        </div>
-    </footer>
-
-    @include('components.login-modal')
-
-</body>
-</html>
+@endsection

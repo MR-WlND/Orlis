@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giỏ hàng - Orlis</title>
+@extends('layouts.client')
+
+@section('title', 'Giỏ hàng - Orlis')
+
+@section('styles')
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Alata&family=Castoro:ital,wght@0,400;1,400&family=Charis+SIL:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
@@ -37,38 +36,6 @@
             color: inherit;
         }
 
-        /* Header */
-        header {
-            background-color: white;
-            padding: 20px 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .back-btn {
-            position: absolute;
-            left: 40px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            color: var(--text-dark);
-            cursor: pointer;
-        }
-
-        .back-btn svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        .logo {
-            font-family: var(--font-serif);
-            font-size: 32px;
-            font-weight: 500;
-        }
 
         /* Main Container */
         .container {
@@ -389,18 +356,10 @@
             border: 1px solid var(--border);
         }
     </style>
-</head>
-<body>
+@endsection
 
-    <header>
-        <div class="back-btn" onclick="history.back()">
-            <svg viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg>
-            Quay lại
-        </div>
-        <div class="logo">Orlis</div>
-    </header>
-
-    <div class="container">
+@section('content')
+    <div class="container" style="margin-top: 80px;">
         
         <!-- Shared Title -->
         <div class="page-title">
@@ -539,7 +498,4 @@
         </div>
 
     </div>
-
-    @include('components.login-modal')
-</body>
-</html>
+@endsection

@@ -4,15 +4,15 @@ use App\Http\Controllers\Auth\RoleLoginController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('client.home');
 });
 
 Route::get('/cart', function () {
-    return view('cart');
+    return view('client.cart');
 })->name('cart');
 
 Route::get('/product/{id?}', function () {
-    return view('product');
+    return view('client.product');
 })->name('product');
 
 Route::get('/login/{role}', [RoleLoginController::class, 'showLoginForm'])->name('role.login');
