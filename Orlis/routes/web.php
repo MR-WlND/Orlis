@@ -26,6 +26,8 @@ Route::get('/admin', function () {
 })->name('admin.dashboard');
 
 Route::resource('admin/users', \App\Http\Controllers\Admin\UserController::class, ['as' => 'admin']);
+Route::resource('admin/categories', \App\Http\Controllers\Admin\CategoryController::class, ['as' => 'admin']);
+Route::resource('admin/products', \App\Http\Controllers\Admin\ProductController::class, ['as' => 'admin']);
 
 Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/manager', fn() => 'Quản lý vận hành');
