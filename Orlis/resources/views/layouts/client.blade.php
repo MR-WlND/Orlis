@@ -219,5 +219,6 @@
 
 
     @include('components.login-modal')
+    @include('components.register-modal')
 </body>
 </html>

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('phone', 20)->unique()->nullable();
             $table->string('password', 255);
             $table->string('avatar', 255)->nullable();
-            $table->enum('role', ['admin', 'manager', 'staff', 'editor', 'warehouse_staff'])->default('staff');
+            $table->enum('role', ['admin', 'manager', 'staff', 'editor', 'warehouse_staff', 'shipper', 'supplier'])->default('staff');
             $table->boolean('status')->default(1)->comment('1: Hoạt động, 0: Khóa/Chờ xác nhận');
             $table->rememberToken();
             $table->timestamps();

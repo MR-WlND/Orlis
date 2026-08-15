@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\RoleLoginController;
+use App\Http\Controllers\Auth\SocialAuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -22,6 +24,12 @@ Route::get('/perfume', function () {
 Route::get('/login/{role}', [RoleLoginController::class, 'showLoginForm'])->name('role.login');
 Route::post('/login/{role}', [RoleLoginController::class, 'login'])->name('role.login.post');
 Route::post('/logout', [RoleLoginController::class, 'logout'])->name('logout');
+
+Route::get('/register', fn() => redirect('/'))->name('register');
+Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
+
+Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirect'])->name('social.redirect');
+Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('social.callback');
 Route::get('/admin', function () {
     return view('admin.dashboard');
 })->name('admin.dashboard');

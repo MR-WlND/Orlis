@@ -221,7 +221,7 @@
                 </div>
 
                 <button type="submit" class="btn-submit">Đăng nhập</button>
-                <a href="#" class="btn-create">Tạo tài khoản</a>
+                <a href="#" onclick="document.getElementById('registerModalOverlay').style.display='flex'; document.querySelector('.modal').style.display='none'; return false;" class="btn-create">Tạo tài khoản</a>
             </div>
         </form>
 
@@ -247,6 +247,8 @@
         </div>
 
     </div>
+
+    @include('components.register-modal')
 
 </body>
 </html>

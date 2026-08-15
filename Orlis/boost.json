@@ -8,6 +8,7 @@
     "sail": false,
     "skills": [
         "laravel-best-practices",
+        "socialite-development",
         "tailwindcss-development"
     ]
 }
