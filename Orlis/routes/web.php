@@ -21,11 +21,13 @@ Route::get('/perfume', function () {
 
 Route::get('/login/{role}', [RoleLoginController::class, 'showLoginForm'])->name('role.login');
 Route::post('/login/{role}', [RoleLoginController::class, 'login'])->name('role.login.post');
+Route::post('/logout', [RoleLoginController::class, 'logout'])->name('logout');
 Route::get('/admin', function () {
     return view('admin.dashboard');
 })->name('admin.dashboard');
 
 Route::resource('admin/users', \App\Http\Controllers\Admin\UserController::class, ['as' => 'admin']);
+Route::resource('admin/admins', \App\Http\Controllers\Admin\AdminAccountController::class, ['as' => 'admin']);
 Route::resource('admin/categories', \App\Http\Controllers\Admin\CategoryController::class, ['as' => 'admin']);
 Route::resource('admin/products', \App\Http\Controllers\Admin\ProductController::class, ['as' => 'admin']);
 

@@ -13,11 +13,14 @@ class EnsureUserHasRole
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        $user = $request->user();
+        $user = \Illuminate\Support\Facades\Auth::guard('admin')->user() ?? \Illuminate\Support\Facades\Auth::guard('web')->user();
 
         if (! $user || ! $user->hasAnyRole($roles)) {
             abort(403, 'Bạn không có quyền truy cập chức năng này.');
         }
+
+        // Cập nhật lại user vào request để dùng chung nếu cần
+        $request->setUserResolver(fn() => $user);
 
         return $next($request);
     }

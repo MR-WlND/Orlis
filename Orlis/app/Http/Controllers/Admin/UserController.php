@@ -13,9 +13,31 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::latest()->paginate(10);
+        $query = User::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            // Cột status chưa có trong User, nhưng nếu thêm sau này thì code đã sẵn sàng
+            // Giả định User có cột status
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('membership_level')) {
+            $query->where('membership_level', $request->membership_level);
+        }
+
+        $users = $query->latest()->paginate(10)->withQueryString();
+        
         return view('admin.users.index', compact('users'));
     }
 
@@ -36,15 +58,20 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone' => ['nullable', 'string', 'max:20', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
             'role' => ['required', Rule::in(array_keys(User::ROLES))],
+            'membership_level' => ['nullable', Rule::in(array_keys(User::MEMBERSHIPS))],
+            'status' => ['required', 'boolean'],
         ], [
             'name.required' => 'Vui lòng nhập họ và tên.',
             'email.required' => 'Vui lòng nhập email.',
             'email.unique' => 'Email này đã tồn tại trong hệ thống.',
+            'phone.unique' => 'Số điện thoại này đã tồn tại trong hệ thống.',
             'password.required' => 'Vui lòng nhập mật khẩu.',
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
             'role.in' => 'Vai trò không hợp lệ.',
+            'membership_level.in' => 'Hạng thành viên không hợp lệ.',
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
@@ -80,14 +107,19 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'phone' => ['nullable', 'string', 'max:20', Rule::unique('users')->ignore($user->id)],
             'password' => ['nullable', 'string', 'min:8'],
             'role' => ['required', Rule::in(array_keys(User::ROLES))],
+            'membership_level' => ['nullable', Rule::in(array_keys(User::MEMBERSHIPS))],
+            'status' => ['required', 'boolean'],
         ], [
             'name.required' => 'Vui lòng nhập họ và tên.',
             'email.required' => 'Vui lòng nhập email.',
-            'email.unique' => 'Email này đã tồn tại trong hệ thống.',
+            'email.unique' => 'Email này đã tồn tại.',
+            'phone.unique' => 'Số điện thoại này đã tồn tại.',
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
             'role.in' => 'Vai trò không hợp lệ.',
+            'membership_level.in' => 'Hạng thành viên không hợp lệ.',
         ]);
 
         if (!empty($validated['password'])) {

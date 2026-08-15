@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Chỉnh sửa Khách hàng')
+@section('title', 'Chỉnh sửa Nhân sự')
 
 @section('page-style')
 <style>
@@ -148,14 +148,14 @@
 @endsection
 
 @section('content')
-<form action="{{ route('admin.users.update', $user->id) }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('admin.admins.update', $admin->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
     
     <div class="page-header">
-        <h1 class="page-title">Sửa Khách hàng</h1>
+        <h1 class="page-title">Sửa tài khoản</h1>
         <div class="header-actions">
-            <a href="{{ route('admin.users.index') }}" class="btn-cancel">Hủy</a>
+            <a href="{{ route('admin.admins.index') }}" class="btn-cancel">Hủy</a>
             <button type="submit" class="btn-submit">Cập nhật thay đổi</button>
         </div>
     </div>
@@ -177,17 +177,17 @@
             
             <div class="form-group">
                 <label>Họ và Tên</label>
-                <input type="text" name="name" class="form-control" value="{{ old('name', $user->name) }}" required>
+                <input type="text" name="name" class="form-control" value="{{ old('name', $admin->name) }}" required>
             </div>
 
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
+                <input type="email" name="email" class="form-control" value="{{ old('email', $admin->email) }}" required>
             </div>
             
             <div class="form-group">
                 <label>Số điện thoại</label>
-                <input type="text" name="phone" class="form-control" value="{{ old('phone', $user->phone) }}">
+                <input type="text" name="phone" class="form-control" value="{{ old('phone', $admin->phone) }}">
             </div>
             
             <div class="form-group">
@@ -206,18 +206,7 @@
                     <select name="role" class="form-control" required>
                         <option value="">Chọn vai trò...</option>
                         @foreach($roles as $key => $label)
-                            <option value="{{ $key }}" {{ old('role', $user->role) == $key ? 'selected' : '' }}>
-                                {{ $label }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Hạng thành viên</label>
-                    <select name="membership_level" class="form-control">
-                        <option value="">Chọn hạng...</option>
-                        @foreach(App\Models\User::MEMBERSHIPS as $key => $label)
-                            <option value="{{ $key }}" {{ old('membership_level', $user->membership_level) == $key ? 'selected' : '' }}>
+                            <option value="{{ $key }}" {{ old('role', $admin->role) == $key ? 'selected' : '' }}>
                                 {{ $label }}
                             </option>
                         @endforeach
@@ -231,10 +220,13 @@
                     <label>Trạng thái</label>
                     <div class="radio-group">
                         <label class="radio-item">
-                            <input type="radio" name="status" value="1" {{ old('status', $user->status) == '1' ? 'checked' : '' }}> Hoạt động
+                            <input type="radio" name="status" value="1" {{ old('status', $admin->status) == '1' ? 'checked' : '' }}> Hoạt động
                         </label>
                         <label class="radio-item">
-                            <input type="radio" name="status" value="0" {{ old('status', $user->status) == '0' ? 'checked' : '' }}> Đã khóa
+                            <input type="radio" name="status" value="2" {{ old('status', $admin->status) == '2' ? 'checked' : '' }}> Chờ xác nhận
+                        </label>
+                        <label class="radio-item">
+                            <input type="radio" name="status" value="0" {{ old('status', $admin->status) == '0' ? 'checked' : '' }}> Đã khóa
                         </label>
                     </div>
                 </div>
