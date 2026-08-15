@@ -38,7 +38,8 @@ Route::resource('admin/users', \App\Http\Controllers\Admin\UserController::class
 Route::resource('admin/admins', \App\Http\Controllers\Admin\AdminAccountController::class, ['as' => 'admin']);
 Route::resource('admin/categories', \App\Http\Controllers\Admin\CategoryController::class, ['as' => 'admin']);
 Route::resource('admin/products', \App\Http\Controllers\Admin\ProductController::class, ['as' => 'admin']);
-
+Route::resource('admin/posts', \App\Http\Controllers\Admin\PostController::class, ['as' => 'admin']);
+Route::resource('admin/products.variants', \App\Http\Controllers\Admin\ProductVariantController::class, ['as' => 'admin']);
 Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/manager', fn() => 'Quản lý vận hành');
 });

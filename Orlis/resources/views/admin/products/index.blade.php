@@ -97,6 +97,7 @@
                 @endif
             </td>
             <td>
+                <a href="{{ route('admin.products.variants.index', $prod->id) }}" class="btn btn-sm" style="background:#52c41a; color:white;">Biến thể</a>
                 <a href="{{ route('admin.products.edit', $prod->id) }}" class="btn btn-info btn-sm">Sửa</a>
                 <form action="{{ route('admin.products.destroy', $prod->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?');">
                     @csrf

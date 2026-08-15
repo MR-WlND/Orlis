@@ -63,11 +63,21 @@ class RoleLoginController extends Controller
             $user = User::where('email', $request->email)->first();
         }
 
-        if (! $user || $user->role !== $role || ! Hash::check($request->password, $user->password)) {
+        if (! $user) {
             return back()
-                ->withErrors([
-                    'email' => 'Thông tin đăng nhập không đúng hoặc vai trò không phù hợp.',
-                ])
+                ->withErrors(['email' => 'Tài khoản không tồn tại.'])
+                ->onlyInput('email');
+        }
+
+        if ($user->role !== $role) {
+            return back()
+                ->withErrors(['email' => 'Tài khoản không có quyền truy cập.'])
+                ->onlyInput('email');
+        }
+
+        if (! Hash::check($request->password, $user->password)) {
+            return back()
+                ->withErrors(['password' => 'Mật khẩu không chính xác.'])
                 ->onlyInput('email');
         }
 
