@@ -28,7 +28,13 @@ class ReleaseExpiredOrderJob implements ShouldQueue
             $order = \App\Models\Order::find($this->orderId);
 
             if ($order && $order->order_status === 'pending') {
-                $order->update(['order_status' => 'cancelled']);
+                $hasPayment = \Illuminate\Support\Facades\DB::table('transactions')
+                    ->where('order_id', $order->id)
+                    ->where('status', 'success')
+                    ->exists();
+
+                if (!$hasPayment) {
+                    $order->update(['order_status' => 'cancelled']);
 
                 // Lấy chi tiết đơn hàng (Giả định OrderItem model tồn tại)
                 $orderItems = \Illuminate\Support\Facades\DB::table('order_items')->where('order_id', $order->id)->get();
@@ -48,6 +54,7 @@ class ReleaseExpiredOrderJob implements ShouldQueue
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
+                }
             }
         });
     }

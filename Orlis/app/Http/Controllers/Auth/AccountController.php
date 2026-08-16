@@ -31,11 +31,24 @@ class AccountController extends Controller
                 'shipping_address_snapshot' => json_encode(['status' => 'anonymized', 'message' => 'Data removed due to GDPR request']),
             ]);
 
-            // Ẩn danh hóa đánh giá
-            \App\Models\Review::where('user_id', $user->id)->update([
-                'user_id' => null,
-                'is_anonymous' => true,
-            ]);
+            // Deep GDPR: Xóa ảnh vật lý và ẩn comment
+            $reviews = \App\Models\Review::where('user_id', $user->id)->get();
+            foreach ($reviews as $review) {
+                if (!empty($review->rating_media)) {
+                    // Giả định dùng cột JSON hoặc string
+                    $medias = is_array($review->rating_media) ? $review->rating_media : json_decode($review->rating_media, true) ?? [$review->rating_media];
+                    foreach ($medias as $media) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($media);
+                    }
+                }
+                
+                $review->update([
+                    'user_id' => null,
+                    'is_anonymous' => true,
+                    'comment' => '[Nội dung đã bị ẩn theo chính sách bảo mật GDPR]',
+                    'rating_media' => null,
+                ]);
+            }
 
             // Xóa dữ liệu cá nhân liên quan
             \DB::table('addresses')->where('user_id', $user->id)->delete();
