@@ -40,6 +40,9 @@ Route::resource('admin/categories', \App\Http\Controllers\Admin\CategoryControll
 Route::resource('admin/products', \App\Http\Controllers\Admin\ProductController::class, ['as' => 'admin']);
 Route::resource('admin/posts', \App\Http\Controllers\Admin\PostController::class, ['as' => 'admin']);
 Route::resource('admin/products.variants', \App\Http\Controllers\Admin\ProductVariantController::class, ['as' => 'admin']);
+Route::resource('admin/coupons', \App\Http\Controllers\Admin\CouponController::class, ['as' => 'admin']);
+Route::resource('admin/reviews', \App\Http\Controllers\Admin\ReviewController::class, ['as' => 'admin'])->only(['index', 'destroy']);
+Route::patch('admin/reviews/{review}/status', [\App\Http\Controllers\Admin\ReviewController::class, 'updateStatus'])->name('admin.reviews.updateStatus');
 Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/manager', fn() => 'Quản lý vận hành');
 });
@@ -50,6 +53,7 @@ Route::middleware(['auth', 'role:staff'])->group(function () {
 
 Route::middleware(['auth', 'role:customer'])->group(function () {
     Route::get('/customer', fn() => 'Mua hàng và theo dõi đơn');
+    Route::delete('/account', [\App\Http\Controllers\Auth\AccountController::class, 'deleteAccount'])->name('account.delete');
 });
 
 Route::middleware(['auth', 'role:shipper'])->group(function () {

@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('admins', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->unique()->constrained('users')->nullOnDelete();
             $table->string('name', 100);
             $table->string('email', 150)->unique();
             $table->string('phone', 20)->unique()->nullable();
@@ -19,7 +20,6 @@ return new class extends Migration
             $table->boolean('status')->default(1)->comment('1: Hoạt động, 0: Khóa/Chờ xác nhận');
             $table->rememberToken();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

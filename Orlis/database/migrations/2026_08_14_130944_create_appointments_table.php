@@ -12,8 +12,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('store_id')->constrained('stores')->restrictOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->date('appointment_date');
-            $table->time('appointment_time');
+            $table->foreignId('staff_id')->nullable()->constrained('admins')->nullOnDelete();
+            $table->string('service_type')->nullable();
+            $table->dateTime('appointment_datetime');
             $table->text('note')->nullable();
             $table->enum('status', ['pending', 'confirmed', 'completed', 'cancelled'])->default('pending');
             $table->timestamps();

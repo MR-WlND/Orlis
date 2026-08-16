@@ -12,9 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
             $table->string('sku', 50)->unique();
-            $table->string('color', 50)->nullable();
-            $table->string('size', 20)->nullable();
-            $table->integer('stock_qty')->default(0);
+            $table->json('attributes')->nullable();
             $table->decimal('price_override', 15, 2)->nullable();
             $table->timestamps();
         });

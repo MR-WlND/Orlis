@@ -11,9 +11,9 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('order_code', 50)->unique();
-            $table->foreignId('user_id')->constrained('users')->restrictOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('coupon_id')->nullable()->constrained('coupons')->nullOnDelete();
-            $table->text('shipping_address');
+            $table->json('shipping_address_snapshot');
             $table->string('recipient_name', 100);
             $table->string('recipient_phone', 20);
             $table->decimal('subtotal', 15, 2);
