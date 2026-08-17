@@ -101,7 +101,7 @@
         max-width: 320px;
         line-height: 1.4;
     }
-    .badge {
+    .status-badge {
         padding: 4px 8px;
         border-radius: 4px;
         font-size: 12px;
@@ -198,7 +198,7 @@
                         Thg {{ $post->created_at->format('m, Y') }}
                     </td>
                     <td>
-                        <span class="badge">
+                        <span class="status-badge">
                             @if($post->status == 'published') Đã xuất bản
                             @elseif($post->status == 'draft') Bản nháp
                             @else Lưu trữ @endif
