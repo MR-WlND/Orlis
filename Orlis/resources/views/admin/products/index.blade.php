@@ -46,6 +46,36 @@
     .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
     .badge-success { background: #d4edda; color: #155724; }
     .badge-warning { background: #fff3cd; color: #856404; }
+
+    /* Custom Pagination (Orlis Design System) */
+    .pagination-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 30px;
+    }
+    .pagination-info {
+        font-size: 11px;
+        color: var(--text-secondary);
+    }
+    .pagination-buttons {
+        display: flex;
+        gap: 10px;
+    }
+    .btn-page {
+        padding: 10px 15px;
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--text-primary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: 1px solid var(--border-color);
+        background: #fff;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
+    .btn-page:hover { background: #f5f5f5; }
 </style>
 @endsection
 
@@ -110,7 +140,22 @@
     </tbody>
 </table>
 
-<div style="margin-top: 20px;">
-    {{ $products->links() }}
+<div class="pagination-container">
+    <div class="pagination-info">
+        Hiển thị {{ $products->firstItem() ?? 0 }} - {{ $products->lastItem() ?? 0 }} trên tổng số {{ $products->total() ?? 0 }} sản phẩm
+    </div>
+    <div class="pagination-buttons">
+        @if ($products->onFirstPage())
+            <button class="btn-page" disabled style="opacity: 0.5; cursor: not-allowed;">TRANG TRƯỚC</button>
+        @else
+            <a href="{{ $products->previousPageUrl() }}" class="btn-page">TRANG TRƯỚC</a>
+        @endif
+
+        @if ($products->hasMorePages())
+            <a href="{{ $products->nextPageUrl() }}" class="btn-page">TIẾP THEO</a>
+        @else
+            <button class="btn-page" disabled style="opacity: 0.5; cursor: not-allowed;">TIẾP THEO</button>
+        @endif
+    </div>
 </div>
 @endsection

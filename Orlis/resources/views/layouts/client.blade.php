@@ -145,7 +145,7 @@
                                 Close
                             </div>
                             <div class="mega-title" onclick="closeMegaMenu()">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
+                                <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
                                 {{ $level2->name }}
                             </div>
                             <ul class="mega-list menu-list active">

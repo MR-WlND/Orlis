@@ -15,7 +15,7 @@ class CategoryController extends Controller
         $categories = Category::with('products', 'children.products', 'children.children.products')
             ->whereNull('parent_id')
             ->latest()
-            ->paginate(10);
+            ->get();
             
         return view('admin.categories.index', compact('categories'));
     }

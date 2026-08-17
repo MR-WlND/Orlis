@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap');
 
 :root {
     --bg-main: #f9f9f9;
@@ -9,7 +9,7 @@
     --active-bg: #ececec;
     
     --font-serif: 'Playfair Display', serif;
-    --font-sans: 'Jost', sans-serif;
+    --font-sans: 'Inter', sans-serif;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
