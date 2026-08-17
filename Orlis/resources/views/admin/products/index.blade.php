@@ -27,9 +27,7 @@
         width: 100%;
         border-collapse: collapse;
         background: white;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        border: 1px solid var(--border-color);
     }
     .table th, .table td {
         padding: 12px 15px;

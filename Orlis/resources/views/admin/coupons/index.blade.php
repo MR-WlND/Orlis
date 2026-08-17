@@ -3,7 +3,7 @@
 @section('title', 'Quản lý Mã giảm giá')
 
 @section('content')
-<div style="background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+<div style="background: #fff; border: 1px solid var(--border-color); padding: 20px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2 style="margin: 0; font-size: 20px; font-weight: 600;">Danh sách Mã giảm giá</h2>
         <a href="{{ route('admin.coupons.create') }}" class="btn btn-primary" style="background:#000; color:#fff; border:none; padding:8px 16px; border-radius:4px; text-decoration:none;">+ Thêm Mã mới</a>

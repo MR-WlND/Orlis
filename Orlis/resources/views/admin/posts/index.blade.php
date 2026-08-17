@@ -19,8 +19,7 @@
         gap: 20px;
         background: #fff;
         padding: 15px 20px;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        border: 1px solid var(--border-color);
         margin-bottom: 20px;
     }
     .search-input {
@@ -60,8 +59,7 @@
     }
     .table-container {
         background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        border: 1px solid var(--border-color);
         overflow: hidden;
     }
     table {
@@ -118,22 +116,6 @@
     .action-links a:hover, .action-links button:hover {
         color: #000;
     }
-    /* Pagination Fix */
-    nav[role="navigation"] {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 13px;
-        color: #666;
-    }
-    nav[role="navigation"] p { margin: 0; }
-    nav[role="navigation"] > div { display: flex; align-items: center; gap: 20px; width: 100%; justify-content: space-between; }
-    nav[role="navigation"] svg { width: 16px; height: 16px; }
-    .relative.z-0.inline-flex { display: inline-flex; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; }
-    .relative.z-0.inline-flex > * { padding: 8px 12px; background: #fff; border-left: 1px solid #ddd; color: #333; text-decoration: none; display: flex; align-items: center; }
-    .relative.z-0.inline-flex > *:first-child { border-left: none; }
-    .relative.z-0.inline-flex > [aria-current="page"] { background: #000; color: #fff; }
-    .relative.z-0.inline-flex > *:hover:not([aria-current="page"]):not([aria-disabled="true"]) { background: #f5f5f5; }
 </style>
 @endsection
 
@@ -237,8 +219,23 @@
         </table>
     </div>
     
-    <div style="margin-top: 20px;">
-        {{ $posts->links() }}
+    <div class="pagination-container">
+        <div class="pagination-info">
+            Hiển thị {{ $posts->firstItem() ?? 0 }} - {{ $posts->lastItem() ?? 0 }} trên tổng số {{ $posts->total() ?? 0 }} bài viết
+        </div>
+        <div class="pagination-buttons">
+            @if ($posts->onFirstPage())
+                <button class="btn-page" disabled style="opacity: 0.5; cursor: not-allowed;">TRANG TRƯỚC</button>
+            @else
+                <a href="{{ $posts->previousPageUrl() }}" class="btn-page">TRANG TRƯỚC</a>
+            @endif
+
+            @if ($posts->hasMorePages())
+                <a href="{{ $posts->nextPageUrl() }}" class="btn-page">TIẾP THEO</a>
+            @else
+                <button class="btn-page" disabled style="opacity: 0.5; cursor: not-allowed;">TIẾP THEO</button>
+            @endif
+        </div>
     </div>
 </div>
 @endsection

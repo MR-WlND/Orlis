@@ -326,8 +326,23 @@
 </div>
 
 @if($admins->hasPages())
-    <div style="margin-top: 30px;">
-        {{ $admins->links() }}
+    <div class="pagination-container">
+        <div class="pagination-info">
+            Hiển thị {{ $admins->firstItem() ?? 0 }} - {{ $admins->lastItem() ?? 0 }} trên tổng số {{ $admins->total() ?? 0 }} tài khoản
+        </div>
+        <div class="pagination-buttons">
+            @if ($admins->onFirstPage())
+                <button class="btn-page" disabled style="opacity: 0.5; cursor: not-allowed;">TRANG TRƯỚC</button>
+            @else
+                <a href="{{ $admins->previousPageUrl() }}" class="btn-page">TRANG TRƯỚC</a>
+            @endif
+
+            @if ($admins->hasMorePages())
+                <a href="{{ $admins->nextPageUrl() }}" class="btn-page">TIẾP THEO</a>
+            @else
+                <button class="btn-page" disabled style="opacity: 0.5; cursor: not-allowed;">TIẾP THEO</button>
+            @endif
+        </div>
     </div>
 @endif
 @endsection

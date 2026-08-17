@@ -3,7 +3,7 @@
 @section('title', 'Biến thể: ' . $product->name)
 
 @section('content')
-<div style="background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+<div style="background: #fff; border: 1px solid var(--border-color); padding: 20px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2 style="margin: 0; font-size: 18px; color: #333;">Biến thể: {{ $product->name }}</h2>
         <div>
