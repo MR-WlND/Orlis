@@ -1,0 +1,31 @@
+
+:root {
+    --primary: #111111;
+    --bg-light: #F5F5F5;
+    --text-dark: #111111;
+    --text-light: #ffffff;
+    --border: #eaeaea;
+    --font-serif: 'Playfair Display', serif;
+    --font-sans: 'Inter', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-sans);
+    color: var(--text-dark);
+    background-color: var(--text-light);
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    letter-spacing: 0.15em;
+    font-size: 12px;
+}

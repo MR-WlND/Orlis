@@ -18,7 +18,7 @@
         gap: 30px;
         max-width: 1100px;
         margin: 0 auto;
-        font-family: 'Inter', sans-serif;
+        font-family: var(--font-sans);
     }
     
     .post-main {
@@ -46,7 +46,7 @@
     }
 
     .page-title {
-        font-family: 'Playfair Display', serif;
+        font-family: var(--font-serif);
         font-size: 32px;
         font-weight: 400;
         margin: 0;
@@ -106,7 +106,7 @@
     .title-input {
         width: 100%;
         border: none;
-        font-family: 'Playfair Display', serif;
+        font-family: var(--font-serif);
         font-size: 26px;
         padding: 0 0 10px 0;
         outline: none;
@@ -129,7 +129,7 @@
     }
 
     .sidebar-title {
-        font-family: 'Inter', sans-serif;
+        font-family: var(--font-sans);
         font-size: 11px;
         font-weight: 700;
         text-transform: uppercase;
@@ -163,7 +163,7 @@
         padding: 8px 0;
         border: none;
         border-bottom: 1px solid #e0e0e0;
-        font-family: 'Playfair Display', serif;
+        font-family: var(--font-serif);
         font-size: 15px;
         color: #000;
         outline: none;
@@ -195,7 +195,7 @@
     .upload-text {
         font-size: 10px;
         color: #888;
-        font-family: 'Inter', sans-serif;
+        font-family: var(--font-sans);
     }
 
     .hidden-file-input {
@@ -212,7 +212,7 @@
         font-size: 10px;
         color: #aaa;
         margin-top: 6px;
-        font-family: 'Inter', sans-serif;
+        font-family: var(--font-sans);
     }
     
     /* CKEditor Custom Styles matching mockup */
@@ -282,7 +282,7 @@
                 <input type="text" name="title" class="title-input" value="{{ old('title', $post->title ?? '') }}" placeholder="Nhập tiêu đề bài viết..." required>
                 <div class="title-divider"></div>
                 
-                <textarea name="excerpt" class="form-control" style="font-family: 'Inter', sans-serif; font-size: 14px; margin-bottom: 20px; resize: vertical; min-height: 60px;" placeholder="Tóm tắt bài viết (Sa-pô)... Dẫn nhập ngắn 2-3 câu hiển thị ngoài Frontend">{{ old('excerpt', $post->excerpt ?? '') }}</textarea>
+                <textarea name="excerpt" class="form-control" style="font-family: var(--font-sans); font-size: 14px; margin-bottom: 20px; resize: vertical; min-height: 60px;" placeholder="Tóm tắt bài viết (Sa-pô)... Dẫn nhập ngắn 2-3 câu hiển thị ngoài Frontend">{{ old('excerpt', $post->excerpt ?? '') }}</textarea>
                 
                 <textarea name="content" id="editor" required>{{ old('content', $post->content ?? '') }}</textarea>
             </div>
@@ -374,7 +374,7 @@
         resize_enabled: false,
         contentsCss: [
             'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap',
-            'body { font-family: "Playfair Display", serif; font-size: 16px; color: #000; line-height: 1.6; padding: 0; margin: 0; }'
+            'body { font-family: "Castoro", serif; font-size: 16px; color: #000; line-height: 1.6; padding: 0; margin: 0; }'
         ]
     });
 

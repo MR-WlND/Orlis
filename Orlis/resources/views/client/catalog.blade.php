@@ -4,73 +4,77 @@
 
 @section('content')
 <div class="catalog-page">
-    <div class="catalog-header">
-        <h1>Bộ Sưu Tập</h1>
-        <div class="catalog-controls">
-            <button class="filter-btn" onclick="toggleFilter()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M10 12h10M14 18h6"/></svg>
-                Bộ Lọc
-            </button>
-            <div class="sort-dropdown">Sắp xếp: Mới nhất <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16"><path d="M6 9l6 6 6-6"/></svg></div>
-        </div>
+    <div class="catalog-header-clean">
+        <h1>{{ $category ? $category->name : ($categoryBanner->title ?? 'Tất cả sản phẩm') }}</h1>
+        <p class="catalog-desc">{{ isset($categoryBanner) && $categoryBanner->description ? $categoryBanner->description : 'Khám phá các bộ sưu tập mới nhất, nơi kết hợp sự thanh lịch vượt thời gian và tinh thần hiện đại qua từng thiết kế.' }}</p>
+        <p class="catalog-count">{{ $isParentCategory ? '' : $products->total() . ' mặt hàng' }}</p>
     </div>
 
-    <div class="catalog-grid">
-        <a href="{{ route('product', 1) }}" class="product-card">
-            <div class="product-img">
-                <img src="{{ asset('images/orlis_model_1.png') }}" alt="Product">
+    @if($isParentCategory)
+        @foreach($subcategoriesData as $data)
+            @if($data['products']->count() > 0)
+                <div class="subcategory-section">
+                    <div class="subcategory-banner">
+                        @if($data['banner'])
+                            <img src="{{ Storage::url($data['banner']->image_path) }}" alt="{{ $data['category']->name }}">
+                        @else
+                            <div class="subcategory-fallback-banner">
+                                <h2>{{ $data['category']->name }}</h2>
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="catalog-grid">
+                        @foreach($data['products'] as $product)
+                            <a href="{{ route('product', $product->id) }}" class="product-card">
+                                <div class="product-img">
+                                    @if($product->created_at > now()->subDays(30))
+                                        <span class="product-tag-new">Mới</span>
+                                    @endif
+                                    <img src="{{ $product->thumbnail ? Storage::url($product->thumbnail) : asset('images/orlis_model_1.png') }}" alt="{{ $product->name }}">
+                                </div>
+                                <div class="product-info center-info">
+                                    <h3>{{ $product->name }}</h3>
+                                    <p>{{ number_format($product->price, 0, ',', '.') }} ₫</p>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+        @endforeach
+    @else
+        <div class="catalog-grid">
+            @forelse($products as $product)
+                <a href="{{ route('product', $product->id) }}" class="product-card">
+                    <div class="product-img">
+                        @if($product->created_at > now()->subDays(30))
+                            <span class="product-tag-new">Mới</span>
+                        @endif
+                        <img src="{{ $product->thumbnail ? Storage::url($product->thumbnail) : asset('images/orlis_model_1.png') }}" alt="{{ $product->name }}">
+                    </div>
+                    <div class="product-info center-info">
+                        <h3>{{ $product->name }}</h3>
+                        <p>{{ number_format($product->price, 0, ',', '.') }} ₫</p>
+                    </div>
+                </a>
+            @empty
+                <p style="text-align: center; grid-column: span 4; font-family: var(--font-sans); color: #666; margin: 40px 0;">Không có sản phẩm nào trong danh mục này.</p>
+            @endforelse
+        </div>
+        
+        @if($products->hasPages())
+            <div class="pagination-wrapper" style="margin-top: 50px; display: flex; justify-content: center;">
+                {{ $products->links() }}
             </div>
-            <div class="product-info">
-                <h3>Váy Lụa Đen Tuyền</h3>
-                <p>25,000,000 ₫</p>
-            </div>
-        </a>
-        <a href="{{ route('product', 2) }}" class="product-card">
-            <div class="product-img">
-                <img src="{{ asset('images/orlis_model_2.png') }}" alt="Product">
-            </div>
-            <div class="product-info">
-                <h3>Suit Nam Beige</h3>
-                <p>45,000,000 ₫</p>
-            </div>
-        </a>
-        <a href="{{ route('product', 3) }}" class="product-card">
-            <div class="product-img">
-                <img src="{{ asset('images/orlis_bag.png') }}" alt="Product">
-            </div>
-            <div class="product-info">
-                <h3>Túi Xách Da Cá Sấu</h3>
-                <p>120,000,000 ₫</p>
-            </div>
-        </a>
-        <a href="{{ route('product', 4) }}" class="product-card">
-            <div class="product-img">
-                <img src="{{ asset('images/orlis_shoes.png') }}" alt="Product">
-            </div>
-            <div class="product-info">
-                <h3>Giày Cao Gót Nhung</h3>
-                <p>18,500,000 ₫</p>
-            </div>
-        </a>
-        <a href="{{ route('product', 5) }}" class="product-card">
-            <div class="product-img">
-                <img src="{{ asset('images/orlis_perfume.png') }}" alt="Product">
-            </div>
-            <div class="product-info">
-                <h3>Nước Hoa L'Orlis</h3>
-                <p>8,500,000 ₫</p>
-            </div>
-        </a>
-        <a href="{{ route('product', 6) }}" class="product-card">
-            <div class="product-img">
-                <img src="{{ asset('images/orlis_scarf.png') }}" alt="Product">
-            </div>
-            <div class="product-info">
-                <h3>Khăn Lụa Equestrian</h3>
-                <p>12,000,000 ₫</p>
-            </div>
-        </a>
-    </div>
+        @endif
+    @endif
+
+    <!-- Floating Filter Button -->
+    <button class="floating-filter-btn" onclick="toggleFilter()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" width="16"><path d="M4 6h16M10 12h10M14 18h6"/></svg>
+        Lọc & Sắp xếp
+    </button>
 
     <!-- Filter Offcanvas -->
     <div class="filter-overlay" id="filterOverlay" onclick="toggleFilter()"></div>

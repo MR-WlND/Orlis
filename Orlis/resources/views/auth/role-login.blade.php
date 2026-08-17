@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập {{ $roleLabel }} - Orlis</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Alata&family=Castoro:ital,wght@0,400;1,400&family=Charis+SIL:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Castoro:ital,wght@0,400;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
 
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
-            font-family: 'Alata', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
         
         .login-page {
@@ -47,7 +47,7 @@
 
         .title {
             text-align: center;
-            font-family: 'Charis SIL', serif;
+            font-family: 'Castoro', serif;
             font-size: 22px;
             font-weight: 400;
             margin-top: 0;
@@ -90,7 +90,7 @@
             background: transparent;
             border: none;
             font-size: 14px;
-            font-family: 'Alata', sans-serif;
+            font-family: 'Inter', sans-serif;
             color: #18181b;
             outline: none;
         }
@@ -114,7 +114,7 @@
             border-radius: 6px;
             font-size: 13px;
             font-weight: bold;
-            font-family: 'Alata', sans-serif;
+            font-family: 'Inter', sans-serif;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             cursor: pointer;

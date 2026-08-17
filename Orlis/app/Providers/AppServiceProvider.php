@@ -28,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
                     $q->with('children');
                 }])
                 ->get();
+                
             $view->with('globalCategories', $globalCategories);
         });
     }

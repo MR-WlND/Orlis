@@ -1,0 +1,297 @@
+.beauty-hero-grid {
+    position: relative;
+    width: 100%;
+    padding-top: 120px;
+    padding-bottom: 60px;
+    overflow: hidden;
+    display: block;
+    background-color: transparent;
+}
+
+.beauty-hero-item {
+    position: absolute;
+    top: 120px;
+    aspect-ratio: 1 / 2;
+    overflow: hidden;
+    display: block;
+    transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.beauty-hero-item:nth-child(1) {
+    position: relative;
+    top: 0;
+    margin-left: 40px;
+    width: calc((100% - 120px) / 3);
+    transform: translateY(100vh);
+    opacity: 0;
+}
+
+.beauty-hero-item:nth-child(2) {
+    left: 10%;
+    width: 80%;
+    aspect-ratio: 21 / 9;
+    z-index: 2;
+    top: 80px;
+}
+
+.beauty-hero-item:nth-child(3) {
+    left: calc(40px + (((100% - 120px) / 3) * 2) + 40px);
+    width: calc((100% - 120px) / 3);
+    transform: translateY(100vh);
+    opacity: 0;
+}
+
+.beauty-hero-grid.scrolled-down .beauty-hero-item:nth-child(1),
+.beauty-hero-grid.scrolled-down .beauty-hero-item:nth-child(3) {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.beauty-hero-grid.scrolled-down .beauty-hero-item:nth-child(2) {
+    left: calc(40px + ((100% - 120px) / 3) + 20px);
+    width: calc((100% - 120px) / 3);
+    aspect-ratio: 1 / 2;
+    top: 120px;
+}
+
+.beauty-hero-item video,
+.beauty-hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-size: cover;
+    background-position: center;
+    display: block;
+    z-index: 1;
+}
+
+.beauty-item-content {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    padding: 20px 20px 30px 20px;
+    text-align: center;
+    color: #fff;
+    z-index: 5;
+    pointer-events: none;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+}
+
+.beauty-item-content.content-center {
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.beauty-item-content.content-bottom {
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+    padding-top: 60px;
+}
+
+.beauty-item-desc {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.beauty-hero-subtitle {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+
+.beauty-hero-title {
+    font-family: var(--font-serif);
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 400;
+    margin-bottom: 20px;
+    line-height: 1.1;
+}
+
+.beauty-hero-btn {
+    pointer-events: auto;
+    display: inline-block;
+    color: #fff;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 1px solid #fff;
+    padding-bottom: 4px;
+    transition: opacity 0.3s;
+}
+
+.beauty-hero-btn:hover {
+    opacity: 0.7;
+}
+.mega-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+.mega-card {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 4px;
+    aspect-ratio: 4/5;
+}
+.mega-card img {
+    width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease;
+}
+.mega-card::after {
+    content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.5), transparent 60%);
+    pointer-events: none;
+}
+.mega-card:hover img {
+    transform: scale(1.05);
+}
+.mega-label {
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    color: #fff; font-size: 13px; z-index: 2; 
+    border-bottom: 1px solid rgba(255, 255, 255, 1); 
+    padding-bottom: 2px; text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    transition: border-color 0.4s ease;
+    white-space: nowrap;
+}
+.mega-card:hover .mega-label {
+    border-bottom-color: rgba(255, 255, 255, 0);
+}
+
+@media (max-width: 900px) {
+    .drawer.mega-expanded {
+        width: 360px;
+    }
+    .mega-panel {
+        flex-direction: column;
+        overflow-y: auto;
+    }
+    .mega-sidebar { width: 100%; border-right: none; }
+    .mega-content { display: none; }
+}
+
+
+.perfume-products-section {
+    padding: 20px 20px 20px;
+}
+.perfume-section-title {
+    text-align: center;
+    font-family: var(--font-serif);
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 40px;
+    color: #333;
+}
+
+.perfume-product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    padding: 0 40px;
+}
+.perfume-product-card {
+    text-align: center;
+    cursor: pointer;
+}
+.perfume-product-card .product-img-wrapper {
+    aspect-ratio: 4/5;
+    overflow: hidden;
+    margin-bottom: 15px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.perfume-product-card .product-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+.perfume-product-card:hover .product-img-wrapper img {
+    transform: scale(1.05);
+}
+.product-info .product-category {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111;
+    display: block;
+    margin-bottom: 6px;
+}
+.product-info .product-name {
+    font-size: 13px;
+    font-weight: 400;
+    color: #444;
+    margin-bottom: 8px;
+    line-height: 1.4;
+    padding: 0 10px;
+}
+.product-info .product-price {
+    font-size: 13px;
+    font-weight: 400;
+    color: #111;
+}
+
+.perfume-bottom-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 60px 40px;
+}
+.perfume-bottom-card {
+    text-align: center;
+}
+.perfume-bottom-card img {
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    margin-bottom: 25px;
+}
+.bottom-card-content h3 {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 15px;
+    color: #333;
+}
+.bottom-card-content p {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+.bottom-card-content a {
+    font-size: 12px;
+    color: #333;
+    text-decoration: none;
+    border-bottom: 1px solid #333;
+    padding-bottom: 2px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: opacity 0.3s;
+}
+.bottom-card-content a:hover {
+    opacity: 0.6;
+}
+
+@media (max-width: 900px) {
+    .perfume-hero-grid, .perfume-bottom-grid {
+        grid-template-columns: 1fr;
+    }
+    .perfume-product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 0 15px;
+    }
+}

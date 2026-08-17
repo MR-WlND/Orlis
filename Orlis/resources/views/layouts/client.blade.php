@@ -10,11 +10,11 @@
     @yield('styles')
 
     <!-- Header -->
-    <header id="mainHeader" class="{{ request()->is('/') ? '' : 'header-light' }}">
+    <header id="mainHeader" class="{{ request()->is('/') ? '' : (request()->is('beauty') ? 'header-dark-text' : 'header-light') }}">
         <div class="menu-icon" onclick="toggleDrawer()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 8h16M4 16h16"/></svg>
         </div>
-        <a href="/" class="logo">Orlis</a>
+        <a href="{{ session('department') === 'beauty' ? url('/beauty') : url('/') }}" class="logo">Orlis</a>
         <div class="action-icons">
             <div class="search-container" id="searchContainer">
                 <input type="text" class="search-input" placeholder="Tìm kiếm sản phẩm">
@@ -29,7 +29,7 @@
         </div>
     </header>
 
-    <main>
+    <main id="swup" class="transition-fade">
         @yield('content')
     </main>
 
@@ -103,7 +103,11 @@
                 </div>
                 <div class="drawer-content">
                     @foreach($globalCategories as $index => $level1)
-                        <ul class="menu-list {{ $index === 0 ? 'active' : '' }}" id="menu-{{ $level1->slug }}">
+                        @php 
+                            $isActive = (session('department', 'fashion') === 'beauty' && str_contains($level1->name, 'Nước hoa')) || 
+                                        (session('department', 'fashion') === 'fashion' && str_contains($level1->name, 'Thời trang'));
+                        @endphp
+                        <ul class="menu-list {{ $isActive ? 'active' : '' }}" id="menu-{{ $level1->slug }}">
                             @foreach($level1->children as $level2)
                                 @if($level2->children->count() > 0)
                                     <li onclick="openMegaMenu('{{ $level2->slug }}')">
@@ -126,7 +130,11 @@
                 <div class="drawer-footer">
                     <div class="tab-wrapper">
                         @foreach($globalCategories as $index => $level1)
-                            <div class="tab-btn {{ $index === 0 ? 'active' : '' }}" id="tab-{{ $level1->slug }}" onclick="switchTab('{{ $level1->slug }}')">
+                            @php 
+                                $isActive = (session('department', 'fashion') === 'beauty' && str_contains($level1->name, 'Nước hoa')) || 
+                                            (session('department', 'fashion') === 'fashion' && str_contains($level1->name, 'Thời trang'));
+                            @endphp
+                            <div class="tab-btn {{ $isActive ? 'active' : '' }}" id="tab-{{ $level1->slug }}" onclick="switchTab('{{ $level1->slug }}')">
                                 {{ $level1->name }}
                             </div>
                         @endforeach
@@ -177,5 +185,17 @@
 
     @include('components.login-modal')
     @include('components.register-modal')
+
+    <script src="https://unpkg.com/swup@4"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!window.swup) {
+                window.swup = new Swup({
+                    containers: ['#swup', '#sideDrawer', '#mainHeader'],
+                    cache: false
+                });
+            }
+        });
+    </script>
 </body>
 </html>

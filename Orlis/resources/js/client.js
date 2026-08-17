@@ -47,17 +47,83 @@ document.addEventListener('click', function(event) {
     }
 });
 
-// Handle scroll effect for header (only on homepage)
-if (window.location.pathname === '/') {
-    window.addEventListener('scroll', function() {
+function initPage() {
+    // Handle scroll effect for header
+    var path = window.location.pathname;
+    if (path === '/' || path === '/beauty') {
+        window.addEventListener('scroll', handleHeaderScroll);
+        // Trigger once on load
+        handleHeaderScroll();
+    } else {
+        window.removeEventListener('scroll', handleHeaderScroll);
         var header = document.getElementById('mainHeader');
-        if (window.scrollY > 50) {
-            header.classList.add('header-light');
-        } else {
-            header.classList.remove('header-light');
-        }
-    });
+        if(header) header.classList.add('header-light');
+    }
+
+    // Init Info Slider (if exists)
+    const slider = document.querySelector('.info-section');
+    if (slider) {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        // Xóa các event listener cũ để tránh trùng lặp khi init lại
+        const newSlider = slider.cloneNode(true);
+        if(slider.parentNode) slider.parentNode.replaceChild(newSlider, slider);
+
+        newSlider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            newSlider.classList.add('active');
+            startX = e.pageX - newSlider.offsetLeft;
+            scrollLeft = newSlider.scrollLeft;
+        });
+        newSlider.addEventListener('mouseleave', () => {
+            isDown = false;
+            newSlider.classList.remove('active');
+        });
+        newSlider.addEventListener('mouseup', () => {
+            isDown = false;
+            newSlider.classList.remove('active');
+        });
+        newSlider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - newSlider.offsetLeft;
+            const walk = (x - startX) * 2;
+            newSlider.scrollLeft = scrollLeft - walk;
+        });
+    }
 }
+
+function handleHeaderScroll() {
+    var header = document.getElementById('mainHeader');
+    var perfumeGrid = document.querySelector('.beauty-hero-grid');
+    if(!header) return;
+    if (window.scrollY > 50) {
+        header.classList.add('header-light');
+        header.classList.remove('header-dark-text');
+        if(perfumeGrid) perfumeGrid.classList.add('scrolled-down');
+    } else {
+        header.classList.remove('header-light');
+        if (window.location.pathname === '/beauty') {
+            header.classList.add('header-dark-text');
+        }
+        if(perfumeGrid) perfumeGrid.classList.remove('scrolled-down');
+    }
+}
+
+// Chạy lần đầu tiên
+document.addEventListener('DOMContentLoaded', () => {
+    initPage();
+    if (window.swup) {
+        window.swup.hooks.on('page:view', () => {
+            initPage();
+            // Đóng menu khi chuyển trang
+            document.getElementById('drawerOverlay').classList.remove('active');
+            document.getElementById('sideDrawer').classList.remove('active');
+        });
+    }
+});
 
 // Mega Menu Logic
 window.openMegaMenu = function(menuId) {

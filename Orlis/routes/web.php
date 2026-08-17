@@ -5,16 +5,81 @@ use App\Http\Controllers\Auth\RoleLoginController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('client.home');
-});
+Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/beauty', [\App\Http\Controllers\HomeController::class, 'beauty'])->name('home.beauty');
 
 Route::get('/cart', function () {
     return view('client.cart');
 })->name('cart');
 
-Route::get('/catalog', function () {
-    return view('client.catalog');
+Route::get('/catalog/{slug?}', function ($slug = null) {
+    if ($slug && str_contains($slug, 'nuoc-hoa-lam-dep-nuoc-hoa')) {
+        return view('client.perfume');
+    }
+
+    $categoryBanner = null;
+    $category = null;
+    $isParentCategory = false;
+    $subcategoriesData = [];
+    $products = collect();
+
+    if ($slug) {
+        $category = \App\Models\Category::with('children')->where('slug', $slug)->first();
+        if ($category) {
+            $categoryIds = [];
+            $current = $category;
+            while ($current) {
+                $categoryIds[] = (string) $current->id;
+                $current = $current->parent;
+            }
+
+            $query = \App\Models\Banner::active()->position('category_header')->where(function($q) use ($categoryIds) {
+                foreach ($categoryIds as $id) {
+                    $q->orWhereJsonContains('category_ids', (string)$id);
+                }
+            });
+            $categoryBanner = $query->orderBy('order')->first();
+
+            // Phân nhánh logic cho Menu cha và Menu con
+            if ($category->children->count() > 0) {
+                $isParentCategory = true;
+                foreach ($category->children as $child) {
+                    $childBanner = \App\Models\Banner::active()->position('category_header')->whereJsonContains('category_ids', (string)$child->id)->first();
+                    $subcategoriesData[] = [
+                        'category' => $child,
+                        'banner' => $childBanner,
+                        'products' => $child->products()->where('is_active', true)->take(8)->get()
+                    ];
+                }
+            } else {
+                $products = $category->products()->where('is_active', true)->paginate(16);
+            }
+        }
+    } else {
+        $rootCategories = \App\Models\Category::whereNull('parent_id')->get();
+        if ($rootCategories->count() > 0) {
+            $isParentCategory = true;
+            foreach ($rootCategories as $child) {
+                $childBanner = \App\Models\Banner::active()->position('category_header')->whereJsonContains('category_ids', (string)$child->id)->first();
+                $subcategoriesData[] = [
+                    'category' => $child,
+                    'banner' => $childBanner,
+                    'products' => $child->products()->where('is_active', true)->take(8)->get()
+                ];
+            }
+        } else {
+            $products = \App\Models\Product::where('is_active', true)->paginate(16);
+        }
+    }
+
+    if (!$categoryBanner) {
+        $categoryBanner = \App\Models\Banner::active()->position('category_header')->where('is_global', true)->orderBy('order')->first();
+    }
+    if (!$categoryBanner) {
+        $categoryBanner = \App\Models\Banner::active()->position('category_header')->orderBy('order')->first();
+    }
+
+    return view('client.catalog', compact('categoryBanner', 'slug', 'category', 'isParentCategory', 'subcategoriesData', 'products'));
 })->name('catalog');
 
 Route::get('/product/{id?}', function () {
@@ -41,6 +106,7 @@ Route::get('/admin', function () {
 Route::resource('admin/users', \App\Http\Controllers\Admin\UserController::class, ['as' => 'admin']);
 Route::resource('admin/admins', \App\Http\Controllers\Admin\AdminAccountController::class, ['as' => 'admin']);
 Route::resource('admin/categories', \App\Http\Controllers\Admin\CategoryController::class, ['as' => 'admin']);
+Route::resource('admin/banners', \App\Http\Controllers\Admin\BannerController::class, ['as' => 'admin']);
 Route::resource('admin/products', \App\Http\Controllers\Admin\ProductController::class, ['as' => 'admin']);
 Route::resource('admin/posts', \App\Http\Controllers\Admin\PostController::class, ['as' => 'admin']);
 Route::resource('admin/products.variants', \App\Http\Controllers\Admin\ProductVariantController::class, ['as' => 'admin']);
