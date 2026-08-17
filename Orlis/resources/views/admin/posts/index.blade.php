@@ -95,10 +95,10 @@
         font-size: 15px;
         font-family: var(--font-serif, 'Playfair Display', serif);
         display: -webkit-box;
-        -webkit-line-clamp: 1;
+        -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        max-width: 220px;
+        max-width: 200px;
         line-height: 1.4;
     }
     .status-badge {
