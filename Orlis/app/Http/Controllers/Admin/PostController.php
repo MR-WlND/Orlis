@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+use App\Models\PostCategory;
+
 class PostController extends Controller
 {
     public function index()
@@ -18,7 +20,8 @@ class PostController extends Controller
 
     public function create()
     {
-        return view('admin.posts.form');
+        $categories = PostCategory::all();
+        return view('admin.posts.form', compact('categories'));
     }
 
     public function store(Request $request)
@@ -54,7 +57,8 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
-        return view('admin.posts.form', compact('post'));
+        $categories = PostCategory::all();
+        return view('admin.posts.form', compact('post', 'categories'));
     }
 
     public function update(Request $request, Post $post)
