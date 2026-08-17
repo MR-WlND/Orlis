@@ -95,10 +95,10 @@
         font-size: 15px;
         font-family: var(--font-serif, 'Playfair Display', serif);
         display: -webkit-box;
-        -webkit-line-clamp: 2;
+        -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        max-width: 320px;
+        max-width: 220px;
         line-height: 1.4;
     }
     .status-badge {
@@ -118,6 +118,22 @@
     .action-links a:hover, .action-links button:hover {
         color: #000;
     }
+    /* Pagination Fix */
+    nav[role="navigation"] {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        color: #666;
+    }
+    nav[role="navigation"] p { margin: 0; }
+    nav[role="navigation"] > div { display: flex; align-items: center; gap: 20px; width: 100%; justify-content: space-between; }
+    nav[role="navigation"] svg { width: 16px; height: 16px; }
+    .relative.z-0.inline-flex { display: inline-flex; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; }
+    .relative.z-0.inline-flex > * { padding: 8px 12px; background: #fff; border-left: 1px solid #ddd; color: #333; text-decoration: none; display: flex; align-items: center; }
+    .relative.z-0.inline-flex > *:first-child { border-left: none; }
+    .relative.z-0.inline-flex > [aria-current="page"] { background: #000; color: #fff; }
+    .relative.z-0.inline-flex > *:hover:not([aria-current="page"]):not([aria-disabled="true"]) { background: #f5f5f5; }
 </style>
 @endsection
 
