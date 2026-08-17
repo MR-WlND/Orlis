@@ -34,6 +34,7 @@ class PostController extends Controller
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
             'meta_keywords' => 'nullable|string|max:255',
+            'department' => 'required|in:fashion,beauty',
         ]);
 
         $data = $request->except('thumbnail');
@@ -69,6 +70,7 @@ class PostController extends Controller
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
             'meta_keywords' => 'nullable|string|max:255',
+            'department' => 'required|in:fashion,beauty',
         ]);
 
         $data = $request->except('thumbnail');

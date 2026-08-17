@@ -82,13 +82,14 @@ Route::get('/catalog/{slug?}', function ($slug = null) {
     return view('client.catalog', compact('categoryBanner', 'slug', 'category', 'isParentCategory', 'subcategoriesData', 'products'));
 })->name('catalog');
 
-Route::get('/product/{id?}', function () {
-    return view('client.product');
-})->name('product');
+Route::get('/product/{id}', [\App\Http\Controllers\Client\ProductController::class, 'show'])->name('product');
 
 Route::get('/perfume', function () {
     return view('client.perfume');
 })->name('perfume');
+
+Route::get('/magazine', [\App\Http\Controllers\Client\PostController::class, 'index'])->name('magazine.index');
+Route::get('/magazine/{slug}', [\App\Http\Controllers\Client\PostController::class, 'show'])->name('magazine.show');
 
 Route::get('/login/{role}', [RoleLoginController::class, 'showLoginForm'])->name('role.login');
 Route::post('/login/{role}', [RoleLoginController::class, 'login'])->name('role.login.post');

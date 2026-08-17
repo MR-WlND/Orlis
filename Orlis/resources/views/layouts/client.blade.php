@@ -108,6 +108,12 @@
                                         (session('department', 'fashion') === 'fashion' && str_contains($level1->name, 'Thời trang'));
                         @endphp
                         <ul class="menu-list {{ $isActive ? 'active' : '' }}" id="menu-{{ $level1->slug }}">
+                            @if(str_contains(mb_strtolower($level1->name), 'thời trang'))
+                                <li onclick="window.location='{{ route('magazine.index', ['department' => 'fashion']) }}'">Tin tức và Sự kiện</li>
+                            @elseif(str_contains(mb_strtolower($level1->name), 'nước hoa'))
+                                <li onclick="window.location='{{ route('magazine.index', ['department' => 'beauty']) }}'">Tin tức</li>
+                            @endif
+
                             @foreach($level1->children as $level2)
                                 @if($level2->children->count() > 0)
                                     <li onclick="openMegaMenu('{{ $level2->slug }}')">

@@ -50,7 +50,7 @@ document.addEventListener('click', function(event) {
 function initPage() {
     // Handle scroll effect for header
     var path = window.location.pathname;
-    if (path === '/' || path === '/beauty') {
+    if (path === '/' || path === '/beauty' || path === '/perfume' || path.includes('/catalog/nuoc-hoa')) {
         window.addEventListener('scroll', handleHeaderScroll);
         // Trigger once on load
         handleHeaderScroll();
@@ -105,7 +105,7 @@ function handleHeaderScroll() {
         if(perfumeGrid) perfumeGrid.classList.add('scrolled-down');
     } else {
         header.classList.remove('header-light');
-        if (window.location.pathname === '/beauty') {
+        if (window.location.pathname !== '/') {
             header.classList.add('header-dark-text');
         }
         if(perfumeGrid) perfumeGrid.classList.remove('scrolled-down');

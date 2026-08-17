@@ -1,0 +1,217 @@
+/* Magazine Grid */
+.magazine-page {
+    padding: 120px 40px 60px;
+    background-color: #f9f9f9;
+}
+
+.magazine-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+.magazine-header h1 {
+    font-family: var(--font-serif);
+    font-size: 36px;
+    font-weight: 400;
+    color: #111;
+    margin-bottom: 10px;
+}
+.magazine-header p {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: #777;
+    line-height: 1.6;
+}
+
+.magazine-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+.magazine-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    min-width: 0;
+}
+
+.magazine-card-img {
+    aspect-ratio: 3/2;
+    overflow: hidden;
+    background: #f5f5f5;
+}
+.magazine-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.magazine-card:hover .magazine-card-img img {
+    transform: scale(1.05);
+}
+
+.magazine-card-body {
+    background-color: #fff;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+.magazine-card-meta {
+    font-size: 12px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+.magazine-card-title {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: #111;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.magazine-card-summary {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #777;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.magazine-card-link {
+    font-size: 14px;
+    color: #111;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+    margin-top: auto;
+}
+
+/* Pagination */
+.magazine-pagination {
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Article Detail */
+.article-page {
+    background-color: #fff;
+    padding-bottom: 80px;
+}
+
+.article-hero {
+    position: relative;
+    width: 100%;
+    height: 70vh;
+    min-height: 500px;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.article-hero img {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+.article-hero::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.3);
+    z-index: 2;
+}
+.article-hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    color: #fff;
+    max-width: 800px;
+    padding: 0 40px;
+}
+.article-meta {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+.article-title {
+    font-family: var(--font-serif);
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.article-content {
+    max-width: 720px;
+    margin: 60px auto 0;
+    padding: 0 20px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #333;
+}
+.article-content p {
+    margin-bottom: 24px;
+}
+.article-content h2, .article-content h3 {
+    font-family: var(--font-serif);
+    margin-top: 40px;
+    margin-bottom: 20px;
+    color: #111;
+}
+.article-content img {
+    max-width: 100%;
+    height: auto;
+    margin: 30px 0;
+}
+.article-content blockquote {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-style: italic;
+    line-height: 1.5;
+    text-align: center;
+    margin: 40px 0;
+    padding: 0 40px;
+    color: #111;
+}
+
+/* Related Articles */
+.related-articles {
+    max-width: 1200px;
+    margin: 80px auto 0;
+    padding: 0 40px;
+}
+.related-title {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 40px;
+    color: #111;
+}
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+@media (max-width: 1024px) {
+    .magazine-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+    .magazine-page { padding: 100px 20px 40px; }
+    .magazine-grid { grid-template-columns: 1fr; gap: 30px; }
+    .article-hero { height: 50vh; min-height: 400px; }
+    .related-articles { padding: 0 20px; }
+}

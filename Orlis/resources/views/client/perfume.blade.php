@@ -37,7 +37,7 @@
                     </div>
                 </a>
             @else
-                <a href="#" class="beauty-hero-item">
+                <a href="/catalog/nuoc-hoa-lam-dep-nuoc-hoa" class="beauty-hero-item">
                     <div class="beauty-hero-bg" style="background-image: url('https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=600&q=80');"></div>
                     <div class="beauty-item-content content-bottom">
                         <p class="beauty-item-desc">Một loại chypre vani đầy gợi cảm</p>
@@ -51,11 +51,11 @@
                     <div class="beauty-item-content content-center">
                         <h4 class="beauty-hero-subtitle">Hoa hậu Dior Eau de Parfum</h4>
                         <h2 class="beauty-hero-title">Biểu tượng<br>thời trang<br>cao cấp mới</h2>
-                        <a href="#" class="beauty-hero-btn">Khám phá</a>
+                        <a href="/catalog/nuoc-hoa-lam-dep-nuoc-hoa" class="beauty-hero-btn">Khám phá</a>
                     </div>
                 </div>
-                <a href="#" class="beauty-hero-item">
-                    <div class="beauty-hero-bg" style="background-image: url('https://images.unsplash.com/photo-1594035987173-16a5d9333919?auto=format&fit=crop&w=600&q=80');"></div>
+                <a href="/catalog/nuoc-hoa-lam-dep-nuoc-hoa" class="beauty-hero-item">
+                    <div class="beauty-hero-bg" style="background-image: url('https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=600&q=80');"></div>
                     <div class="beauty-item-content content-bottom">
                         <p class="beauty-item-desc">Hoa Dior trong hương Dior</p>
                         <span class="beauty-hero-btn">Khám phá</span>

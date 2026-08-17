@@ -304,6 +304,14 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-label">MẢNG (DEPARTMENT)</label>
+                    <select class="form-control form-select" name="department">
+                        <option value="fashion" {{ (old('department', $post->department ?? 'fashion') == 'fashion') ? 'selected' : '' }}>Thời trang</option>
+                        <option value="beauty" {{ (old('department', $post->department ?? '') == 'beauty') ? 'selected' : '' }}>Làm đẹp / Nước hoa</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label class="form-label">CHUYÊN MỤC</label>
                     <select class="form-control form-select" name="category_id">
                         <option value="">Chọn chuyên mục</option>
