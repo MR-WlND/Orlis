@@ -4,42 +4,11 @@
 
 @section('styles')
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Alata&family=Castoro:ital,wght@0,400;1,400&family=Charis+SIL:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-
-        :root {
-            --bg-color: #f1f4f5;
-            --text-dark: #333;
-            --text-light: #666;
-            --border: #e2e8f0;
-            --primary: #474747;
-            --font-serif: 'Charis SIL', serif;
-            --font-sans: 'Alata', sans-serif;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: var(--font-sans);
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
 
 
         /* Main Container */
         .container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 40px 20px;
             width: 100%;
@@ -61,7 +30,7 @@
 
         .page-title span {
             font-size: 13px;
-            color: var(--text-light);
+            color: #666;
         }
 
         /* Empty Cart State */
@@ -130,13 +99,17 @@
 
         .cart-header {
             display: grid;
-            grid-template-columns: 50px 3fr 1fr 1fr 1fr;
+            grid-template-columns: 16px 4fr 1fr 1.5fr 1fr;
+            gap: 24px;
             padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-            font-size: 12px;
-            color: var(--text-light);
+            padding-left: 24px;
+            padding-right: 24px;
+            border-bottom: 1px solid #d0d0d0;
+            font-size: 13px;
+            color: #666;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            font-weight: 400;
         }
 
         .cart-header > :nth-child(2) {
@@ -145,83 +118,93 @@
 
         .cart-item {
             display: grid;
-            grid-template-columns: 50px 3fr 1fr 1fr 1fr;
+            grid-template-columns: 16px 4fr 1fr 1.5fr 1fr;
+            gap: 24px;
             align-items: center;
             background: white;
-            padding: 20px 10px;
-            border-radius: 4px;
+            padding: 16px 24px;
+            border-radius: 8px;
             margin-bottom: 15px;
             text-align: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
         .cart-item > :nth-child(2) {
             display: flex;
-            gap: 20px;
+            gap: 24px;
             text-align: left;
             align-items: center;
         }
 
         .item-img {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 120px;
             object-fit: cover;
-            border: 1px solid #f0f0f0;
-            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            background: #ffffff;
+            border-radius: 2px;
         }
 
         .item-info h4 {
+            font-family: var(--font-sans);
             font-size: 14px;
             margin-bottom: 5px;
             font-weight: 600;
+            color: #333;
         }
 
         .item-info p {
-            font-size: 12px;
-            color: var(--text-light);
-            margin-bottom: 10px;
-            line-height: 1.4;
+            font-family: var(--font-sans);
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
         }
 
         .item-remove {
             font-size: 12px;
-            color: var(--text-light);
+            color: #555;
             text-decoration: underline;
             cursor: pointer;
         }
 
         .item-price, .item-total {
+            font-family: var(--font-sans);
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 700;
+            color: #333;
         }
 
         .qty-control {
             display: inline-flex;
             align-items: center;
-            background: #f5f5f5;
+            background: #e2e2e2;
             border-radius: 4px;
+            height: 32px;
+            padding: 0 6px;
         }
 
         .qty-btn {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             border: none;
             background: none;
-            font-weight: bold;
-            color: var(--text-light);
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
         }
 
         .qty-input {
-            width: 30px;
+            width: 28px;
             text-align: center;
             border: none;
             background: none;
-            font-size: 13px;
-            font-weight: bold;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
         }
 
         .cart-footer {
@@ -229,33 +212,39 @@
             justify-content: space-between;
             align-items: center;
             background: white;
-            padding: 20px;
-            border-radius: 4px;
-            margin-top: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding: 16px 24px;
+            border-radius: 8px;
+            margin-top: 15px;
+            position: sticky;
+            bottom: 20px;
+            z-index: 100;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
         }
 
         .footer-left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-size: 14px;
+            color: #333;
         }
 
         .footer-right {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 30px;
         }
 
         .total-price {
+            font-family: var(--font-sans);
             font-size: 14px;
-            font-weight: bold;
+            font-weight: 700;
+            color: #333;
         }
 
         .btn-checkout {
-            padding: 12px 30px;
-            background: var(--primary);
+            padding: 14px 40px;
+            background: #444444;
             color: white;
             border: none;
             border-radius: 4px;
@@ -269,7 +258,15 @@
             width: 16px;
             height: 16px;
             cursor: pointer;
-            accent-color: var(--primary);
+            appearance: none;
+            background-color: #dbdbdb;
+            border-radius: 2px;
+            border: none;
+        }
+        
+        input[type="checkbox"]:checked {
+            background-color: #888;
+            border-color: #888;
         }
 
         /* Recommendations Section */
@@ -280,15 +277,16 @@
 
         .recommendations h3 {
             font-family: var(--font-serif);
-            font-size: 20px;
-            font-weight: 500;
-            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 40px;
+            color: #333;
         }
 
         .product-list {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            gap: 30px;
         }
 
         .product-card {
@@ -297,44 +295,49 @@
 
         .product-img {
             width: 100%;
-            aspect-ratio: 1;
-            background: #f8f8f8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
+            aspect-ratio: 3/4;
+            margin-bottom: 20px;
+            overflow: hidden;
         }
 
         .product-img img {
-            width: 80%;
-            height: 80%;
-            object-fit: contain;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .product-card h4 {
+            font-family: var(--font-sans);
             font-size: 13px;
+            font-weight: 600;
+            color: #444;
             margin-bottom: 8px;
         }
 
         .product-card p {
+            font-family: var(--font-sans);
             font-size: 12px;
-            color: var(--text-light);
-            margin-bottom: 8px;
-            line-height: 1.4;
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.5;
         }
 
         .product-card .price {
+            font-family: var(--font-sans);
             font-size: 13px;
-            font-weight: bold;
+            font-weight: 700;
+            color: #333;
         }
 
         .pagination {
-            margin-top: 30px;
+            margin-top: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 40px;
             font-size: 14px;
+            font-weight: 500;
+            color: #333;
         }
         
         .pagination span {
@@ -359,11 +362,12 @@
 @endsection
 
 @section('content')
-    <div class="container" style="margin-top: 80px;">
+<div style="background-color: #f1f4f5; min-height: 100vh; padding-top: 80px; padding-bottom: 80px;">
+    <div class="container">
         
         <!-- Shared Title -->
         <div class="page-title">
-            <h2>Túi của bạn</h2>
+            <h1>Túi của bạn</h1>
             @auth
             <span id="item-count">2 mặt hàng</span>
             @else
@@ -406,7 +410,7 @@
             <div class="cart-item">
                 <div><input type="checkbox" class="item-cb"></div>
                 <div>
-                    <img src="https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=300&q=80" alt="Perfume 1" class="item-img">
+                    <img src="{{ asset('images/perfume_gold_drop.png') }}" alt="Perfume 1" class="item-img">
                     <div class="item-info">
                         <h4>Tinh chất miss Orlis</h4>
                         <p>Essence miss Orlis<br>Hương thơm mát -<br>Hoa và gỗ</p>
@@ -428,9 +432,9 @@
             <div class="cart-item">
                 <div><input type="checkbox" class="item-cb"></div>
                 <div>
-                    <img src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=300&q=80" alt="Perfume 2" class="item-img">
+                    <img src="{{ asset('images/perfume_pink_bow.png') }}" alt="Perfume 2" class="item-img">
                     <div class="item-info">
-                        <h4>Nước hoa miss Orlis</h4>
+                        <h4>Tinh chất miss Orlis</h4>
                         <p>Essence miss Orlis<br>Hương thơm ngọt ngào -<br>Hoa và gỗ</p>
                         <span class="item-remove">Xóa</span>
                     </div>
@@ -466,7 +470,7 @@
             <div class="product-list">
                 <div class="product-card">
                     <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=300&q=80" alt="Product">
+                        <img src="{{ asset('images/perfume_pink_bow.png') }}" alt="Product">
                     </div>
                     <h4>Tinh chất miss Orlis</h4>
                     <p>Nước hoa - Hương thơm<br>ngọt ngào và quyến rũ</p>
@@ -474,7 +478,7 @@
                 </div>
                 <div class="product-card">
                     <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=300&q=80" alt="Product">
+                        <img src="{{ asset('images/perfume_gold_drop.png') }}" alt="Product">
                     </div>
                     <h4>Tinh chất miss Orlis</h4>
                     <p>Essence miss Orlis<br>Hương thơm mát -<br>Hoa và gỗ</p>
@@ -482,7 +486,7 @@
                 </div>
                 <div class="product-card">
                     <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&w=300&q=80" alt="Product">
+                        <img src="{{ asset('images/perfume_gold_drop.png') }}" alt="Product">
                     </div>
                     <h4>Nước hoa miss Orlis</h4>
                     <p>Nước hoa - Hương thơm<br>ngọt ngào và quyến rũ</p>
@@ -498,4 +502,5 @@
         </div>
 
     </div>
+</div>
 @endsection

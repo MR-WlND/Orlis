@@ -27,7 +27,14 @@ class RemindUpcomingAppointmentJob implements ShouldQueue
 
         foreach ($appointments as $appointment) {
             // Gửi email/notification tới khách hàng
-            Log::info("Sending appointment reminder email to User #{$appointment->user_id} for Appointment #{$appointment->appointment_code}");
+            Log::info("Đang gửi email nhắc nhở Lịch hẹn #{$appointment->appointment_code} cho User #{$appointment->user_id}");
+            try {
+                \Illuminate\Support\Facades\Mail::raw("Xin chào. Nhắc nhở bạn có lịch hẹn thử đồ VIP vào ngày mai lúc {$appointment->time_slot} tại cửa hàng.", function ($msg) use ($appointment) {
+                    $msg->to($appointment->user->email ?? 'guest@example.com')->subject("Nhắc nhở Lịch hẹn VIP Orlis - {$appointment->appointment_code}");
+                });
+            } catch (\Exception $e) {
+                Log::error("Lỗi gửi Email nhắc lịch: " . $e->getMessage());
+            }
 
             // Gửi notification nhắc nhở Staff phụ trách
             if ($appointment->staff_id) {

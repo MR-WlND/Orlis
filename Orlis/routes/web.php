@@ -13,6 +13,10 @@ Route::get('/cart', function () {
     return view('client.cart');
 })->name('cart');
 
+Route::get('/catalog', function () {
+    return view('client.catalog');
+})->name('catalog');
+
 Route::get('/product/{id?}', function () {
     return view('client.product');
 })->name('product');

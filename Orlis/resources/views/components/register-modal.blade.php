@@ -20,12 +20,12 @@
     .register-modal {
         background-color: #eaeaea;
         width: 100%;
-        max-width: 440px;
+        max-width: 400px;
         border-radius: 8px;
         padding: 25px 30px;
         position: relative;
         box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        font-family: 'Alata', sans-serif;
+        font-family: var(--font-sans);
         color: #333;
         transform: scale(0.95);
         transition: transform 0.3s;
@@ -54,7 +54,7 @@
     }
 
     .register-modal-title {
-        font-family: 'Castoro', serif;
+        font-family: var(--font-serif);
         font-size: 20px;
         text-align: center;
         color: #333;
@@ -90,7 +90,7 @@
         font-size: 14px;
         color: #333;
         outline: none;
-        font-family: 'Alata', sans-serif;
+        font-family: var(--font-sans);
     }
     .register-input-group input::placeholder {
         color: #666;
@@ -256,13 +256,19 @@
                     @error('email') <div class="register-error">{{ $message }}</div> @enderror
                 </div>
                 
-                <div class="register-input-group">
-                    <input type="password" name="password" placeholder=".........." required>
+                <div class="register-input-group" style="position: relative;">
+                    <input type="password" id="regPassword" name="password" placeholder=".........." required style="padding-right: 35px;">
+                    <span onclick="togglePasswordVisibility('regPassword', this)" style="position: absolute; right: 0; top: 12px; cursor: pointer; color: #666;" title="Hiện/Ẩn mật khẩu">
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </span>
                     @error('password') <div class="register-error">{{ $message }}</div> @enderror
                 </div>
                 
-                <div class="register-input-group">
-                    <input type="password" name="password_confirmation" placeholder="Xác nhận mật khẩu" required>
+                <div class="register-input-group" style="position: relative;">
+                    <input type="password" id="regPasswordConfirm" name="password_confirmation" placeholder="Xác nhận mật khẩu" required style="padding-right: 35px;">
+                    <span onclick="togglePasswordVisibility('regPasswordConfirm', this)" style="position: absolute; right: 0; top: 12px; cursor: pointer; color: #666;" title="Hiện/Ẩn mật khẩu">
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </span>
                 </div>
 
                 <div class="register-checkbox-group">
@@ -333,6 +339,19 @@
                 if (mainModal) mainModal.style.display = 'block';
             }
         }, 300);
+    }
+    
+    if (typeof togglePasswordVisibility !== 'function') {
+        function togglePasswordVisibility(inputId, iconSpan) {
+            var input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                iconSpan.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
+            } else {
+                input.type = "password";
+                iconSpan.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+            }
+        }
     }
     
     @if($errors->has('name') || ($errors->has('password') && !$errors->has('email')))
