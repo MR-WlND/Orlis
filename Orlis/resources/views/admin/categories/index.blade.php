@@ -289,9 +289,45 @@
                                 @method('DELETE')
                                 <button type="submit" class="action-link delete">Xóa</button>
                             </form>
-                        </div>
-                    </td>
-                </tr>
+                    @foreach($child->children as $grandchild)
+                    <tr style="background-color: #fafafa;">
+                        <td>
+                            <div class="cat-name-col" style="padding-left: 70px;">
+                                <div style="width: 15px; height: 1px; background-color: #ddd; margin-right: 10px;"></div>
+                                <div class="cat-icon-box" style="width: 28px; height: 28px; background-color: #fff; border: 1px solid #eee;">
+                                    @if($grandchild->image)
+                                        <img src="{{ filter_var($grandchild->image, FILTER_VALIDATE_URL) ? $grandchild->image : Storage::url($grandchild->image) }}" alt="{{ $grandchild->name }}">
+                                    @else
+                                        <svg viewBox="0 0 24 24" style="width: 14px; height: 14px; stroke: #999;"><path d="M4 19h16v-9H4v9z"></path><path d="M16 10V6c0-2.21-1.79-4-4-4S8 3.79 8 6v4"></path></svg>
+                                    @endif
+                                </div>
+                                <span class="cat-title" style="font-size: 14px; color: #555;">{{ $grandchild->name }}</span>
+                            </div>
+                        </td>
+                        <td><span class="cat-count" style="font-size: 11px; color: #888;">{{ $grandchild->slug }}</span></td>
+                        <td><span class="cat-count" style="font-size: 11px; color: #888;">{{ $child->name }}</span></td>
+                        <td>
+                            <span class="cat-count" style="color: #888;">{{ $grandchild->products()->count() ?? 0 }}</span>
+                        </td>
+                        <td>
+                            @if(isset($grandchild->status) && $grandchild->status == 0)
+                                <span class="status-badge inactive">Ẩn</span>
+                            @else
+                                <span class="status-badge">Hiển thị</span>
+                            @endif
+                        </td>
+                        <td>
+                            <div class="action-links">
+                                <a href="{{ route('admin.categories.edit', $grandchild->id) }}" class="action-link">Sửa</a>
+                                <form action="{{ route('admin.categories.destroy', $grandchild->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="action-link delete">Xóa</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
                 @endforeach
             @endforeach
         </tbody>

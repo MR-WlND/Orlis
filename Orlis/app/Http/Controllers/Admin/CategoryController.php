@@ -11,8 +11,8 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        // Get root categories with their children
-        $categories = Category::with('products', 'children.products')
+        // Get root categories with their children up to 3 levels
+        $categories = Category::with('products', 'children.products', 'children.children.products')
             ->whereNull('parent_id')
             ->latest()
             ->paginate(10);
@@ -22,7 +22,7 @@ class CategoryController extends Controller
 
     public function create()
     {
-        $parentCategories = Category::whereNull('parent_id')->get();
+        $parentCategories = Category::with('children')->whereNull('parent_id')->get();
         return view('admin.categories.create', compact('parentCategories'));
     }
 
@@ -56,7 +56,7 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        $parentCategories = Category::whereNull('parent_id')->where('id', '!=', $category->id)->get();
+        $parentCategories = Category::with('children')->whereNull('parent_id')->where('id', '!=', $category->id)->get();
         return view('admin.categories.edit', compact('category', 'parentCategories'));
     }
 

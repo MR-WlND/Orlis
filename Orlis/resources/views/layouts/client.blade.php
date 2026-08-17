@@ -102,116 +102,73 @@
                     Close
                 </div>
                 <div class="drawer-content">
-                    <ul class="menu-list active" id="menu-fashion">
-                        <li onclick="openMegaMenu('gifts')">Quà tặng <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></li>
-                        <li onclick="openMegaMenu('new')">Có gì mới? <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></li>
-                        <li>Thời trang nam <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></li>
-                        <li>Thời trang nữ <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></li>
-                        <li>Túi <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></li>
-                        <li>Trang sức & Đồng hồ <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></li>
-                        <li>Trẻ em & Em bé <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></li>
-                        <li>Thời trang cao cấp <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></li>
-                        <li style="margin-top: 40px;">Liên hệ</li>
-                        <li><a href="{{ route('cart') }}" style="text-decoration: none; color: inherit; display: block; width: 100%;">Giỏ hàng</a></li>
-                    </ul>
-                    <ul class="menu-list" id="menu-beauty">
-                        <li>Có gì mới?</li>
-                        <li><a href="{{ route('perfume') }}" style="text-decoration: none; color: inherit; display: block; width: 100%;">Nước hoa</a></li>
-                        <li>Trang điểm</li>
-                        <li>Chăm sóc da</li>
-                    </ul>
+                    @foreach($globalCategories as $index => $level1)
+                        <ul class="menu-list {{ $index === 0 ? 'active' : '' }}" id="menu-{{ $level1->slug }}">
+                            @foreach($level1->children as $level2)
+                                @if($level2->children->count() > 0)
+                                    <li onclick="openMegaMenu('{{ $level2->slug }}')">
+                                @else
+                                    <li onclick="window.location='/catalog/{{ $level2->slug }}'">
+                                @endif
+                                    {{ $level2->name }} 
+                                    @if($level2->children->count() > 0)
+                                        <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                                    @endif
+                                </li>
+                            @endforeach
+                            @if($index === 0)
+                                <li style="margin-top: 40px;"><a href="#" style="text-decoration: none; color: inherit; display: block; width: 100%;">Liên hệ</a></li>
+                                <li><a href="{{ route('cart') }}" style="text-decoration: none; color: inherit; display: block; width: 100%;">Giỏ hàng</a></li>
+                            @endif
+                        </ul>
+                    @endforeach
                 </div>
                 <div class="drawer-footer">
                     <div class="tab-wrapper">
-                        <div class="tab-btn active" id="tab-fashion" onclick="switchTab('fashion')">Thời trang & phụ kiện</div>
-                        <div class="tab-btn" id="tab-beauty" onclick="switchTab('beauty')">Nước hoa & Làm đẹp</div>
+                        @foreach($globalCategories as $index => $level1)
+                            <div class="tab-btn {{ $index === 0 ? 'active' : '' }}" id="tab-{{ $level1->slug }}" onclick="switchTab('{{ $level1->slug }}')">
+                                {{ $level1->name }}
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
 
-            <!-- MEGA MENU: QUÀ TẶNG -->
-            <div class="drawer-panel mega-panel" id="panel-gifts">
-                <div class="mega-sidebar">
-                    <div class="drawer-header" onclick="toggleDrawer()">
-                        <svg viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
-                        Close
-                    </div>
-                    <div class="mega-title" onclick="closeMegaMenu()">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
-                        Quà tặng
-                    </div>
-                    <ul class="mega-list menu-list active">
-                        <li>Khám phá quà tặng</li>
-                        <li>Quà tặng cho nữ</li>
-                        <li>Quà tặng cho nam</li>
-                        <li>Quà tặng cho bé</li>
-                        <li>Quà tặng cho gia đình</li>
-                        <li>Những món quà nhỏ sang trọng</li>
-                    </ul>
-                </div>
-                <div class="mega-content">
-                    <div class="mega-grid">
-                        <div class="mega-card">
-                            <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=400&q=80" alt="Gifts for her">
-                            <span class="mega-label">Quà tặng cho nữ</span>
+            <!-- MEGA MENUS DYNAMIC -->
+            @foreach($globalCategories as $level1)
+                @foreach($level1->children as $level2)
+                    @if($level2->children->count() > 0)
+                    <div class="drawer-panel mega-panel" id="panel-{{ $level2->slug }}">
+                        <div class="mega-sidebar">
+                            <div class="drawer-header" onclick="toggleDrawer()">
+                                <svg viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                                Close
+                            </div>
+                            <div class="mega-title" onclick="closeMegaMenu()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
+                                {{ $level2->name }}
+                            </div>
+                            <ul class="mega-list menu-list active">
+                                <li><a href="/catalog/{{ $level2->slug }}" style="text-decoration:none; color:inherit; display:block;">Khám phá {{ $level2->name }}</a></li>
+                                @foreach($level2->children as $level3)
+                                    <li><a href="/catalog/{{ $level3->slug }}" style="text-decoration:none; color:inherit; display:block;">{{ $level3->name }}</a></li>
+                                @endforeach
+                            </ul>
                         </div>
-                        <div class="mega-card">
-                            <img src="https://images.unsplash.com/photo-1594911772125-07fc7a2d8d9f?auto=format&fit=crop&w=400&q=80" alt="Gifts for him">
-                            <span class="mega-label">Quà tặng cho nam</span>
-                        </div>
-                        <div class="mega-card">
-                            <img src="https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=400&q=80" alt="Gifts for kids">
-                            <span class="mega-label">Quà tặng cho trẻ em</span>
-                        </div>
-                        <div class="mega-card">
-                            <img src="https://images.unsplash.com/photo-1513201099705-a9746e1e201f?auto=format&fit=crop&w=400&q=80" alt="Gifts for family">
-                            <span class="mega-label">Quà tặng cho gia đình</span>
+                        <div class="mega-content">
+                            <div class="mega-grid">
+                                @foreach($level2->children as $level3)
+                                    <div class="mega-card" onclick="window.location='/catalog/{{ $level3->slug }}'" style="cursor: pointer;">
+                                        <img src="{{ $level3->image ?? 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=400&q=80' }}" alt="{{ $level3->name }}">
+                                        <span class="mega-label">{{ $level3->name }}</span>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- MEGA MENU: CÓ GÌ MỚI? -->
-            <div class="drawer-panel mega-panel" id="panel-new">
-                <div class="mega-sidebar">
-                    <div class="drawer-header" onclick="toggleDrawer()">
-                        <svg viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
-                        Close
-                    </div>
-                    <div class="mega-title" onclick="closeMegaMenu()">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
-                        Có gì mới?
-                    </div>
-                    <ul class="mega-list menu-list active">
-                        <li>Dành cho nữ</li>
-                        <li>Dành cho nam</li>
-                        <li>Dành cho trẻ em</li>
-                        <li>Dành cho gia đình</li>
-                        <li>Trang sức</li>
-                        <li>Đồng hồ</li>
-                    </ul>
-                </div>
-                <div class="mega-content">
-                    <div class="mega-grid">
-                        <div class="mega-card">
-                            <img src="https://images.unsplash.com/photo-1520608552192-3211516e87f3?auto=format&fit=crop&w=400&q=80" alt="New for her">
-                            <span class="mega-label">Dành cho nữ</span>
-                        </div>
-                        <div class="mega-card">
-                            <img src="https://images.unsplash.com/photo-1550246140-5119ae4790b8?auto=format&fit=crop&w=400&q=80" alt="New for him">
-                            <span class="mega-label">Dành cho nam</span>
-                        </div>
-                        <div class="mega-card">
-                            <img src="https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?auto=format&fit=crop&w=400&q=80" alt="New for kids">
-                            <span class="mega-label">Dành cho trẻ em</span>
-                        </div>
-                        <div class="mega-card">
-                            <img src="https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?auto=format&fit=crop&w=400&q=80" alt="New for family">
-                            <span class="mega-label">Dành cho gia đình</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    @endif
+                @endforeach
+            @endforeach
 
         </div>
     </div>

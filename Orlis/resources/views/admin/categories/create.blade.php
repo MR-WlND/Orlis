@@ -223,7 +223,10 @@
                     <select name="parent_id" class="form-control">
                         <option value="">Không có (Danh mục gốc)</option>
                         @foreach($parentCategories as $parent)
-                            <option value="{{ $parent->id }}">{{ $parent->name }}</option>
+                            <option value="{{ $parent->id }}" style="font-weight: 600;">{{ $parent->name }}</option>
+                            @foreach($parent->children as $child)
+                                <option value="{{ $child->id }}">&nbsp;&nbsp;&nbsp;-- {{ $child->name }}</option>
+                            @endforeach
                         @endforeach
                     </select>
                 </div>

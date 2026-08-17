@@ -8,18 +8,22 @@ window.toggleDrawer = function() {
     }
 }
 
-window.switchTab = function(tab) {
-    if (tab === 'fashion') {
-        document.getElementById('tab-fashion').classList.add('active');
-        document.getElementById('tab-beauty').classList.remove('active');
-        document.getElementById('menu-fashion').classList.add('active');
-        document.getElementById('menu-beauty').classList.remove('active');
-    } else {
-        document.getElementById('tab-beauty').classList.add('active');
-        document.getElementById('tab-fashion').classList.remove('active');
-        document.getElementById('menu-beauty').classList.add('active');
-        document.getElementById('menu-fashion').classList.remove('active');
-    }
+window.switchTab = function(tabSlug) {
+    // Remove active class from all tab buttons
+    document.querySelectorAll('.tab-btn').forEach(function(el) {
+        el.classList.remove('active');
+    });
+    // Add active class to clicked tab button
+    var targetTab = document.getElementById('tab-' + tabSlug);
+    if(targetTab) targetTab.classList.add('active');
+
+    // Remove active class from all menu lists
+    document.querySelectorAll('.drawer-content .menu-list').forEach(function(el) {
+        el.classList.remove('active');
+    });
+    // Add active class to target menu list
+    var targetMenu = document.getElementById('menu-' + tabSlug);
+    if(targetMenu) targetMenu.classList.add('active');
 }
 
 window.toggleSearch = function() {

@@ -264,9 +264,14 @@
                 <select name="parent_id" class="form-control">
                     <option value="">Không có (Danh mục gốc)</option>
                     @foreach($parentCategories as $parent)
-                        <option value="{{ $parent->id }}" {{ (old('parent_id', $category->parent_id) == $parent->id) ? 'selected' : '' }}>
+                        <option value="{{ $parent->id }}" style="font-weight: 600;" {{ (old('parent_id', $category->parent_id) == $parent->id) ? 'selected' : '' }}>
                             {{ $parent->name }}
                         </option>
+                        @foreach($parent->children as $child)
+                            <option value="{{ $child->id }}" {{ (old('parent_id', $category->parent_id) == $child->id) ? 'selected' : '' }}>
+                                &nbsp;&nbsp;&nbsp;-- {{ $child->name }}
+                            </option>
+                        @endforeach
                     @endforeach
                 </select>
             </div>
