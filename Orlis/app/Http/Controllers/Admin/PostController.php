@@ -12,9 +12,21 @@ use App\Models\PostCategory;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::with('author')->latest()->paginate(10);
+        $query = Post::with(['author', 'category']);
+
+        if ($request->filled('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $posts = $query->latest()->paginate(10)->withQueryString();
         return view('admin.posts.index', compact('posts'));
     }
 
