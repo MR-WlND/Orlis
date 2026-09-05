@@ -14,6 +14,8 @@ Route::post('/cart/add', [\App\Http\Controllers\Client\CartController::class, 'a
 Route::post('/cart/{variantId}', [\App\Http\Controllers\Client\CartController::class, 'updateItem'])->name('cart.update');
 Route::delete('/cart/{variantId}', [\App\Http\Controllers\Client\CartController::class, 'removeItem'])->name('cart.remove');
 Route::post('/cart/clear', [\App\Http\Controllers\Client\CartController::class, 'clear'])->name('cart.clear');
+Route::post('/cart/coupon/apply', [\App\Http\Controllers\Client\CartController::class, 'applyCoupon'])->name('cart.coupon.apply');
+Route::post('/cart/coupon/remove', [\App\Http\Controllers\Client\CartController::class, 'removeCoupon'])->name('cart.coupon.remove');
 
 // Checkout routes (auth required)
 Route::middleware(['auth'])->group(function () {
@@ -21,6 +23,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/checkout', [\App\Http\Controllers\Client\CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('/checkout/confirm', [\App\Http\Controllers\Client\CheckoutController::class, 'confirm'])->name('checkout.confirm');
 });
+
+// VNPay routes
+Route::get('/vnpay/return', [\App\Http\Controllers\Client\CheckoutController::class, 'vnpayReturn'])->name('vnpay.return');
+Route::get('/vnpay/ipn', [\App\Http\Controllers\Client\CheckoutController::class, 'vnpayIpn'])->name('vnpay.ipn');
 
 
 // Appointment routes (auth required)
@@ -31,77 +37,7 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/appointments/{appointment}/cancel', [\App\Http\Controllers\Client\AppointmentController::class, 'cancel'])->name('appointments.cancel');
 });
 
-Route::get('/catalog/{slug?}', function ($slug = null) {
-
-    if ($slug && str_contains($slug, 'nuoc-hoa-lam-dep-nuoc-hoa')) {
-        return view('client.perfume');
-    }
-
-    $categoryBanner = null;
-    $category = null;
-    $isParentCategory = false;
-    $subcategoriesData = [];
-    $products = collect();
-
-    if ($slug) {
-
-        $category = \App\Models\Category::with('children')->where('slug', $slug)->first();
-        if ($category) {
-            $categoryIds = [];
-            $current = $category;
-            while ($current) {
-                $categoryIds[] = (string) $current->id;
-                $current = $current->parent;
-            }
-
-            $query = \App\Models\Banner::active()->position('category_header')->where(function($q) use ($categoryIds) {
-                foreach ($categoryIds as $id) {
-                    $q->orWhereJsonContains('category_ids', (string)$id);
-                }
-            });
-            $categoryBanner = $query->orderBy('order')->first();
-
-            // Phân nhánh logic cho Menu cha và Menu con
-            if ($category->children->count() > 0) {
-                $isParentCategory = true;
-                foreach ($category->children as $child) {
-                    $childBanner = \App\Models\Banner::active()->position('category_header')->whereJsonContains('category_ids', (string)$child->id)->first();
-                    $subcategoriesData[] = [
-                        'category' => $child,
-                        'banner' => $childBanner,
-                        'products' => $child->products()->where('is_active', true)->take(8)->get()
-                    ];
-                }
-            } else {
-                $products = $category->products()->where('is_active', true)->paginate(16);
-            }
-        }
-    } else {
-        $rootCategories = \App\Models\Category::whereNull('parent_id')->get();
-        if ($rootCategories->count() > 0) {
-            $isParentCategory = true;
-            foreach ($rootCategories as $child) {
-                $childBanner = \App\Models\Banner::active()->position('category_header')->whereJsonContains('category_ids', (string)$child->id)->first();
-                $subcategoriesData[] = [
-                    'category' => $child,
-                    'banner' => $childBanner,
-                    'products' => $child->products()->where('is_active', true)->take(8)->get()
-                ];
-            }
-        } else {
-            $products = \App\Models\Product::where('is_active', true)->paginate(16);
-        }
-    }
-
-    if (!$categoryBanner) {
-        $categoryBanner = \App\Models\Banner::active()->position('category_header')->where('is_global', true)->orderBy('order')->first();
-    }
-    if (!$categoryBanner) {
-        $categoryBanner = \App\Models\Banner::active()->position('category_header')->orderBy('order')->first();
-    }
-
-    return view('client.catalog', compact('categoryBanner', 'slug', 'category', 'isParentCategory', 'subcategoriesData', 'products'));
-})->name('catalog');
+Route::get('/catalog/{slug?}', [\App\Http\Controllers\Client\CatalogController::class, 'index'])->name('catalog');
 
 Route::get('/product/{id}', [\App\Http\Controllers\Client\ProductController::class, 'show'])->name('product');
 Route::post('/product/{id}/review', [\App\Http\Controllers\Client\ReviewController::class, 'store'])->name('product.review')->middleware('auth');
@@ -119,6 +55,12 @@ Route::post('/logout', [RoleLoginController::class, 'logout'])->name('logout');
 
 Route::get('/register', fn() => redirect('/'))->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
+
+// Password Reset Routes
+Route::get('password/reset', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('password/email', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('password/reset/{token}', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('password/reset', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
 
 Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirect'])->name('social.redirect');
 Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('social.callback');
@@ -149,7 +91,8 @@ Route::middleware(['auth', 'role:manager'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:staff'])->group(function () {
-    Route::get('/staff', fn() => 'Xử lý đơn hàng');
+    Route::get('/staff', [\App\Http\Controllers\Staff\StaffController::class, 'dashboard'])->name('staff.dashboard');
+    Route::patch('/staff/orders/{id}/process', [\App\Http\Controllers\Staff\StaffController::class, 'processOrder'])->name('staff.orders.process');
 });
 
 Route::middleware(['auth', 'role:customer'])->group(function () {
@@ -169,13 +112,14 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 // Wishlist toggle (all auth users)
 Route::middleware(['auth'])->post('/wishlist/toggle', [\App\Http\Controllers\Client\WishlistController::class, 'toggle'])->name('wishlist.toggle');
 
-
 Route::middleware(['auth', 'role:shipper'])->group(function () {
-    Route::get('/shipper', fn() => 'Giao hàng');
+    Route::get('/shipper', [\App\Http\Controllers\Shipper\ShipperController::class, 'dashboard'])->name('shipper.dashboard');
+    Route::patch('/shipper/orders/{id}/status', [\App\Http\Controllers\Shipper\ShipperController::class, 'updateStatus'])->name('shipper.orders.updateStatus');
 });
 
 Route::middleware(['auth', 'role:warehouse_staff'])->group(function () {
-    Route::get('/warehouse', fn() => 'Quản lý kho');
+    Route::get('/warehouse', [\App\Http\Controllers\Warehouse\WarehouseController::class, 'dashboard'])->name('warehouse.dashboard');
+    Route::patch('/warehouse/orders/{id}/delivering', [\App\Http\Controllers\Warehouse\WarehouseController::class, 'markAsDelivering'])->name('warehouse.orders.delivering');
 });
 
 Route::middleware(['auth', 'role:supplier'])->group(function () {
