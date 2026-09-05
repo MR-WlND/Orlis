@@ -137,6 +137,25 @@
             </div>
             @endforeach
 
+            <!-- Áp dụng mã giảm giá -->
+            <div class="cart-coupon" style="background: white; padding: 16px 24px; border-radius: 8px; margin-bottom: 15px; display: flex; gap: 15px; align-items: center;">
+                <input type="text" id="coupon_code" placeholder="Nhập mã giảm giá..." style="padding: 10px; border: 1px solid #ccc; width: 250px;">
+                <button type="button" id="btn-apply-coupon" onclick="applyCoupon()" style="padding: 10px 20px; background: #333; color: white; border: none; cursor: pointer;">Áp dụng</button>
+                <div id="coupon-message" style="margin-left: 10px; font-size: 13px;"></div>
+                
+                @if(session()->has('applied_coupon'))
+                    <div id="applied-coupon-info" style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+                        <span style="color: #28a745; font-weight: bold;">Đã áp dụng mã: {{ session('applied_coupon')['code'] }} ({{ '-'.number_format(session('applied_coupon')['discount_amount'], 0, ',', '.') }}₫)</span>
+                        <button type="button" onclick="removeCoupon()" style="background: none; border: none; color: #dc3545; text-decoration: underline; cursor: pointer; font-size: 13px;">Gỡ bỏ</button>
+                    </div>
+                @else
+                    <div id="applied-coupon-info" style="margin-left: auto; display: none; align-items: center; gap: 10px;">
+                        <span id="applied-coupon-text" style="color: #28a745; font-weight: bold;"></span>
+                        <button type="button" onclick="removeCoupon()" style="background: none; border: none; color: #dc3545; text-decoration: underline; cursor: pointer; font-size: 13px;">Gỡ bỏ</button>
+                    </div>
+                @endif
+            </div>
+
             <div class="cart-footer">
                 <div class="footer-left">
                     <input type="checkbox" id="check-all" onclick="toggleAll(this)">
@@ -188,6 +207,51 @@ function changeQty(variantId, unitPrice, delta) {
 
 function toggleAll(cb) {
     document.querySelectorAll('.item-cb').forEach(el => el.checked = cb.checked);
+}
+
+function applyCoupon() {
+    let code = document.getElementById('coupon_code').value;
+    if (!code) {
+        document.getElementById('coupon-message').innerHTML = '<span style="color: #dc3545;">Vui lòng nhập mã giảm giá</span>';
+        return;
+    }
+
+    fetch('{{ route("cart.coupon.apply") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify({ coupon_code: code })
+    })
+    .then(res => res.json())
+    .then(data => {
+        let msgEl = document.getElementById('coupon-message');
+        if (data.success) {
+            msgEl.innerHTML = '';
+            document.getElementById('applied-coupon-info').style.display = 'flex';
+            document.getElementById('applied-coupon-text').textContent = 'Đã áp dụng mã: ' + code + ' (' + data.discount_formatted + ')';
+            document.getElementById('grand-total').textContent = data.new_total_formatted;
+        } else {
+            msgEl.innerHTML = '<span style="color: #dc3545;">' + data.message + '</span>';
+        }
+    });
+}
+
+function removeCoupon() {
+    fetch('{{ route("cart.coupon.remove") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    });
 }
 </script>
 @endsection

@@ -233,10 +233,11 @@
 
         {{-- Coupon --}}
         <div class="divider"></div>
-        <div class="coupon-row">
-            <input type="text" name="coupon_code" class="form-input" placeholder="Mã giảm giá" value="{{ old('coupon_code') }}">
-            <button type="button">Áp dụng</button>
+        <div class="coupon-row" style="margin-bottom: 5px;">
+            <input type="text" id="checkout_coupon_code" name="coupon_code" class="form-input" placeholder="Mã giảm giá" value="{{ session('applied_coupon')['code'] ?? old('coupon_code') }}">
+            <button type="button" onclick="applyCouponCheckout()">Áp dụng</button>
         </div>
+        <div id="checkout-coupon-msg" style="font-size: 12px; margin-bottom: 15px;"></div>
 
         <div class="summary-row">
             <span>Tạm tính</span>
@@ -246,10 +247,21 @@
             <span>Phí vận chuyển</span>
             <span style="color:#52c41a;">Miễn phí</span>
         </div>
+        
+        @php
+            $discount = session('applied_coupon')['discount_amount'] ?? 0;
+            $grandTotal = max(0, $cart->total - $discount);
+        @endphp
+        
+        <div class="summary-row" id="discount-row" style="{{ $discount > 0 ? '' : 'display: none;' }}">
+            <span>Giảm giá</span>
+            <span style="color:#dc3545;" id="discount-amount">-{{ number_format($discount, 0, ',', '.') }}₫</span>
+        </div>
+        
         <div class="divider"></div>
         <div class="summary-row grand">
             <span>Tổng cộng</span>
-            <span>{{ number_format($cart->total, 0, ',', '.') }}₫</span>
+            <span id="checkout-grand-total">{{ number_format($grandTotal, 0, ',', '.') }}₫</span>
         </div>
 
         <button type="submit" class="btn-place-order">ĐẶT HÀNG NGAY</button>
@@ -277,6 +289,35 @@ function clearAddress() {
         document.getElementById(id).value = '';
     });
     document.querySelectorAll('input[name="saved_address_id"]').forEach(r => r.checked = false);
+}
+
+function applyCouponCheckout() {
+    let code = document.getElementById('checkout_coupon_code').value;
+    let msgEl = document.getElementById('checkout-coupon-msg');
+    if (!code) {
+        msgEl.innerHTML = '<span style="color: #dc3545;">Vui lòng nhập mã giảm giá</span>';
+        return;
+    }
+
+    fetch('{{ route("cart.coupon.apply") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({ coupon_code: code })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            msgEl.innerHTML = '<span style="color: #28a745;">' + data.message + '</span>';
+            document.getElementById('discount-row').style.display = 'flex';
+            document.getElementById('discount-amount').textContent = data.discount_formatted;
+            document.getElementById('checkout-grand-total').textContent = data.new_total_formatted;
+        } else {
+            msgEl.innerHTML = '<span style="color: #dc3545;">' + data.message + '</span>';
+        }
+    });
 }
 </script>
 @endsection
