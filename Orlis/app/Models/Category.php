@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 class Category extends Model
 {
     use HasFactory;
+
     protected $fillable = ['parent_id', 'name', 'slug', 'image', 'description', 'status'];
 
     public static function boot()

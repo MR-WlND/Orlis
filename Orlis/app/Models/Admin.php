@@ -51,6 +51,7 @@ class Admin extends Authenticatable
     public function hasAnyRole(array|string $roles): bool
     {
         $roles = is_array($roles) ? $roles : [$roles];
+
         return in_array($this->role, $roles, true);
     }
 }

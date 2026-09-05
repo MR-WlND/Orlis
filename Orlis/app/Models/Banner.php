@@ -37,12 +37,12 @@ class Banner extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true)
-                     ->where(function ($q) {
-                         $q->whereNull('start_time')->orWhere('start_time', '<=', now());
-                     })
-                     ->where(function ($q) {
-                         $q->whereNull('end_time')->orWhere('end_time', '>=', now());
-                     });
+            ->where(function ($q) {
+                $q->whereNull('start_time')->orWhere('start_time', '<=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('end_time')->orWhere('end_time', '>=', now());
+            });
     }
 
     public function scopePosition($query, $position)

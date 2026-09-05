@@ -8,11 +8,31 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/beauty', [\App\Http\Controllers\HomeController::class, 'beauty'])->name('home.beauty');
 
-Route::get('/cart', function () {
-    return view('client.cart');
-})->name('cart');
+// Cart routes
+Route::get('/cart', [\App\Http\Controllers\Client\CartController::class, 'index'])->name('cart');
+Route::post('/cart/add', [\App\Http\Controllers\Client\CartController::class, 'addItem'])->name('cart.add');
+Route::post('/cart/{variantId}', [\App\Http\Controllers\Client\CartController::class, 'updateItem'])->name('cart.update');
+Route::delete('/cart/{variantId}', [\App\Http\Controllers\Client\CartController::class, 'removeItem'])->name('cart.remove');
+Route::post('/cart/clear', [\App\Http\Controllers\Client\CartController::class, 'clear'])->name('cart.clear');
+
+// Checkout routes (auth required)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/checkout', [\App\Http\Controllers\Client\CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [\App\Http\Controllers\Client\CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/checkout/confirm', [\App\Http\Controllers\Client\CheckoutController::class, 'confirm'])->name('checkout.confirm');
+});
+
+
+// Appointment routes (auth required)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/appointment/book', [\App\Http\Controllers\Client\AppointmentController::class, 'create'])->name('appointments.create');
+    Route::post('/appointment/book', [\App\Http\Controllers\Client\AppointmentController::class, 'store'])->name('appointments.store');
+    Route::get('/appointments', [\App\Http\Controllers\Client\AppointmentController::class, 'index'])->name('customer.appointments');
+    Route::patch('/appointments/{appointment}/cancel', [\App\Http\Controllers\Client\AppointmentController::class, 'cancel'])->name('appointments.cancel');
+});
 
 Route::get('/catalog/{slug?}', function ($slug = null) {
+
     if ($slug && str_contains($slug, 'nuoc-hoa-lam-dep-nuoc-hoa')) {
         return view('client.perfume');
     }
@@ -24,6 +44,7 @@ Route::get('/catalog/{slug?}', function ($slug = null) {
     $products = collect();
 
     if ($slug) {
+
         $category = \App\Models\Category::with('children')->where('slug', $slug)->first();
         if ($category) {
             $categoryIds = [];
@@ -100,9 +121,7 @@ Route::post('/register', [RegisterController::class, 'register'])->name('registe
 
 Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirect'])->name('social.redirect');
 Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('social.callback');
-Route::get('/admin', function () {
-    return view('admin.dashboard');
-})->name('admin.dashboard');
+Route::get('/admin', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
 
 Route::resource('admin/users', \App\Http\Controllers\Admin\UserController::class, ['as' => 'admin']);
 Route::resource('admin/admins', \App\Http\Controllers\Admin\AdminAccountController::class, ['as' => 'admin']);
@@ -114,6 +133,16 @@ Route::resource('admin/products.variants', \App\Http\Controllers\Admin\ProductVa
 Route::resource('admin/coupons', \App\Http\Controllers\Admin\CouponController::class, ['as' => 'admin']);
 Route::resource('admin/reviews', \App\Http\Controllers\Admin\ReviewController::class, ['as' => 'admin'])->only(['index', 'destroy']);
 Route::patch('admin/reviews/{review}/status', [\App\Http\Controllers\Admin\ReviewController::class, 'updateStatus'])->name('admin.reviews.updateStatus');
+Route::resource('admin/orders', \App\Http\Controllers\Admin\OrderController::class, ['as' => 'admin'])->only(['index', 'show', 'destroy']);
+Route::patch('admin/orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+Route::resource('admin/appointments', \App\Http\Controllers\Admin\AppointmentController::class, ['as' => 'admin'])->only(['index', 'show']);
+Route::patch('admin/appointments/{appointment}/staff', [\App\Http\Controllers\Admin\AppointmentController::class, 'assignStaff'])->name('admin.appointments.assignStaff');
+Route::patch('admin/appointments/{appointment}/status', [\App\Http\Controllers\Admin\AppointmentController::class, 'updateStatus'])->name('admin.appointments.updateStatus');
+Route::get('admin/inventory', [\App\Http\Controllers\Admin\InventoryController::class, 'index'])->name('admin.inventory.index');
+Route::put('admin/inventory', [\App\Http\Controllers\Admin\InventoryController::class, 'upsert'])->name('admin.inventory.upsert');
+Route::get('admin/inventory/variant/{variantId}', [\App\Http\Controllers\Admin\InventoryController::class, 'showVariant'])->name('admin.inventory.variant');
+Route::post('admin/inventory/transfer', [\App\Http\Controllers\Admin\InventoryController::class, 'transfer'])->name('admin.inventory.transfer');
+
 Route::middleware(['auth', 'role:manager'])->group(function () {
     Route::get('/manager', fn() => 'Quản lý vận hành');
 });
@@ -123,9 +152,22 @@ Route::middleware(['auth', 'role:staff'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:customer'])->group(function () {
-    Route::get('/customer', fn() => 'Mua hàng và theo dõi đơn');
+    Route::get('/customer', [\App\Http\Controllers\Client\CustomerController::class, 'dashboard'])->name('customer.dashboard');
+    Route::get('/customer/orders', [\App\Http\Controllers\Client\CustomerController::class, 'orders'])->name('customer.orders');
+    Route::get('/customer/orders/{order}', [\App\Http\Controllers\Client\CustomerController::class, 'orderDetail'])->name('customer.order-detail');
+    Route::get('/customer/profile', [\App\Http\Controllers\Client\CustomerController::class, 'profile'])->name('customer.profile');
+    Route::patch('/customer/profile', [\App\Http\Controllers\Client\CustomerController::class, 'updateProfile'])->name('customer.profile.update');
+    Route::get('/customer/addresses', [\App\Http\Controllers\Client\CustomerController::class, 'addresses'])->name('customer.addresses');
+    Route::post('/customer/addresses', [\App\Http\Controllers\Client\CustomerController::class, 'storeAddress'])->name('customer.addresses.store');
+    Route::delete('/customer/addresses/{address}', [\App\Http\Controllers\Client\CustomerController::class, 'destroyAddress'])->name('customer.addresses.destroy');
+    Route::patch('/customer/addresses/{address}/default', [\App\Http\Controllers\Client\CustomerController::class, 'setDefaultAddress'])->name('customer.addresses.default');
+    Route::get('/customer/wishlist', [\App\Http\Controllers\Client\CustomerController::class, 'wishlist'])->name('customer.wishlist');
     Route::delete('/account', [\App\Http\Controllers\Auth\AccountController::class, 'deleteAccount'])->name('account.delete');
 });
+
+// Wishlist toggle (all auth users)
+Route::middleware(['auth'])->post('/wishlist/toggle', [\App\Http\Controllers\Client\WishlistController::class, 'toggle'])->name('wishlist.toggle');
+
 
 Route::middleware(['auth', 'role:shipper'])->group(function () {
     Route::get('/shipper', fn() => 'Giao hàng');
