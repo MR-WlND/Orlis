@@ -68,7 +68,18 @@ Route::get('/admin', [\App\Http\Controllers\Admin\DashboardController::class, 'i
 
 Route::resource('admin/users', \App\Http\Controllers\Admin\UserController::class, ['as' => 'admin']);
 Route::resource('admin/admins', \App\Http\Controllers\Admin\AdminAccountController::class, ['as' => 'admin']);
-Route::resource('admin/categories', \App\Http\Controllers\Admin\CategoryController::class, ['as' => 'admin']);
+
+// Category routes
+Route::resource('/admin/categories', \App\Http\Controllers\Admin\CategoryController::class, ['as' => 'admin']);
+
+// Admin Ticket Routes
+Route::get('/admin/tickets', [\App\Http\Controllers\Admin\TicketController::class, 'index'])->name('admin.tickets.index');
+Route::get('/admin/tickets/{ticket}', [\App\Http\Controllers\Admin\TicketController::class, 'show'])->name('admin.tickets.show');
+Route::post('/admin/tickets/{ticket}/reply', [\App\Http\Controllers\Admin\TicketController::class, 'reply'])->name('admin.tickets.reply');
+Route::patch('/admin/tickets/{ticket}/close', [\App\Http\Controllers\Admin\TicketController::class, 'close'])->name('admin.tickets.close');
+
+Route::post('/admin/logout', [\App\Http\Controllers\Auth\RoleLoginController::class, 'logout'])->name('admin.logout');
+
 Route::resource('admin/banners', \App\Http\Controllers\Admin\BannerController::class, ['as' => 'admin']);
 Route::resource('admin/products', \App\Http\Controllers\Admin\ProductController::class, ['as' => 'admin']);
 Route::resource('admin/posts', \App\Http\Controllers\Admin\PostController::class, ['as' => 'admin']);
@@ -121,6 +132,26 @@ Route::middleware(['auth', 'role:warehouse_staff'])->group(function () {
     Route::get('/warehouse', [\App\Http\Controllers\Warehouse\WarehouseController::class, 'dashboard'])->name('warehouse.dashboard');
     Route::patch('/warehouse/orders/{id}/delivering', [\App\Http\Controllers\Warehouse\WarehouseController::class, 'markAsDelivering'])->name('warehouse.orders.delivering');
 });
+
+// Ticket routes for Customer
+Route::middleware(['auth', 'role:customer'])->prefix('account')->group(function () {
+    Route::get('/tickets', [\App\Http\Controllers\Client\TicketController::class, 'index'])->name('tickets.index');
+    Route::get('/tickets/create', [\App\Http\Controllers\Client\TicketController::class, 'create'])->name('tickets.create');
+    Route::post('/tickets', [\App\Http\Controllers\Client\TicketController::class, 'store'])->name('tickets.store');
+    Route::get('/tickets/{ticket}', [\App\Http\Controllers\Client\TicketController::class, 'show'])->name('tickets.show');
+    Route::post('/tickets/{ticket}/reply', [\App\Http\Controllers\Client\TicketController::class, 'reply'])->name('tickets.reply');
+});
+
+Route::get('/track-order', [\App\Http\Controllers\Client\TrackOrderController::class, 'index'])->name('track-order');
+Route::post('/track-order', [\App\Http\Controllers\Client\TrackOrderController::class, 'track'])->name('track-order.post');
+
+// Language Route
+Route::get('lang/{locale}', function ($locale) {
+    if (in_array($locale, ['en', 'vi'])) {
+        session()->put('locale', $locale);
+    }
+    return back();
+})->name('lang.switch');
 
 Route::middleware(['auth', 'role:supplier'])->group(function () {
     Route::get('/supplier', [\App\Http\Controllers\Supplier\SupplierController::class, 'dashboard'])->name('supplier.dashboard');
