@@ -17,15 +17,34 @@
         <a href="{{ session('department') === 'beauty' ? url('/beauty') : url('/') }}" class="logo">Orlis</a>
         <div class="action-icons">
             <div class="search-container" id="searchContainer">
-                <input type="text" class="search-input" placeholder="Tìm kiếm sản phẩm">
+                <input type="text" class="search-input" placeholder="{{ __('messages.search') }}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" onclick="toggleSearch()"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
             </div>
-            <a href="{{ route('cart') }}" title="Giỏ hàng">
+            
+            <!-- Language Switcher -->
+            <div style="display: flex; gap: 5px; font-size: 12px; align-items: center; margin-right: 15px;">
+                <a href="{{ route('lang.switch', 'vi') }}" style="color: inherit; text-decoration: {{ app()->getLocale() == 'vi' ? 'underline' : 'none' }}; font-weight: {{ app()->getLocale() == 'vi' ? 'bold' : 'normal' }};">VN</a>
+                <span>|</span>
+                <a href="{{ route('lang.switch', 'en') }}" style="color: inherit; text-decoration: {{ app()->getLocale() == 'en' ? 'underline' : 'none' }}; font-weight: {{ app()->getLocale() == 'en' ? 'bold' : 'normal' }};">EN</a>
+            </div>
+
+            <a href="{{ route('track-order') }}" title="{{ __('messages.track_order') }}" style="margin-right: 10px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM23 17a2 2 0 11-4 0 2 2 0 014 0z"/><path d="M9 17H5a2 2 0 01-2-2V5a2 2 0 012-2h11l4 9v5a2 2 0 01-2 2h-2M16 17h-3M16 3v8"/></svg>
+            </a>
+
+            <a href="{{ route('cart') }}" title="{{ __('messages.cart') }}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg>
             </a>
-            <a href="#" onclick="toggleLoginModal(event)" title="Đăng nhập">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </a>
+            
+            @auth
+                <a href="{{ route('account.profile') }}" title="{{ __('messages.my_account') }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </a>
+            @else
+                <a href="#" onclick="toggleLoginModal(event)" title="{{ __('messages.login') }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </a>
+            @endauth
         </div>
     </header>
 
