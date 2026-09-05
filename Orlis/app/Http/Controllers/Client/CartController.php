@@ -116,4 +116,77 @@ class CartController extends Controller
 
         return back()->with('success', 'Đã làm trống giỏ hàng.');
     }
+
+    /**
+     * Áp dụng mã giảm giá
+     */
+    public function applyCoupon(Request $request)
+    {
+        $request->validate([
+            'coupon_code' => ['required', 'string']
+        ]);
+
+        $cart = $this->cartService->getCartWithItems(
+            userId: auth()->id(),
+            sessionId: session()->getId()
+        );
+
+        if (!$cart || $cart->items->isEmpty()) {
+            return response()->json(['success' => false, 'message' => 'Giỏ hàng trống.']);
+        }
+
+        $coupon = \App\Models\Coupon::where('code', $request->coupon_code)
+            ->where('is_active', true)
+            ->where(function ($q) {
+                $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
+            })
+            ->first();
+
+        if (!$coupon) {
+            return response()->json(['success' => false, 'message' => 'Mã giảm giá không hợp lệ hoặc đã hết hạn.']);
+        }
+
+        if ($coupon->min_order_value && $cart->total < $coupon->min_order_value) {
+            return response()->json(['success' => false, 'message' => 'Đơn hàng chưa đạt giá trị tối thiểu ' . number_format($coupon->min_order_value, 0, ',', '.') . '₫']);
+        }
+
+        if ($coupon->usage_limit !== null && $coupon->used_count >= $coupon->usage_limit) {
+            return response()->json(['success' => false, 'message' => 'Mã giảm giá đã hết lượt sử dụng.']);
+        }
+
+        // Tính toán số tiền giảm
+        $discountAmount = 0;
+        if ($coupon->type === 'fixed') {
+            $discountAmount = $coupon->value;
+        } else {
+            $discountAmount = $cart->total * ($coupon->value / 100);
+            if ($coupon->max_discount && $discountAmount > $coupon->max_discount) {
+                $discountAmount = $coupon->max_discount;
+            }
+        }
+
+        // Store coupon in session
+        session()->put('applied_coupon', [
+            'code' => $coupon->code,
+            'discount_amount' => $discountAmount,
+            'id' => $coupon->id
+        ]);
+
+        return response()->json([
+            'success' => true, 
+            'message' => 'Áp dụng mã thành công!',
+            'discount_amount' => $discountAmount,
+            'discount_formatted' => '-' . number_format($discountAmount, 0, ',', '.') . '₫',
+            'new_total_formatted' => number_format(max(0, $cart->total - $discountAmount), 0, ',', '.') . '₫'
+        ]);
+    }
+
+    /**
+     * Gỡ mã giảm giá
+     */
+    public function removeCoupon()
+    {
+        session()->forget('applied_coupon');
+        return response()->json(['success' => true, 'message' => 'Đã gỡ mã giảm giá.']);
+    }
 }
