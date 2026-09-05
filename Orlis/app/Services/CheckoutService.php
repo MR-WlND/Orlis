@@ -2,8 +2,15 @@
 
 namespace App\Services;
 
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\User;
+use App\Mail\OrderConfirmedMail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use App\Jobs\ReleaseExpiredOrderJob;
+use App\Models\ProductVariant;
 
 class CheckoutService
 {
@@ -88,7 +95,20 @@ class CheckoutService
             // Trigger Timeout Worker: Hủy đơn nếu sau 15p chưa thanh toán
             dispatch(new ReleaseExpiredOrderJob($orderId))->delay(now()->addMinutes(15));
 
-            return $orderId;
+            return Order::find($orderId);
         });
+
+        // Gửi email xác nhận đơn hàng
+        try {
+            $user = User::find($userId);
+            if ($user && $user->email) {
+                Mail::to($user->email)->send(new OrderConfirmedMail($order));
+            }
+        } catch (\Exception $e) {
+            // Log the error but don't fail the checkout
+            Log::error('Lỗi gửi email xác nhận đơn hàng: ' . $e->getMessage());
+        }
+
+        return $order->id;
     }
 }
