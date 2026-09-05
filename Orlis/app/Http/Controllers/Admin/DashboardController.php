@@ -57,22 +57,28 @@ class DashboardController extends Controller
             ? round((($activeCustomers - $activeCustomersLastMonth) / $activeCustomersLastMonth) * 100, 1)
             : 0;
 
-        // Doanh thu 7 ngày gần nhất cho biểu đồ
+        // Biểu đồ doanh thu 12 tháng qua
         $chartData = Order::where('order_status', 'delivered')
-            ->where('created_at', '>=', now()->subDays(7))
-            ->select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(grand_total) as total'))
-            ->groupBy('date')
-            ->orderBy('date')
+            ->where('created_at', '>=', now()->subMonths(11)->startOfMonth())
+            ->select(DB::raw('DATE_FORMAT(created_at, "%Y-%m") as month'), DB::raw('SUM(grand_total) as total'))
+            ->groupBy('month')
+            ->orderBy('month')
             ->get()
-            ->keyBy('date');
+            ->keyBy('month');
 
         $chartLabels = [];
         $chartValues = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $date = now()->subDays($i)->format('Y-m-d');
-            $chartLabels[] = now()->subDays($i)->format('d/m');
-            $chartValues[] = $chartData->get($date)?->total ?? 0;
+        for ($i = 11; $i >= 0; $i--) {
+            $month = now()->subMonths($i)->format('Y-m');
+            $chartLabels[] = now()->subMonths($i)->format('m/Y');
+            $chartValues[] = $chartData->get($month)?->total ?? 0;
         }
+
+        // Tỷ lệ trạng thái đơn hàng
+        $orderStatusStats = Order::select('order_status', DB::raw('count(*) as count'))
+            ->groupBy('order_status')
+            ->pluck('count', 'order_status')
+            ->toArray();
 
         // Đơn hàng mới nhất
         $recentOrders = Order::with('user')->latest()->take(5)->get();
@@ -94,6 +100,7 @@ class DashboardController extends Controller
             'ordersThisMonth', 'ordersChange',
             'activeCustomers', 'customersChange',
             'chartLabels', 'chartValues',
+            'orderStatusStats',
             'recentOrders', 'topProducts'
         ));
     }
