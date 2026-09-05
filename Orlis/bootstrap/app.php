@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(append: [
             \App\Http\Middleware\DepartmentMiddleware::class,
+            \App\Http\Middleware\LanguageMiddleware::class,
         ]);
         $middleware->alias([
             'role' => EnsureUserHasRole::class,
