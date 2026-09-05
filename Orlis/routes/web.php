@@ -123,7 +123,8 @@ Route::middleware(['auth', 'role:warehouse_staff'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:supplier'])->group(function () {
-    Route::get('/supplier', fn() => 'Quản lý hàng nhập');
+    Route::get('/supplier', [\App\Http\Controllers\Supplier\SupplierController::class, 'dashboard'])->name('supplier.dashboard');
+    Route::patch('/supplier/orders/{purchaseOrder}', [\App\Http\Controllers\Supplier\SupplierController::class, 'updateStatus'])->name('supplier.orders.updateStatus');
 });
 
 Route::get('/guest', fn() => 'Khách chưa đăng nhập chỉ xem sản phẩm và tìm kiếm');
