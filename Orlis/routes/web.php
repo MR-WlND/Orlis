@@ -104,6 +104,7 @@ Route::get('/catalog/{slug?}', function ($slug = null) {
 })->name('catalog');
 
 Route::get('/product/{id}', [\App\Http\Controllers\Client\ProductController::class, 'show'])->name('product');
+Route::post('/product/{id}/review', [\App\Http\Controllers\Client\ReviewController::class, 'store'])->name('product.review')->middleware('auth');
 
 Route::get('/perfume', function () {
     return view('client.perfume');

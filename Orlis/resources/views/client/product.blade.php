@@ -81,6 +81,72 @@
     </div>
 </div>
 
+<!-- Đánh giá & Nhận xét -->
+<div class="product-reviews-section" style="padding: 60px 60px; background: #fafafa; border-top: 1px solid #eee;">
+    <h2 style="font-family: var(--font-serif); font-size: 28px; margin-bottom: 40px; text-align: center;">Đánh giá & Nhận xét ({{ $product->reviews->count() }})</h2>
+    
+    <div style="max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 2fr; gap: 40px;">
+        <!-- Form đánh giá -->
+        <div class="review-form-container">
+            <h3 style="font-size: 18px; margin-bottom: 20px;">Viết đánh giá của bạn</h3>
+            @if(auth()->check())
+                <form action="{{ route('product.review', $product->id) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px;">Số sao:</label>
+                        <select name="rating" required style="width: 100%; padding: 10px; border: 1px solid #ccc;">
+                            <option value="5">5 Sao - Tuyệt vời</option>
+                            <option value="4">4 Sao - Tốt</option>
+                            <option value="3">3 Sao - Tạm được</option>
+                            <option value="2">2 Sao - Kém</option>
+                            <option value="1">1 Sao - Tệ</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px;">Nhận xét:</label>
+                        <textarea name="comment" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ccc;" placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..."></textarea>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 5px;">Đính kèm ảnh (tuỳ chọn):</label>
+                        <input type="file" name="images[]" multiple accept="image/*" style="width: 100%;">
+                    </div>
+                    <button type="submit" class="btn-pdp-modern btn-dark-modern" style="width: 100%;">Gửi đánh giá</button>
+                </form>
+            @else
+                <p style="color: #666; background: #fff; padding: 20px; border: 1px solid #eee;">
+                    Vui lòng <a href="{{ route('role.login', 'customer') }}" style="color: var(--color-primary); text-decoration: underline;">đăng nhập</a> để gửi đánh giá.
+                </p>
+            @endif
+        </div>
+
+        <!-- Danh sách đánh giá -->
+        <div class="reviews-list">
+            @if($product->reviews->isEmpty())
+                <p style="color: #666; font-style: italic;">Chưa có đánh giá nào cho sản phẩm này.</p>
+            @else
+                @foreach($product->reviews as $review)
+                    <div class="review-item" style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                            <strong style="font-size: 16px;">{{ $review->user->name ?? 'Khách hàng' }}</strong>
+                            <span style="color: #ff9800; font-size: 14px;">
+                                {!! str_repeat('★', $review->rating) !!}{!! str_repeat('☆', 5 - $review->rating) !!}
+                            </span>
+                        </div>
+                        <p style="color: #444; line-height: 1.6; margin-bottom: 10px;">{{ $review->comment }}</p>
+                        @if(!empty($review->images))
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                @foreach($review->images as $img)
+                                    <img src="{{ Storage::url($img) }}" alt="Review Image" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;">
+                                @endforeach
+                            </div>
+                        @endif
+                        <small style="color: #999; display: block; margin-top: 10px;">Đã đánh giá vào {{ $review->created_at->format('d/m/Y') }}</small>
+                    </div>
+                @endforeach
+            @endif
+        </div>
+    </div>
+</div>
 @if(isset($relatedProducts) && $relatedProducts->count() > 0)
 <div style="padding: 80px 60px;">
     <h2 style="font-family: var(--font-serif); font-size: 28px; text-align: center; margin-bottom: 50px;">Sản Phẩm Cùng Danh Mục</h2>
