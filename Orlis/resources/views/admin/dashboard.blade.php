@@ -108,11 +108,20 @@
     </div>
 </div>
 
-{{-- Revenue Chart --}}
-<div class="card" style="margin-bottom: 24px;">
-    <div class="card-title" style="margin-bottom: 16px;">Doanh Thu 7 Ngày Gần Nhất</div>
-    <div class="chart-wrap">
-        <canvas id="revenueChart"></canvas>
+{{-- Revenue and Status Charts --}}
+<div class="dashboard-grid" style="grid-template-columns: 2fr 1fr; margin-bottom: 24px;">
+    <div class="card">
+        <div class="card-title" style="margin-bottom: 16px;">Doanh Thu 12 Tháng Gần Nhất</div>
+        <div class="chart-wrap">
+            <canvas id="revenueChart"></canvas>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-title" style="margin-bottom: 16px;">Tỷ Lệ Trạng Thái Đơn Hàng</div>
+        <div class="chart-wrap" style="display: flex; justify-content: center; align-items: center;">
+            <canvas id="statusChart"></canvas>
+        </div>
     </div>
 </div>
 
@@ -174,25 +183,24 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const ctx = document.getElementById('revenueChart').getContext('2d');
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: @json($chartLabels),
+            labels: {!! json_encode($chartLabels) !!},
             datasets: [{
-                label: 'Doanh thu (₫)',
-                data: @json($chartValues),
-                borderColor: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#8b6f47',
-                backgroundColor: 'rgba(139,111,71,0.08)',
+                label: 'Doanh Thu 12 Tháng Gần Nhất',
+                data: {!! json_encode($chartValues) !!},
+                borderColor: '#111',
+                backgroundColor: 'rgba(17, 17, 17, 0.05)',
                 borderWidth: 2,
-                fill: true,
-                tension: 0.4,
-                pointBackgroundColor: '#fff',
-                pointBorderColor: '#8b6f47',
-                pointBorderWidth: 2,
+                pointBackgroundColor: '#111',
                 pointRadius: 4,
+                pointHoverRadius: 6,
+                fill: true,
+                tension: 0.3
             }]
         },
         options: {
@@ -202,18 +210,78 @@
                 legend: { display: false },
                 tooltip: {
                     callbacks: {
-                        label: ctx => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(ctx.raw)
+                        label: function(context) {
+                            let value = context.raw || 0;
+                            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+                        }
                     }
                 }
             },
             scales: {
-                x: { grid: { display: false }, ticks: { font: { size: 11 } } },
                 y: {
-                    grid: { color: 'rgba(0,0,0,0.05)' },
+                    beginAtZero: true,
+                    grid: { color: '#f0f0f0' },
                     ticks: {
-                        font: { size: 11 },
-                        callback: v => new Intl.NumberFormat('vi-VN', { notation: 'compact' }).format(v)
+                        callback: function(value) {
+                            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumSignificantDigits: 3 }).format(value);
+                        }
                     }
+                },
+                x: {
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    const statusData = {!! json_encode($orderStatusStats) !!};
+    
+    // Map statuses to labels and colors
+    const statusMap = {
+        'pending': { label: 'Chờ xử lý', color: '#faad14' },
+        'processing': { label: 'Đang xử lý', color: '#1890ff' },
+        'shipped': { label: 'Đã giao ĐVVC', color: '#13c2c2' },
+        'delivering': { label: 'Đang giao hàng', color: '#722ed1' },
+        'completed': { label: 'Đã nhận hàng', color: '#eb2f96' },
+        'delivered': { label: 'Thành công', color: '#52c41a' },
+        'cancelled': { label: 'Đã hủy', color: '#f5222d' },
+    };
+
+    const statusLabels = [];
+    const statusValues = [];
+    const statusColors = [];
+
+    Object.keys(statusData).forEach(key => {
+        statusLabels.push(statusMap[key] ? statusMap[key].label : key);
+        statusValues.push(statusData[key]);
+        statusColors.push(statusMap[key] ? statusMap[key].color : '#ccc');
+    });
+
+    if (statusValues.length === 0) {
+        statusLabels.push('Chưa có đơn');
+        statusValues.push(1);
+        statusColors.push('#f0f0f0');
+    }
+
+    new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: statusLabels,
+            datasets: [{
+                data: statusValues,
+                backgroundColor: statusColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { boxWidth: 12, font: { size: 11 } }
                 }
             }
         }
