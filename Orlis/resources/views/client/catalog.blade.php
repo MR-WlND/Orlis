@@ -79,34 +79,41 @@
     <!-- Filter Offcanvas -->
     <div class="filter-overlay" id="filterOverlay" onclick="toggleFilter()"></div>
     <div class="filter-drawer" id="filterDrawer">
-        <div class="filter-header">
-            <h4>BỘ LỌC</h4>
-            <svg onclick="toggleFilter()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </div>
-        <div class="filter-body">
-            <div class="filter-group">
-                <h5>DANH MỤC</h5>
-                <ul>
-                    <li><label><input type="checkbox"> Thời Trang Nữ</label></li>
-                    <li><label><input type="checkbox"> Thời Trang Nam</label></li>
-                    <li><label><input type="checkbox"> Đồ Da Nhỏ</label></li>
-                    <li><label><input type="checkbox"> Nước Hoa</label></li>
-                </ul>
+        <form action="{{ route('catalog', $slug) }}" method="GET" style="height: 100%; display: flex; flex-direction: column;">
+            <div class="filter-header">
+                <h4>BỘ LỌC & TÌM KIẾM</h4>
+                <svg onclick="toggleFilter()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="cursor: pointer;"><path d="M18 6L6 18M6 6l12 12"/></svg>
             </div>
-            <div class="filter-group">
-                <h5>MÀU SẮC</h5>
-                <div class="color-options">
-                    <span style="background: #111;"></span>
-                    <span style="background: #e6dac3;"></span>
-                    <span style="background: #731e1e;"></span>
-                    <span style="background: #20415a;"></span>
+            <div class="filter-body" style="flex: 1; overflow-y: auto;">
+                <div class="filter-group">
+                    <h5>TÌM KIẾM</h5>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Nhập tên sản phẩm, mã..." style="width: 100%; padding: 10px; border: 1px solid #ccc;">
+                </div>
+                
+                <div class="filter-group" style="margin-top: 20px;">
+                    <h5>KHOẢNG GIÁ</h5>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="Tối thiểu" style="flex: 1; padding: 10px; border: 1px solid #ccc; width: 100%;">
+                        <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="Tối đa" style="flex: 1; padding: 10px; border: 1px solid #ccc; width: 100%;">
+                    </div>
+                </div>
+
+                <div class="filter-group" style="margin-top: 20px;">
+                    <h5>SẮP XẾP</h5>
+                    <select name="sort" style="width: 100%; padding: 10px; border: 1px solid #ccc;">
+                        <option value="">Mặc định</option>
+                        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Mới nhất</option>
+                        <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Giá: Thấp đến Cao</option>
+                        <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Giá: Cao đến Thấp</option>
+                        <option value="best_selling" {{ request('sort') == 'best_selling' ? 'selected' : '' }}>Bán chạy nhất (Rating cao)</option>
+                    </select>
                 </div>
             </div>
-        </div>
-        <div class="filter-footer">
-            <button class="btn-clear">XÓA BỘ LỌC</button>
-            <button class="btn-apply">ÁP DỤNG</button>
-        </div>
+            <div class="filter-footer">
+                <a href="{{ route('catalog', $slug) }}" class="btn-clear" style="text-align: center; display: inline-block; text-decoration: none;">XÓA BỘ LỌC</a>
+                <button type="submit" class="btn-apply">ÁP DỤNG</button>
+            </div>
+        </form>
     </div>
 </div>
 
