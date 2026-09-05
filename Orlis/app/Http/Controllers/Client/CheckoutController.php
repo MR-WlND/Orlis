@@ -131,6 +131,13 @@ class CheckoutController extends Controller
             return back()->with('error', $e->getMessage())->withInput();
         }
 
+        if ($request->payment_method === 'vnpay') {
+            $order = Order::find($orderId);
+            $vnpayService = new \App\Services\VnpayService();
+            $url = $vnpayService->createPaymentUrl($order, $order->grand_total);
+            return redirect($url);
+        }
+
         return redirect()->route('checkout.confirm', ['orderId' => $orderId])
             ->with('success', 'Đặt hàng thành công!');
     }
@@ -151,5 +158,30 @@ class CheckoutController extends Controller
             ->findOrFail($orderId);
 
         return view('client.order-confirm', compact('order'));
+    }
+
+    public function vnpayReturn(Request $request)
+    {
+        $vnpayService = new \App\Services\VnpayService();
+        $result = $vnpayService->handleIPN($request->all());
+
+        $orderCode = explode('_', $request->input('vnp_TxnRef'))[0];
+        $order = Order::where('order_code', $orderCode)->first();
+
+        if ($result['RspCode'] == '00') {
+            return redirect()->route('checkout.confirm', ['orderId' => $order->id])
+                ->with('success', 'Thanh toán VNPay thành công!');
+        }
+
+        return redirect()->route('checkout.confirm', ['orderId' => $order->id])
+            ->with('error', 'Thanh toán thất bại hoặc đã bị hủy. Vui lòng thử lại sau.');
+    }
+
+    public function vnpayIpn(Request $request)
+    {
+        $vnpayService = new \App\Services\VnpayService();
+        $result = $vnpayService->handleIPN($request->all());
+        
+        return response()->json($result);
     }
 }
