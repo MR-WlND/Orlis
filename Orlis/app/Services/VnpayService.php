@@ -17,8 +17,8 @@ class VnpayService
 
     public function __construct()
     {
-        $this->vnp_TmnCode = config('services.vnpay.tmn_code', 'YOUR_TMN_CODE');
-        $this->vnp_HashSecret = config('services.vnpay.hash_secret', 'YOUR_HASH_SECRET');
+        $this->vnp_TmnCode = config('services.vnpay.tmn_code', 'PV1C4YYP');
+        $this->vnp_HashSecret = config('services.vnpay.hash_secret', 'QNZBTBNTNSCYLDTCJXWAJHNBEMXWSJCZ');
         $this->vnp_Url = config('services.vnpay.url', 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html');
         $this->vnp_Returnurl = config('services.vnpay.return_url', env('APP_URL') . '/vnpay/return');
     }
@@ -94,8 +94,10 @@ class VnpayService
             return ['RspCode' => '01', 'Message' => 'Order not found'];
         }
 
-        // Idempotency Check (Chống ghi trùng giao dịch)
+        // Idempotency Check: dùng DB lock (lockForUpdate) để chặn race condition
+        // khi VNPay gọi IPN đồng thời nhiều lần (chỉ 1 request được xử lý).
         $transactionNo = $inputData['vnp_TransactionNo'];
+
         $existingTxn = Transaction::where('transaction_code', $transactionNo)->first();
         if ($existingTxn) {
             return ['RspCode' => '02', 'Message' => 'Order already confirmed'];
@@ -108,23 +110,38 @@ class VnpayService
         }
 
         if ($inputData['vnp_ResponseCode'] == '00') {
-            DB::transaction(function () use ($order, $inputData, $vnpAmount, $transactionNo) {
-                Transaction::create([
-                    'order_id' => $order->id,
-                    'type' => $vnpAmount < $order->grand_total ? 'deposit' : 'payment',
-                    'amount' => $vnpAmount,
-                    'currency' => 'VND',
-                    'exchange_rate' => 1.0,
-                    'payment_method' => 'vnpay',
-                    'transaction_code' => $transactionNo,
-                    'gateway_response' => json_encode($inputData),
-                    'status' => 'success',
-                ]);
+            try {
+                DB::transaction(function () use ($order, $inputData, $vnpAmount, $transactionNo) {
+                    // Pessimistic Lock: giữ row order trong suốt transaction
+                    // Chặn 2 request IPN chạy song song ghi trùng transaction
+                    $lockedOrder = Order::lockForUpdate()->find($order->id);
 
-                $order->update([
-                    'order_status' => $vnpAmount < $order->grand_total ? 'partially_paid' : 'paid',
-                ]);
-            });
+                    if (!$lockedOrder || $lockedOrder->order_status !== 'pending') {
+                        // Đã được xử lý bởi request song song khác — bỏ qua
+                        return;
+                    }
+
+                    // Kiểm tra lại idempotency bên trong lock (double-check pattern)
+                    $alreadyDone = Transaction::where('transaction_code', $transactionNo)->exists();
+                    if ($alreadyDone) {
+                        return;
+                    }
+
+                    Transaction::create([
+                        'order_id'         => $lockedOrder->id,
+                        'type'             => $vnpAmount < $lockedOrder->grand_total ? 'deposit' : 'payment',
+                        'amount'           => $vnpAmount,
+                        'currency'         => 'VND',
+                        'exchange_rate'    => 1.0,
+                        'payment_method'   => 'vnpay',
+                        'transaction_code' => $transactionNo,
+                        'gateway_response' => json_encode($inputData),
+                        'status'           => 'success',
+                    ]);
+                });
+            } catch (\Exception $e) {
+                return ['RspCode' => '99', 'Message' => 'Internal error: ' . $e->getMessage()];
+            }
 
             return ['RspCode' => '00', 'Message' => 'Confirm Success'];
         }

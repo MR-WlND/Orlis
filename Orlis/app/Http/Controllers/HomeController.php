@@ -15,7 +15,11 @@ class HomeController extends Controller
         $homeDouble = $banners->where('position', 'home_double')->take(2);
         $homeWide = $banners->where('position', 'home_wide')->first();
 
-        return view('client.home', compact('homeHero', 'homeDouble', 'homeWide'));
+        $recentPosts = \App\Models\Post::where('status', 'published')->orderBy('created_at', 'desc')->take(3)->get();
+        
+        $services = \App\Models\Service::where('is_active', true)->orderBy('order')->get();
+
+        return view('client.home', compact('homeHero', 'homeDouble', 'homeWide', 'recentPosts', 'services'));
     }
 
     public function beauty()

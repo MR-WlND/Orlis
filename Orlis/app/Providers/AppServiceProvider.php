@@ -38,6 +38,12 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with('globalCategories', $globalCategories);
 
+            $footerLinks = \App\Models\FooterLink::where('is_active', true)
+                ->orderBy('order')
+                ->get()
+                ->groupBy('group_name');
+            $view->with('footerLinks', $footerLinks);
+
             // Cart item count for header badge
             $cartCount = 0;
             try {

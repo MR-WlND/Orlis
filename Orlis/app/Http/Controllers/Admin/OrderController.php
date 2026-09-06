@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderStatusUpdatedMail;
 use App\Models\Order;
 use App\Models\OrderStatusLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -74,15 +77,27 @@ class OrderController extends Controller
             $order->update(['order_status' => $newStatus]);
 
             OrderStatusLog::create([
-                'order_id' => $order->id,
+                'order_id'   => $order->id,
                 'old_status' => $oldStatus,
                 'new_status' => $newStatus,
-                'note' => $request->note,
+                'note'       => $request->note,
                 'changed_by' => auth('admin')->id(),
             ]);
         });
 
-        return back()->with('success', 'Cập nhật trạng thái đơn hàng thành công.');
+        // Gửi email thông báo cho khách
+        try {
+            $customer = $order->user;
+            if ($customer && $customer->email) {
+                Mail::to($customer->email)->send(
+                    new OrderStatusUpdatedMail($order, $newStatus, $request->note)
+                );
+            }
+        } catch (\Exception $e) {
+            Log::error('Lỗi gửi email trạng thái đơn hàng: ' . $e->getMessage());
+        }
+
+        return back()->with('success', 'Cập nhật trạng thái đơn hàng và gửi email thông báo thành công.');
     }
 
     public function destroy(Order $order)

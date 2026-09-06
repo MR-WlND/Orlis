@@ -2,15 +2,15 @@
 
 namespace App\Services;
 
+use App\Jobs\ReleaseExpiredOrderJob;
+use App\Mail\NewOrderAdminMail;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\ProductVariant;
 use App\Models\User;
-use App\Mail\OrderConfirmedMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use App\Jobs\ReleaseExpiredOrderJob;
-use App\Models\ProductVariant;
 
 class CheckoutService
 {
@@ -28,7 +28,7 @@ class CheckoutService
      */
     public function checkout(array $cartData, int $userId, array $shippingAddress, ?int $couponId)
     {
-        return DB::transaction(function () use ($cartData, $userId, $shippingAddress, $couponId) {
+        $order = DB::transaction(function () use ($cartData, $userId, $shippingAddress, $couponId) {
             // [DEADLOCK PREVENTION] Sort cart items theo variant_id tăng dần 
             // trước khi đẩy vào vòng lặp giữ kho bằng lockForUpdate().
             usort($cartData, function ($a, $b) {
@@ -98,15 +98,12 @@ class CheckoutService
             return Order::find($orderId);
         });
 
-        // Gửi email xác nhận đơn hàng
+        // Gửi email thông báo cho Admin
         try {
-            $user = User::find($userId);
-            if ($user && $user->email) {
-                Mail::to($user->email)->send(new OrderConfirmedMail($order));
-            }
+            $adminEmail = config('mail.admin_email', env('ADMIN_EMAIL', 'admin@orlis.com'));
+            Mail::to($adminEmail)->send(new NewOrderAdminMail($order));
         } catch (\Exception $e) {
-            // Log the error but don't fail the checkout
-            Log::error('Lỗi gửi email xác nhận đơn hàng: ' . $e->getMessage());
+            Log::error('Lỗi gửi email thông báo admin: ' . $e->getMessage());
         }
 
         return $order->id;

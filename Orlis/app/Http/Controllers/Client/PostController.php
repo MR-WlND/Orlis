@@ -19,7 +19,7 @@ class PostController extends Controller
         $posts = Post::with('author')
             ->where('status', 'published')
             ->where('department', $department)
-            ->orderBy('published_at', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(12);
 
         return view('client.magazine.index', compact('posts'));
@@ -36,7 +36,7 @@ class PostController extends Controller
         $relatedPosts = Post::where('id', '!=', $post->id)
             ->where('status', 'published')
             ->where('department', $post->department)
-            ->orderBy('published_at', 'desc')
+            ->orderBy('created_at', 'desc')
             ->take(3)
             ->get();
 

@@ -11,9 +11,7 @@ class ProductController extends Controller
 {
     public function show($id)
     {
-        $product = Product::with(['category', 'variants', 'reviews' => function($q) {
-            $q->where('status', 'approved');
-        }])
+        $product = Product::with(['category', 'variants'])
         ->where('is_active', true)
         ->where(function($q) use ($id) {
             $q->where('id', $id)->orWhere('slug', $id);
@@ -43,6 +41,29 @@ class ProductController extends Controller
             ->take(4)
             ->get();
 
-        return view('client.product', compact('product', 'images', 'relatedProducts'));
+        // Xử lý sản phẩm đã xem gần đây
+        $viewed = session()->get('recently_viewed', []);
+        
+        $recentlyViewed = collect();
+        if (!empty($viewed)) {
+            // Lấy sản phẩm và giữ nguyên thứ tự trong mảng viewed
+            $ids = implode(',', $viewed);
+            $recentlyViewed = Product::whereIn('id', $viewed)
+                ->where('id', '!=', $product->id)
+                ->where('is_active', true)
+                ->orderByRaw("FIELD(id, $ids)")
+                ->take(4)
+                ->get();
+        }
+
+        // Thêm sản phẩm hiện tại vào đầu danh sách đã xem
+        if (($key = array_search($product->id, $viewed)) !== false) {
+            unset($viewed[$key]);
+        }
+        array_unshift($viewed, $product->id);
+        $viewed = array_slice($viewed, 0, 10); // Lưu tối đa 10 sản phẩm
+        session()->put('recently_viewed', $viewed);
+
+        return view('client.product', compact('product', 'images', 'relatedProducts', 'recentlyViewed'));
     }
 }

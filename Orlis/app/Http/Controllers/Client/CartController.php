@@ -52,6 +52,10 @@ class CartController extends Controller
             ]);
         }
 
+        if ($request->has('buy_now')) {
+            return redirect()->route('checkout.index');
+        }
+
         return back()->with('success', $message);
     }
 

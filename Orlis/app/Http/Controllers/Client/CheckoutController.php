@@ -10,6 +10,7 @@ use App\Services\CartService;
 use App\Services\CheckoutService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class CheckoutController extends Controller
 {
@@ -59,6 +60,25 @@ class CheckoutController extends Controller
             'detail_address.required' => 'Vui lòng nhập địa chỉ chi tiết.',
             'payment_method.required' => 'Vui lòng chọn phương thức thanh toán.',
         ]);
+
+        // ============================================================
+        // IDEMPOTENCY CHECK (Tầng 2 - Server)
+        // Mỗi phiên thanh toán có 1 key duy nhất, nếu key đã được dùng
+        // nghĩa là đơn hàng đã được tạo, trả về kết quả cũ thay vì tạo mới.
+        // ============================================================
+        $idempotencyKey = $request->input('idempotency_key');
+        if ($idempotencyKey) {
+            $cacheKey = 'checkout_idem_' . Auth::id() . '_' . $idempotencyKey;
+            $existingOrderId = Cache::get($cacheKey);
+            if ($existingOrderId) {
+                // Đốn hàng đã được tạo trước đó — trả lại kết quả cũ (safe idempotent response)
+                $existOrder = Order::find($existingOrderId);
+                if ($existOrder) {
+                    return redirect()->route('checkout.confirm', ['orderId' => $existingOrderId])
+                        ->with('info', 'Đơn hàng của bạn đã được xử lý trước đó.');
+                }
+            }
+        }
 
         $cart = $this->cartService->getCartWithItems(userId: Auth::id());
 
@@ -130,6 +150,14 @@ class CheckoutController extends Controller
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage())->withInput();
         }
+
+        // Lưu idempotency key vào cache 30 phút (đủ để cover cả trường hợp chậm)
+        if ($idempotencyKey) {
+            $cacheKey = 'checkout_idem_' . Auth::id() . '_' . $idempotencyKey;
+            Cache::put($cacheKey, $orderId, now()->addMinutes(30));
+        }
+        // Xóa key khỏi session để lần mua sau sẽ sinh key mới
+        session()->forget('checkout_idempotency_key');
 
         if ($request->payment_method === 'vnpay') {
             $order = Order::find($orderId);

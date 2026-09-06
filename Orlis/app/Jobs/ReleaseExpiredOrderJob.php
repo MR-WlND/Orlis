@@ -28,6 +28,10 @@ class ReleaseExpiredOrderJob implements ShouldQueue
             $order = \App\Models\Order::find($this->orderId);
 
             if ($order && $order->order_status === 'pending') {
+                // Fix cho môi trường DEV (queue=sync bỏ qua hàm delay)
+                if (config('queue.default') === 'sync' && $order->created_at->diffInMinutes(now()) < 14) {
+                    return;
+                }
                 $hasPayment = \Illuminate\Support\Facades\DB::table('transactions')
                     ->where('order_id', $order->id)
                     ->where('status', 'success')
