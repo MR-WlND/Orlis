@@ -1,5 +1,5 @@
-@import './client/_magazine.css';
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Castoro:ital,wght@0,400;1,400&display=swap');
+@import './client/_magazine.css';
 @import './client/_variables.css';
 @import './client/_components.css';
 @import './client/_header.css';
@@ -9,3 +9,15 @@
 @import './client/_catalog.css';
 @import './client/_product.css';
 @import './client/_search-modal.css';
+@import './client/_auth.css';
+
+@import './client/_customer.css';
+
+@import './client/_shop.css';
+
+@import './client/_appointment.css';
+
+@import './client/_pages.css';
+
+/* Cache buster */
+:root { --cache-buster: 'v8'; }
