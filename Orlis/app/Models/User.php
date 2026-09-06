@@ -21,8 +21,6 @@ class User extends Authenticatable
 
     public const ROLES = [
         'customer' => 'Customer',
-        'shipper' => 'Shipper',
-        'supplier' => 'Supplier',
         'guest' => 'Guest',
     ];
 

@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->enum('department', ['fashion', 'beauty'])->default('fashion')->after('status');
+        Schema::table('categories', function (Blueprint $table) {
+            $table->dropColumn('name_en');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->dropColumn('department');
+        Schema::table('categories', function (Blueprint $table) {
+            $table->string('name_en')->nullable()->after('name');
         });
     }
 };

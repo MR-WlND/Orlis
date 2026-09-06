@@ -12,6 +12,11 @@ class Category extends Model
 
     protected $fillable = ['parent_id', 'name', 'slug', 'image', 'description', 'status'];
 
+    public function getTranslatedNameAttribute()
+    {
+        return __($this->name);
+    }
+
     public static function boot()
     {
         parent::boot();

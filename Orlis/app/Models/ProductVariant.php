@@ -65,9 +65,14 @@ class ProductVariant extends Model
     public function getDisplayNameAttribute(): string
     {
         $parts = [];
-        if ($this->attributes) {
-            foreach ($this->attributes as $key => $value) {
-                $parts[] = $value;
+        $attrs = $this->getAttribute('attributes');
+        if (is_array($attrs)) {
+            foreach ($attrs as $key => $value) {
+                if (is_string($value) && preg_match('/^#[0-9a-fA-F]{6}$/', $value)) {
+                    $parts[] = 'Màu: '.strtoupper($value);
+                } else {
+                    $parts[] = $value;
+                }
             }
         }
 

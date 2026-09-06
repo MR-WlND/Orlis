@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->decimal('rating_avg', 3, 1)->default(0)->after('status');
-            $table->integer('reviews_count')->default(0)->after('rating_avg');
-        });
+        if (! Schema::hasColumn('products', 'rating_avg')) {
+            Schema::table('products', function (Blueprint $table) {
+                $table->decimal('rating_avg', 3, 1)->default(0)->after('is_active');
+                $table->integer('reviews_count')->default(0)->after('rating_avg');
+            });
+        }
     }
 
     /**

@@ -12,11 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('appointments', function (Blueprint $table) {
-            $table->string('appointment_code')->nullable()->after('id');
-            $table->date('appointment_date')->nullable()->after('appointment_datetime');
-            $table->string('time_slot')->nullable()->after('appointment_date');
-            $table->string('transfer_status')->default('available')->after('status');
-            $table->string('cancel_reason')->nullable()->after('note');
+            if (! Schema::hasColumn('appointments', 'appointment_code')) {
+                $table->string('appointment_code')->nullable()->after('id');
+            }
+            if (! Schema::hasColumn('appointments', 'appointment_date')) {
+                $table->date('appointment_date')->nullable();
+            }
+            if (! Schema::hasColumn('appointments', 'time_slot')) {
+                $table->string('time_slot')->nullable()->after('status');
+            }
+            if (! Schema::hasColumn('appointments', 'transfer_status')) {
+                $table->string('transfer_status')->default('available')->after('status');
+            }
+            if (! Schema::hasColumn('appointments', 'cancel_reason')) {
+                $table->string('cancel_reason')->nullable()->after('note');
+            }
         });
     }
 

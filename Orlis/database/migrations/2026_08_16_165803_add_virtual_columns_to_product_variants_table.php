@@ -11,11 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('product_variants', function (Blueprint $table) {
-            $table->string('color', 50)->virtualAs("JSON_UNQUOTE(JSON_EXTRACT(attributes, '$.color'))")->index();
-            $table->string('size', 50)->virtualAs("JSON_UNQUOTE(JSON_EXTRACT(attributes, '$.size'))")->index();
-            $table->string('material', 100)->virtualAs("JSON_UNQUOTE(JSON_EXTRACT(attributes, '$.material'))")->index();
-        });
+        if (! Schema::hasColumn('product_variants', 'color')) {
+            Schema::table('product_variants', function (Blueprint $table) {
+                $table->string('color', 50)->virtualAs("JSON_UNQUOTE(JSON_EXTRACT(attributes, '$.color'))")->nullable();
+                $table->string('size', 20)->virtualAs("JSON_UNQUOTE(JSON_EXTRACT(attributes, '$.size'))")->nullable()->after('color');
+                $table->string('material', 100)->virtualAs("JSON_UNQUOTE(JSON_EXTRACT(attributes, '$.material'))")->nullable()->after('size');
+
+                $table->index('color');
+                $table->index('size');
+                $table->index('material');
+            });
+        }
     }
 
     /**
