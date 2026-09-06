@@ -3,56 +3,7 @@
 @section('title', 'Giỏ hàng - Orlis')
 
 @section('styles')
-    <style>
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            width: 100%;
-            flex: 1;
-        }
-        .page-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 40px;
-        }
-        .page-title h1 {
-            font-family: var(--font-serif);
-            font-size: 24px;
-            font-weight: 500;
-        }
-        .page-title span { font-size: 13px; color: #666; }
-        .empty-state { display: flex; flex-direction: column; align-items: center; text-align: center; }
-        .login-banner { width: 100%; background-color: var(--primary); color: white; padding: 15px; border-radius: 4px; font-size: 14px; margin-bottom: 15px; cursor: pointer; }
-        .login-note { font-size: 12px; color: #555; margin-bottom: 60px; max-width: 600px; line-height: 1.5; }
-        .bag-icon { margin-bottom: 20px; }
-        .bag-icon svg { width: 32px; height: 32px; stroke: #333; fill: none; stroke-width: 1.5; }
-        .empty-msg { font-size: 13px; color: #555; margin-bottom: 30px; }
-        .btn-continue { padding: 12px 30px; border: 1px solid var(--text-dark); background: transparent; font-size: 14px; cursor: pointer; transition: all 0.2s; }
-        .btn-continue:hover { background: var(--text-dark); color: white; }
-        .cart-header { display: grid; grid-template-columns: 16px 4fr 1fr 1.5fr 1fr; gap: 24px; padding-bottom: 15px; padding-left: 24px; padding-right: 24px; border-bottom: 1px solid #d0d0d0; font-size: 13px; color: #666; text-align: center; margin-bottom: 15px; font-weight: 400; }
-        .cart-header > :nth-child(2) { text-align: left; }
-        .cart-item { display: grid; grid-template-columns: 16px 4fr 1fr 1.5fr 1fr; gap: 24px; align-items: center; background: white; padding: 16px 24px; border-radius: 8px; margin-bottom: 15px; text-align: center; }
-        .cart-item > :nth-child(2) { display: flex; gap: 24px; text-align: left; align-items: center; }
-        .item-img { width: 90px; height: 120px; min-width: 90px; min-height: 120px; max-width: 90px; max-height: 120px; flex-shrink: 0; object-fit: cover; border: 1px solid #e0e0e0; background: #ffffff; border-radius: 2px; }
-        .item-info h4 { font-family: var(--font-sans); font-size: 14px; margin-bottom: 5px; font-weight: 600; color: #333; }
-        .item-info p { font-family: var(--font-sans); font-size: 13px; color: #666; margin-bottom: 15px; line-height: 1.5; }
-        .item-remove { font-size: 12px; color: #555; text-decoration: underline; cursor: pointer; }
-        .item-price, .item-total { font-family: var(--font-sans); font-size: 14px; font-weight: 700; color: #333; }
-        .qty-control { display: inline-flex; align-items: center; background: #e2e2e2; border-radius: 4px; height: 32px; padding: 0 6px; }
-        .qty-btn { width: 24px; height: 100%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; background: none; font-size: 14px; font-weight: 500; color: #333; }
-        .qty-input { width: 28px; text-align: center; border: none; background: none; font-size: 14px; font-weight: 600; color: #333; }
-        .cart-footer { display: flex; justify-content: space-between; align-items: center; background: white; padding: 16px 24px; border-radius: 8px; margin-top: 15px; position: sticky; bottom: 20px; z-index: 90; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); }
-        .footer-left { display: flex; align-items: center; gap: 12px; font-size: 14px; color: #333; }
-        .footer-right { display: flex; align-items: center; gap: 30px; }
-        .total-price { font-family: var(--font-sans); font-size: 14px; font-weight: 700; color: #333; }
-        .btn-checkout { padding: 14px 40px; background: #444444; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; }
-        input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; appearance: none; background-color: #dbdbdb; border-radius: 2px; border: none; position: relative; display: inline-flex; align-items: center; justify-content: center; transition: 0.2s; }
-        input[type="checkbox"]:checked { background-color: #111; }
-        input[type="checkbox"]:checked::after { content: ''; position: absolute; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); margin-bottom: 2px; }
-    </style>
-@endsection
+    @endsection
 
 @section('content')
 <div style="background-color: #f1f4f5; min-height: 100vh; padding-top: 80px; padding-bottom: 80px;">
