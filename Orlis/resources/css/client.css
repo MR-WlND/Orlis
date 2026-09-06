@@ -20,4 +20,4 @@
 @import './client/_pages.css';
 
 /* Cache buster */
-:root { --cache-buster: 'v11'; }
+:root { --cache-buster: 'v12'; }

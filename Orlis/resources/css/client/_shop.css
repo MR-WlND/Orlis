@@ -72,7 +72,7 @@
     /* Forms */
     .form-group { margin-bottom: 20px; }
     .form-label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #777; margin-bottom: 8px; }
-    .form-input { width: 100%; padding: 13px 16px; border: 1px solid #e0e0e0; font-size: 14px; color: #333; transition: border-color 0.2s; box-sizing: border-box; background: transparent; }
+    .form-input { width: 100%; padding: 13px 16px; border: 1px solid #e0e0e0; font-size: 14px; color: #333; transition: border-color 0.2s; box-sizing: border-box; background: transparent; border-radius: 0; }
     .form-input:focus { border-color: #111; outline: none; }
     .form-input::placeholder { color: #bbb; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -119,8 +119,8 @@
     .summary-divider { height: 1px; background: #ebebeb; margin: 24px 0; }
     
     .coupon-flex { display: flex; gap: 10px; }
-    .coupon-flex input { padding: 12px 14px; font-size: 13px; }
-    .btn-apply { background: #111; color: #fff; border: none; padding: 0 24px; font-size: 12px; font-weight: 600; cursor: pointer; letter-spacing: 1px; }
+    .coupon-flex input { padding: 12px 14px; font-size: 13px; border-radius: 0; }
+    .btn-apply { background: #111; color: #fff; border: none; border-radius: 0; padding: 0 24px; font-size: 12px; font-weight: 600; cursor: pointer; letter-spacing: 1px; }
 
     .summary-rows .s-row { display: flex; justify-content: space-between; font-size: 13px; color: #555; margin-bottom: 12px; }
     .summary-rows .s-row:last-child { margin-bottom: 0; }
