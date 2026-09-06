@@ -54,6 +54,7 @@
         @yield('content')
     </main>
 
+    @unless(View::hasSection('hideFooter'))
     <!-- Footer -->
     <footer>
         <!-- Newsletter -->
@@ -176,6 +177,7 @@
             });
         </script>
     </footer>
+    @endunless
 
     <!-- Drawer Menu -->
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>

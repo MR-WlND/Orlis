@@ -8,6 +8,8 @@
 @yield('customer_styles')
 @endsection
 
+@section('hideFooter')@endsection
+
 @section('content')
 <div style="background: #fff; min-height: 100vh;">
 <div class="customer-wrap">
