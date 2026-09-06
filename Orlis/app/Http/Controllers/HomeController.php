@@ -30,7 +30,27 @@ class HomeController extends Controller
         $beautyDouble = $banners->where('position', 'beauty_double');
         $beautyWide = $banners->where('position', 'beauty_wide');
 
-        return view('client.perfume', compact('beautyHero', 'beautyDouble', 'beautyWide'));
+        // Lấy danh mục nước hoa (ID = 3 theo seeder, hoặc name LIKE '%nước hoa%')
+        $perfumeCategory = \App\Models\Category::where('name', 'like', '%Nước hoa%')->first();
+        
+        $recommendedPerfumes = collect();
+        $bestSellingPerfumes = collect();
+        
+        if ($perfumeCategory) {
+            $recommendedPerfumes = \App\Models\Product::where('category_id', $perfumeCategory->id)
+                ->where('is_active', true)
+                ->inRandomOrder()
+                ->take(4)
+                ->get();
+                
+            $bestSellingPerfumes = \App\Models\Product::where('category_id', $perfumeCategory->id)
+                ->where('is_active', true)
+                ->orderBy('price', 'desc') // Tạm thời dùng giá cao nhất làm bán chạy
+                ->take(4)
+                ->get();
+        }
+
+        return view('client.perfume', compact('beautyHero', 'beautyDouble', 'beautyWide', 'recommendedPerfumes', 'bestSellingPerfumes'));
     }
 
 }

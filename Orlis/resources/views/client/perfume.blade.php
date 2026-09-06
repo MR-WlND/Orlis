@@ -65,55 +65,25 @@
         </section>
 
         <!-- Có thể bạn sẽ thích -->
+        @if(isset($recommendedPerfumes) && $recommendedPerfumes->count() > 0)
         <section class="perfume-products-section">
             <h2 class="perfume-section-title">Có thể bạn sẽ thích</h2>
             <div class="perfume-product-grid">
-                <!-- Product 1 -->
-                <a href="{{ route('product', 1) }}" class="perfume-product-card" style="text-decoration: none; color: inherit; display: block;">
+                @foreach($recommendedPerfumes as $perfume)
+                <a href="{{ route('product', $perfume->id) }}" class="perfume-product-card" style="text-decoration: none; color: inherit; display: block;">
                     <div class="product-img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=400&q=80" alt="Perfume 1">
+                        <img src="{{ $perfume->thumbnail ? Storage::url($perfume->thumbnail) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=400&q=80' }}" alt="{{ $perfume->name }}">
                     </div>
                     <div class="product-info">
-                        <span class="product-category">Túi xách</span>
-                        <h3 class="product-name">Black Puffy Macrocannage Calfskin</h3>
-                        <p class="product-price">$3,900</p>
+                        <span class="product-category">{{ $perfume->category ? ($perfume->category->translated_name ?? $perfume->category->name) : 'Nước hoa' }}</span>
+                        <h3 class="product-name" style="font-family: var(--font-serif); font-size: 16px; font-weight: 400; color: #333; margin-top: 5px;">{{ $perfume->name }}</h3>
+                        <p class="product-price">{{ number_format($perfume->sale_price ?? $perfume->price, 0, ',', '.') }} ₫</p>
                     </div>
                 </a>
-                <!-- Product 2 -->
-                <a href="{{ route('product', 1) }}" class="perfume-product-card" style="text-decoration: none; color: inherit; display: block;">
-                    <div class="product-img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=400&q=80" alt="Perfume 2">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Túi xách</span>
-                        <h3 class="product-name">Black Puffy Macrocannage Calfskin</h3>
-                        <p class="product-price">$3,900</p>
-                    </div>
-                </a>
-                <!-- Product 3 -->
-                <a href="{{ route('product', 1) }}" class="perfume-product-card" style="text-decoration: none; color: inherit; display: block;">
-                    <div class="product-img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=400&q=80" alt="Perfume 3">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Túi xách</span>
-                        <h3 class="product-name">Black Puffy Macrocannage Calfskin</h3>
-                        <p class="product-price">$3,900</p>
-                    </div>
-                </a>
-                <!-- Product 4 -->
-                <a href="{{ route('product', 1) }}" class="perfume-product-card" style="text-decoration: none; color: inherit; display: block;">
-                    <div class="product-img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=400&q=80" alt="Perfume 4">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Túi xách</span>
-                        <h3 class="product-name">Black Puffy Macrocannage Calfskin</h3>
-                        <p class="product-price">$3,900</p>
-                    </div>
-                </a>
+                @endforeach
             </div>
         </section>
+        @endif
 
         <!-- Middle Banner -->
         @if(isset($beautyWide) && $beautyWide->count() > 0)
@@ -133,55 +103,25 @@
         @endif
 
         <!-- Sản phẩm bán chạy -->
+        @if(isset($bestSellingPerfumes) && $bestSellingPerfumes->count() > 0)
         <section class="perfume-products-section">
             <h2 class="perfume-section-title">Sản phẩm bán chạy</h2>
             <div class="perfume-product-grid">
-                <!-- Product 1 -->
-                <a href="{{ route('product', 1) }}" class="perfume-product-card" style="text-decoration: none; color: inherit; display: block;">
+                @foreach($bestSellingPerfumes as $perfume)
+                <a href="{{ route('product', $perfume->id) }}" class="perfume-product-card" style="text-decoration: none; color: inherit; display: block;">
                     <div class="product-img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&w=400&q=80" alt="Perfume 1">
+                        <img src="{{ $perfume->thumbnail ? Storage::url($perfume->thumbnail) : 'https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&w=400&q=80' }}" alt="{{ $perfume->name }}">
                     </div>
                     <div class="product-info">
-                        <span class="product-category">Túi xách</span>
-                        <h3 class="product-name">Black Puffy Macrocannage Calfskin</h3>
-                        <p class="product-price">$3,900</p>
+                        <span class="product-category">{{ $perfume->category ? ($perfume->category->translated_name ?? $perfume->category->name) : 'Nước hoa' }}</span>
+                        <h3 class="product-name" style="font-family: var(--font-serif); font-size: 16px; font-weight: 400; color: #333; margin-top: 5px;">{{ $perfume->name }}</h3>
+                        <p class="product-price">{{ number_format($perfume->sale_price ?? $perfume->price, 0, ',', '.') }} ₫</p>
                     </div>
                 </a>
-                <!-- Product 2 -->
-                <a href="{{ route('product', 1) }}" class="perfume-product-card" style="text-decoration: none; color: inherit; display: block;">
-                    <div class="product-img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&w=400&q=80" alt="Perfume 2">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Túi xách</span>
-                        <h3 class="product-name">Black Puffy Macrocannage Calfskin</h3>
-                        <p class="product-price">$3,900</p>
-                    </div>
-                </a>
-                <!-- Product 3 -->
-                <a href="{{ route('product', 1) }}" class="perfume-product-card" style="text-decoration: none; color: inherit; display: block;">
-                    <div class="product-img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&w=400&q=80" alt="Perfume 3">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Túi xách</span>
-                        <h3 class="product-name">Black Puffy Macrocannage Calfskin</h3>
-                        <p class="product-price">$3,900</p>
-                    </div>
-                </a>
-                <!-- Product 4 -->
-                <a href="{{ route('product', 1) }}" class="perfume-product-card" style="text-decoration: none; color: inherit; display: block;">
-                    <div class="product-img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&w=400&q=80" alt="Perfume 4">
-                    </div>
-                    <div class="product-info">
-                        <span class="product-category">Túi xách</span>
-                        <h3 class="product-name">Black Puffy Macrocannage Calfskin</h3>
-                        <p class="product-price">$3,900</p>
-                    </div>
-                </a>
+                @endforeach
             </div>
         </section>
+        @endif
 
         <!-- Bottom Grid Section -->
         <section class="perfume-bottom-grid">
