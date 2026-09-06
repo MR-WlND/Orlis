@@ -1,34 +1,6 @@
 @extends('layouts.customer')
 @section('customer_title', 'Sổ địa chỉ - Orlis')
 @section('customer_styles')
-<style>
-    .address-card { background: white; border-radius: 0; border: 1px solid #eee; padding: 25px; margin-bottom: 20px; position: relative; transition: 0.3s; }
-    .address-card:hover { border-color: #ddd; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
-    .address-card.default { border: 1px solid #d4af37; }
-    .address-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .address-name { font-weight: 600; font-size: 15px; color: #111; }
-    .address-phone { font-size: 13px; color: #888; margin-bottom: 8px; }
-    .address-text { font-size: 14px; color: #555; line-height: 1.5; }
-    .default-badge { font-size: 10px; font-weight: 600; color: #d4af37; text-transform: uppercase; letter-spacing: 1px; padding: 4px 10px; background: rgba(212, 175, 55, 0.1); }
-    .address-actions { display: flex; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #f9f9f9; }
-    .btn-sm { padding: 8px 16px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; text-decoration: none; transition: 0.3s; }
-    .btn-outline-action { background: transparent; border: 1px solid #ddd; color: #555; }
-    .btn-outline-action:hover { border-color: #111; background: #111; color: white; }
-    .btn-danger { background: transparent; border: 1px solid #f5c6c6; color: #c0392b; }
-    .btn-danger:hover { background: #c0392b; color: white; border-color: #c0392b; }
-    .add-address-card { border: 1px dashed #d0d0d0; padding: 30px; text-align: center; cursor: pointer; transition: 0.3s; margin-bottom: 20px; background: #fbfbfb; }
-    .add-address-card:hover { border-color: #111; background: white; }
-    .add-form { background: white; border: 1px solid #eee; padding: 30px; margin-top: 20px; display: none; }
-    .add-form.show { display: block; }
-    .form-group { margin-bottom: 20px; }
-    .form-label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 8px; }
-    .form-input { width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0; font-size: 14px; color: #333; box-sizing: border-box; transition: 0.3s; background: #fbfbfb; }
-    .form-input:focus { border-color: #111; background: white; outline: none; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .btn-save { padding: 12px 24px; background: #111; color: white; border: none; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-    .btn-save:hover { background: #333; }
-    @media(max-width: 768px) { .form-row { grid-template-columns: 1fr; } }
-</style>
 @endsection
 @section('customer_content')
 <div class="section-header">

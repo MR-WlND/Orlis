@@ -1,30 +1,6 @@
 @extends('layouts.customer')
 @section('customer_title', __('messages.profile') . ' - Orlis')
 @section('customer_styles')
-<style>
-    .card { background: white; border: 1px solid #eee; padding: 35px 40px; margin-bottom: 25px; transition: 0.3s; }
-    .card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.02); border-color: #e5e5e5; }
-    .card-title { font-family: var(--font-serif); font-size: 18px; font-weight: 400; color: #111; margin-bottom: 25px; border-bottom: 1px solid #f9f9f9; padding-bottom: 15px; }
-    
-    .form-group { margin-bottom: 20px; }
-    .form-label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 8px; }
-    .form-input { width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0; background: #fbfbfb; font-size: 14px; color: #333; box-sizing: border-box; transition: 0.3s; }
-    .form-input:focus { border-color: #111; background: white; outline: none; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    
-    .avatar-upload { display: flex; gap: 25px; align-items: center; margin-bottom: 30px; }
-    .avatar-preview { width: 80px; height: 80px; border-radius: 50%; background: #111; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; color: white; overflow: hidden; flex-shrink: 0; border: 2px solid #eee; }
-    .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
-    .btn-upload { display: inline-block; padding: 10px 20px; border: 1px solid #ddd; background: transparent; color: #111; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-    .btn-upload:hover { border-color: #111; background: #111; color: white; }
-    
-    .btn-save { padding: 14px 35px; background: #111; color: white; border: none; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; cursor: pointer; transition: 0.3s; display: block; width: fit-content; margin-top: 30px; }
-    .btn-save:hover { background: #333; }
-    
-    .error-msg { color: #c0392b; font-size: 11px; margin-top: 6px; letter-spacing: 0.5px; }
-    
-    @media(max-width: 768px) { .form-row { grid-template-columns: 1fr; } .avatar-upload { flex-direction: column; text-align: center; } }
-</style>
 @endsection
 @section('customer_content')
 <div class="section-header">

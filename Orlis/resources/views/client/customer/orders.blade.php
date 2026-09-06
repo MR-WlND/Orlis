@@ -1,29 +1,6 @@
 @extends('layouts.customer')
 @section('customer_title', 'Đơn hàng của tôi - Orlis')
 @section('customer_styles')
-<style>
-    .filter-bar { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
-    .filter-bar select, .filter-bar button, .filter-bar a { padding: 10px 16px; border: 1px solid #ddd; border-radius: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; background: white; color: #555; text-decoration: none; cursor: pointer; transition: 0.3s; }
-    .filter-bar button { background: #111; color: white; border-color: #111; font-weight: 600; }
-    .filter-bar button:hover { background: #333; }
-    .order-card { background: white; border: 1px solid #eee; margin-bottom: 20px; transition: 0.3s; }
-    .order-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.03); border-color: #ddd; }
-    .order-card-head { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #f9f9f9; }
-    .order-code { font-weight: 600; font-size: 14px; color: #111; text-decoration: none; }
-    .order-date { font-size: 12px; color: #888; margin-top: 4px; }
-    .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-    .order-card-body { padding: 20px; display: flex; gap: 15px; align-items: center; }
-    .order-item-img { width: 60px; height: 80px; object-fit: cover; background: #f9f9f9; flex-shrink: 0; }
-    .order-card-foot { padding: 15px 20px; background: #fbfbfb; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
-    .order-total { font-weight: 600; font-size: 15px; }
-    .btn-outline-sm { padding: 8px 16px; border: 1px solid #ddd; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; color: #111; transition: all 0.2s; }
-    .btn-outline-sm:hover { border-color: #111; background: #111; color: #fff; }
-    .pagination-wrap { display: flex; justify-content: space-between; align-items: center; margin-top: 40px; }
-    .pagination-info { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
-    .pagination-btns { display: flex; gap: 8px; }
-    .page-btn { padding: 8px 16px; border: 1px solid #ddd; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; text-decoration: none; color: #555; transition: all 0.2s; }
-    .page-btn:hover { background: #111; color: white; border-color: #111; }
-</style>
 @endsection
 @section('customer_content')
 <div class="section-header">

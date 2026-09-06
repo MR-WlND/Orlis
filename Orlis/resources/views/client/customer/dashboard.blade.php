@@ -3,57 +3,6 @@
 @section('customer_title', 'Tổng quan độc quyền - Orlis')
 
 @section('customer_styles')
-<style>
-    /* VIP Card */
-    .vip-card { background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); color: #fff; padding: 40px; border-radius: 4px; margin-bottom: 50px; position: relative; overflow: hidden; }
-    .vip-card::after { content: ''; position: absolute; top: 0; right: 0; width: 300px; height: 100%; background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%); }
-    .vip-top { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #d4af37; }
-    .vip-title { font-family: var(--font-serif); font-size: 28px; font-weight: 400; margin-bottom: 40px; }
-    .vip-info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
-    .vip-info-item .label { font-size: 11px; color: #999; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
-    .vip-info-item .value { font-size: 16px; font-weight: 500; }
-    
-    .vip-progress-box { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 4px; }
-    .progress-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #d4af37; margin-bottom: 15px; }
-    .progress-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .step-item { border-left: 2px solid #444; padding-left: 15px; }
-    .step-item.active { border-color: #d4af37; }
-    .step-title { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
-    .step-desc { font-size: 11px; color: #888; }
-    
-    /* Advisor Card */
-    .advisor-box { display: flex; align-items: center; gap: 30px; background: #fbfbfb; border: 1px solid #eee; padding: 30px; margin-bottom: 50px; }
-    .advisor-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; }
-    .advisor-content { flex: 1; }
-    .advisor-name { font-family: var(--font-serif); font-size: 20px; font-weight: 500; margin-bottom: 5px; }
-    .advisor-role { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 10px; }
-    .advisor-quote { font-size: 13px; font-style: italic; color: #555; }
-    .advisor-actions { display: flex; gap: 15px; }
-    
-    /* Product Cards */
-    .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 50px; }
-    .product-card { border: 1px solid #eee; padding: 15px; transition: 0.3s; }
-    .product-card:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-    .product-img { width: 100%; height: 200px; object-fit: contain; margin-bottom: 15px; background: #f8f8f8; }
-    .product-cat { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 5px; }
-    .product-name { font-size: 14px; font-weight: 600; margin-bottom: 10px; min-height: 40px; }
-    .product-bot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px; }
-    .product-price { font-weight: 600; font-size: 13px; }
-    
-    /* Services Grid */
-    .service-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 50px; }
-    .service-card { border: 1px solid #eee; padding: 30px; text-align: left; }
-    .service-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid #eee; border-radius: 50%; margin-bottom: 20px; color: #111; }
-    .service-title { font-family: var(--font-serif); font-size: 16px; font-weight: 500; margin-bottom: 15px; }
-    .service-text { font-size: 13px; color: #666; margin-bottom: 25px; line-height: 1.5; }
-    
-    /* Orders Empty */
-    .orders-empty { text-align: center; padding: 60px 20px; background: #fbfbfb; border: 1px solid #eee; }
-    .empty-icon { width: 48px; height: 48px; margin: 0 auto 20px; color: #ccc; }
-    .empty-text { font-size: 14px; color: #555; margin-bottom: 25px; font-style: italic; line-height: 1.6; }
-    
-    @media(max-width: 768px) { .vip-info-grid, .progress-steps, .product-grid, .service-grid { grid-template-columns: 1fr; } .advisor-box { flex-direction: column; text-align: center; } .advisor-actions { width: 100%; flex-direction: column; } }
-</style>
 @endsection
 
 @section('customer_content')
