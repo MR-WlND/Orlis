@@ -26,9 +26,9 @@ class CheckoutService
     /**
      * Tạo đơn hàng. Ngăn chặn Deadlock bằng cách Sorting mảng biến thể.
      */
-    public function checkout(array $cartData, int $userId, array $shippingAddress, ?int $couponId)
+    public function checkout(array $cartData, int $userId, array $shippingAddress, ?int $couponId, int $shippingMethodId)
     {
-        $order = DB::transaction(function () use ($cartData, $userId, $shippingAddress, $couponId) {
+        $order = DB::transaction(function () use ($cartData, $userId, $shippingAddress, $couponId, $shippingMethodId) {
             // [DEADLOCK PREVENTION] Sort cart items theo variant_id tăng dần 
             // trước khi đẩy vào vòng lặp giữ kho bằng lockForUpdate().
             usort($cartData, function ($a, $b) {
@@ -53,17 +53,27 @@ class CheckoutService
             $subtotal = collect($cartData)->sum(function ($item) {
                 return $item['price'] * $item['quantity'];
             });
-            $grandTotal = max(0, $subtotal - $discountAmount);
+            
+            // Xử lý phí giao hàng
+            $shippingMethod = DB::table('shipping_methods')->where('id', $shippingMethodId)->first();
+            $shippingFee = $shippingMethod->cost;
+            if ($shippingMethod->min_order_amount_for_free_shipping !== null && $subtotal >= $shippingMethod->min_order_amount_for_free_shipping) {
+                $shippingFee = 0;
+            }
+
+            $grandTotal = max(0, $subtotal + $shippingFee - $discountAmount);
 
             // Tạo Order
             $orderId = DB::table('orders')->insertGetId([
                 'order_code' => 'ORD-' . strtoupper(uniqid()),
                 'user_id' => $userId,
                 'coupon_id' => $couponId,
+                'shipping_method_id' => $shippingMethodId,
                 'shipping_address_snapshot' => json_encode($shippingAddress),
                 'recipient_name' => $shippingAddress['recipient_name'],
                 'recipient_phone' => $shippingAddress['recipient_phone'],
                 'subtotal' => $subtotal,
+                'shipping_fee' => $shippingFee,
                 'discount_amount' => $discountAmount,
                 'grand_total' => $grandTotal,
                 'order_status' => 'pending',

@@ -31,8 +31,9 @@ class CheckoutController extends Controller
         }
 
         $addresses = Address::where('user_id', Auth::id())->orderByDesc('is_default')->get();
+        $shippingMethods = \App\Models\ShippingMethod::where('is_active', true)->get();
 
-        return view('client.checkout', compact('cart', 'addresses'));
+        return view('client.checkout', compact('cart', 'addresses', 'shippingMethods'));
     }
 
     /**
@@ -48,6 +49,7 @@ class CheckoutController extends Controller
             'ward' => ['required', 'string', 'max:100'],
             'detail_address' => ['required', 'string', 'max:500'],
             'payment_method' => ['required', 'in:cod,vnpay'],
+            'shipping_method_id' => ['required', 'exists:shipping_methods,id'],
             'coupon_code' => ['nullable', 'string'],
             'gift_note' => ['nullable', 'string', 'max:500'],
             'save_address' => ['nullable', 'boolean'],
@@ -146,6 +148,7 @@ class CheckoutController extends Controller
                     'payment_method' => $request->payment_method,
                 ]),
                 couponId: $couponId,
+                shippingMethodId: $request->shipping_method_id,
             );
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage())->withInput();

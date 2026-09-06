@@ -111,55 +111,56 @@
                 <span class="checkout-card-step">TIÊU CHUẨN MAISON</span>
             </div>
             <div class="checkout-card-body">
-                @php
-                    $isFreeExpress = ($cart->total >= 10000000);
-                @endphp
-
-                <label class="checkout-radio-block active" id="shipping-std-label">
-                    <input type="radio" name="shipping_method_dummy" value="standard" checked onchange="updateShippingSelect(this)">
-                    <div class="cr-content" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
-                        <div>
-                            <div class="cr-title" style="display:flex; align-items:center; gap:6px; font-weight: 600;">
-                                Giao hàng Bảo an Orlis Privé
-                                <span class="badge-gift-icon" title="Đóng gói hộp quà Maison Orlis đặc biệt & kiểm tra tận tay">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
-                                </span>
+                @foreach($shippingMethods as $index => $method)
+                    @php
+                        $isFree = false;
+                        if ($method->min_order_amount_for_free_shipping && $cart->total >= $method->min_order_amount_for_free_shipping) {
+                            $isFree = true;
+                        }
+                        // Nếu phương thức vốn dĩ giá 0đ
+                        if ($method->cost == 0) {
+                            $isFree = true;
+                        }
+                    @endphp
+                    <label class="checkout-radio-block {{ $index === 0 ? 'active' : '' }}" id="shipping-{{ $method->id }}-label">
+                        <input type="radio" name="shipping_method_id" value="{{ $method->id }}" {{ $index === 0 ? 'checked' : '' }} data-cost="{{ $isFree ? 0 : $method->cost }}" onchange="updateShippingSelect(this)">
+                        <div class="cr-content" style="display:flex; justify-content:space-between; align-items:flex-start; width:100%;">
+                            <div>
+                                <div class="cr-title" style="display:flex; align-items:center; gap:6px; font-weight: 600;">
+                                    {{ $method->name }}
+                                    @if(str_contains(strtolower($method->name), 'hỏa tốc') && $isFree)
+                                        <span class="badge-vip">ĐẶC QUYỀN VIP</span>
+                                    @endif
+                                    @if($method->cost == 0)
+                                        <span class="badge-gift-icon" title="Đóng gói hộp quà Maison Orlis đặc biệt & kiểm tra tận tay">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="cr-desc">
+                                    {{ $method->description }}
+                                    @if($method->min_order_amount_for_free_shipping > 0)
+                                        @if($isFree)
+                                            <span style="display:flex; align-items:center; gap:4px; color:#b8860b; font-size:12px; font-weight:500; margin-top:4px;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8860b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z"/></svg>
+                                                Đơn hàng từ {{ number_format($method->min_order_amount_for_free_shipping, 0, ',', '.') }}đ được tặng đặc quyền miễn phí
+                                            </span>
+                                        @else
+                                            <span style="display:block; font-size:11px; color:#999; margin-top:4px;">(Miễn phí cho đơn từ {{ number_format($method->min_order_amount_for_free_shipping, 0, ',', '.') }}đ)</span>
+                                        @endif
+                                    @endif
+                                </div>
                             </div>
-                            <div class="cr-desc">Miễn phí vận chuyển. Đóng gói hộp quà Maison Orlis đặc biệt & kiểm tra sản phẩm tận tay.</div>
-                        </div>
-                        <div class="cr-price highlight">MIỄN PHÍ</div>
-                    </div>
-                </label>
-                
-                <label class="checkout-radio-block" id="shipping-exp-label">
-                    <input type="radio" name="shipping_method_dummy" value="express" onchange="updateShippingSelect(this)">
-                    <div class="cr-content" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
-                        <div>
-                            <div class="cr-title" style="display:flex; align-items:center; gap:6px; font-weight: 600;">
-                                Giao hàng Hỏa tốc Couture Express (Trong ngày)
-                                @if($isFreeExpress)
-                                    <span class="badge-vip">ĐẶC QUYỀN VIP</span>
+                            <div class="cr-price {{ $isFree ? 'highlight' : '' }}" style="font-size: 12px; margin-top: 2px;">
+                                @if($isFree)
+                                    MIỄN PHÍ
+                                @else
+                                    {{ number_format($method->cost, 0, ',', '.') }}₫
                                 @endif
                             </div>
-                            <div class="cr-desc">
-                                Dành riêng cho khu vực Nội thành Hà Nội & TP. HCM. Khách hàng lựa chọn khung giờ nhận hàng.
-                                @if($isFreeExpress)
-                                    <span style="display:flex; align-items:center; gap:4px; color:#b8860b; font-size:12px; font-weight:500; margin-top:4px;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8860b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z"/></svg>
-                                        Đơn hàng từ 10.000.000đ được tặng đặc quyền miễn phí giao Hỏa tốc
-                                    </span>
-                                @endif
-                            </div>
                         </div>
-                        <div class="cr-price {{ $isFreeExpress ? 'highlight' : '' }}">
-                            @if($isFreeExpress)
-                                MIỄN PHÍ
-                            @else
-                                150.000₫
-                            @endif
-                        </div>
-                    </div>
-                </label>
+                    </label>
+                @endforeach
             </div>
         </div>
 
@@ -247,7 +248,7 @@
                 </div>
                 <div class="s-row">
                     <span>Phí vận chuyển bảo hiểm</span>
-                    <span class="highlight">MIỄN PHÍ</span>
+                    <span class="highlight" id="summary-shipping-fee">MIỄN PHÍ</span>
                 </div>
                 <div class="s-row">
                     <span>Hộp quà & Ruy băng Couture</span>
@@ -273,7 +274,7 @@
             <div class="summary-grand">
                 <div class="sg-label">TỔNG THANH TOÁN</div>
                 <div class="sg-value">
-                    <div class="sg-price">{{ number_format($grandTotal, 0, ',', '.') }}₫</div>
+                    <div class="sg-price" id="summary-grand-total">{{ number_format($grandTotal, 0, ',', '.') }}₫</div>
                     <div class="sg-vat">(Đã bao gồm Thuế giá trị gia tăng GTGT)</div>
                 </div>
             </div>
@@ -344,8 +345,28 @@ function updatePaymentSelect() {
 }
 
 function updateShippingSelect(input) {
-    document.querySelectorAll('#shipping-std-label, #shipping-exp-label').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.checkout-radio-block').forEach(el => {
+        // Chỉ bỏ active của các block nằm trong thẻ chứa phương thức giao hàng
+        if(el.id.startsWith('shipping-')) {
+            el.classList.remove('active');
+        }
+    });
     input.closest('.checkout-radio-block').classList.add('active');
+
+    // Cập nhật phí
+    let cost = parseFloat(input.getAttribute('data-cost')) || 0;
+    let feeEl = document.getElementById('summary-shipping-fee');
+    if(cost === 0) {
+        feeEl.innerText = 'MIỄN PHÍ';
+    } else {
+        feeEl.innerText = cost.toLocaleString('vi-VN') + '₫';
+    }
+
+    // Cập nhật tổng
+    let subtotal = {{ $cart->total }};
+    let discount = {{ session('applied_coupon')['discount_amount'] ?? 0 }};
+    let grandTotal = Math.max(0, subtotal + cost - discount);
+    document.getElementById('summary-grand-total').innerText = grandTotal.toLocaleString('vi-VN') + '₫';
 }
 
 function applyCouponCheckout() {
@@ -379,6 +400,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('input[name="saved_address_id"]').forEach(r => {
         if(r.checked) r.closest('.checkout-radio-block').classList.add('active');
     });
+    
+    let checkedShipping = document.querySelector('input[name="shipping_method_id"]:checked');
+    if (checkedShipping) {
+        updateShippingSelect(checkedShipping);
+    }
 });
 
 // Idempotency: vô hiệu hóa nút sau lần bấm đầu

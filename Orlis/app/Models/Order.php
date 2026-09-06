@@ -40,6 +40,8 @@ class Order extends Model
         'recipient_name',
         'recipient_phone',
         'subtotal',
+        'shipping_method_id',
+        'shipping_fee',
         'discount_amount',
         'grand_total',
         'deposit_amount',
@@ -55,6 +57,7 @@ class Order extends Model
         return [
             'shipping_address_snapshot' => 'array',
             'subtotal' => 'decimal:2',
+            'shipping_fee' => 'decimal:2',
             'discount_amount' => 'decimal:2',
             'grand_total' => 'decimal:2',
             'deposit_amount' => 'decimal:2',
@@ -71,6 +74,11 @@ class Order extends Model
     public function coupon(): BelongsTo
     {
         return $this->belongsTo(Coupon::class);
+    }
+
+    public function shippingMethod(): BelongsTo
+    {
+        return $this->belongsTo(ShippingMethod::class);
     }
 
     public function items(): HasMany
