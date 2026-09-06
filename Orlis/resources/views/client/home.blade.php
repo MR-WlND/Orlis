@@ -36,20 +36,20 @@
                 @media (min-width: 768px) { .double-banner-{{ $banner->id }} { background-image: url('{{ Storage::url($banner->image_path) }}'); } }
             </style>
             <a href="{{ $banner->link_url ?? '#' }}" target="{{ $banner->link_target ?? '_self' }}" class="banner-item double-banner-{{ $banner->id }}" style="text-decoration: none; color: inherit; position: relative;">
-                <div style="position: absolute; bottom: 20px; left: 20px;">
+                <div class="desktop-banner-text" style="position: absolute; bottom: 30px; left: 0; right: 0; text-align: center;">
                     <h3 style="color: {{ $banner->text_color }}; margin: 0; font-size: 20px; font-weight: 500;">{{ $banner->title }}</h3>
-                    <p style="color: {{ $banner->text_color }}; margin: 5px 0 0 0; font-size: 12px;">{{ $banner->description }}</p>
+                    <p style="color: {{ $banner->text_color }}; margin: 5px 0 0 0; font-size: 13px;">{{ $banner->description }}</p>
                 </div>
             </a>
             @endforeach
         @else
             <div class="banner-item">
                 <img src="{{ asset('images/orlis_shoes.png') }}" alt="Giày da">
-                <h3>{{ __('messages.premium_shoes') }}</h3>
+                <h3 class="desktop-banner-title" style="position: absolute; bottom: 30px; left: 0; right: 0; text-align: center; margin: 0; z-index: 2; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">{{ __('messages.premium_shoes') }}</h3>
             </div>
             <div class="banner-item">
                 <img src="{{ asset('images/orlis_bag.png') }}" alt="Túi xách">
-                <h3>{{ __('messages.exclusive_bags') }}</h3>
+                <h3 class="desktop-banner-title" style="position: absolute; bottom: 30px; left: 0; right: 0; text-align: center; margin: 0; z-index: 2; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">{{ __('messages.exclusive_bags') }}</h3>
             </div>
         @endif
     </section>
@@ -60,49 +60,70 @@
         .wide-banner-{{ $homeWide->id }} { background-image: url('{{ Storage::url($homeWide->image_mobile_path ?? $homeWide->image_path) }}'); }
         @media (min-width: 768px) { .wide-banner-{{ $homeWide->id }} { background-image: url('{{ Storage::url($homeWide->image_path) }}'); } }
     </style>
-    <a href="{{ $homeWide->link_url ?? '#' }}" target="{{ $homeWide->link_target ?? '_self' }}" style="display: block; text-decoration: none;">
+    <a href="{{ $homeWide->link_url ?? '#' }}" target="{{ $homeWide->link_target ?? '_self' }}" style="display: block; text-decoration: none; position: relative;">
         <section class="mid-banner wide-banner-{{ $homeWide->id }}">
-            <div class="mid-banner-content" style="color: {{ $homeWide->text_color }};">
-                <h2 style="color: {{ $homeWide->text_color }};">{{ $homeWide->title }}</h2>
-                <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">{{ $homeWide->description }}</p>
+            <div class="mid-banner-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 100%; padding: 0 20px; box-sizing: border-box; z-index: 2;">
+                <h2 style="color: {{ $homeWide->text_color }}; margin: 0; font-size: clamp(32px, 6vw, 64px); font-weight: 400; font-family: var(--font-serif); text-shadow: 0 4px 12px rgba(0,0,0,0.4); letter-spacing: 1px;">{{ $homeWide->title }}</h2>
+                <p style="color: {{ $homeWide->text_color }}; font-size: clamp(10px, 2vw, 14px); font-weight: 600; font-family: var(--font-sans); text-transform: uppercase; letter-spacing: 3px; margin: 20px 0 0 0; text-shadow: 0 2px 6px rgba(0,0,0,0.4);">{{ $homeWide->description }}</p>
             </div>
         </section>
     </a>
     @else
-    <section class="mid-banner" style="background-image: url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1920&q=80');">
-        <div class="mid-banner-content">
-            <h2>{{ __('messages.heritage_reborn') }}</h2>
-            <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">{{ __('messages.discover_story') }}</p>
+    <section class="mid-banner" style="background-image: url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1920&q=80'); position: relative;">
+        <div class="mid-banner-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 100%; padding: 0 20px; box-sizing: border-box; z-index: 2;">
+            <h2 style="color: #fff; margin: 0; font-size: clamp(32px, 6vw, 64px); font-weight: 400; font-family: var(--font-serif); text-shadow: 0 4px 12px rgba(0,0,0,0.4); letter-spacing: 1px;">{{ __('messages.heritage_reborn') }}</h2>
+            <p style="color: #fff; font-size: clamp(10px, 2vw, 14px); font-weight: 600; font-family: var(--font-sans); text-transform: uppercase; letter-spacing: 3px; margin: 20px 0 0 0; text-shadow: 0 2px 6px rgba(0,0,0,0.4);">{{ __('messages.discover_story') }}</p>
         </div>
     </section>
     @endif
 
     <!-- Categories -->
     <section class="categories">
-        <div class="category-item">
-            <div class="category-img">
-                <img src="{{ asset('images/orlis_bag.png') }}" alt="Túi xách">
+        @php
+            $displayCategories = collect();
+            if (isset($globalCategories)) {
+                foreach($globalCategories as $level1) {
+                    foreach($level1->children as $level2) {
+                        if ($displayCategories->count() < 4) {
+                            $displayCategories->push($level2);
+                        }
+                    }
+                }
+            }
+        @endphp
+
+        @if($displayCategories->count() > 0)
+            @foreach($displayCategories as $category)
+            <div class="category-item">
+                <div class="category-img">
+                    <a href="{{ url('/catalog/' . $category->slug) }}" style="display:block; width:100%; height:100%;">
+                        <img src="{{ $category->image ? (Str::startsWith($category->image, 'http') ? $category->image : Storage::url($category->image)) : asset('images/orlis_bag.png') }}" alt="{{ $category->translated_name ?? $category->name }}">
+                    </a>
+                </div>
+                <a href="{{ url('/catalog/' . $category->slug) }}" style="text-decoration: none; color: inherit; display: block;">
+                    <h4>{{ $category->translated_name ?? $category->name }}</h4>
+                </a>
             </div>
-            <h4>{{ __('messages.handbags') }}</h4>
-        </div>
-        <div class="category-item">
-            <div class="category-img">
-                <img src="{{ asset('images/orlis_shoes.png') }}" alt="Giày cao gót">
+            @endforeach
+        @else
+            <!-- Fallback if no categories -->
+            <div class="category-item">
+                <div class="category-img"><img src="{{ asset('images/orlis_bag.png') }}" alt="Túi xách"></div>
+                <h4>{{ __('messages.handbags') }}</h4>
             </div>
-            <h4>{{ __('messages.high_heels') }}</h4>
-        </div>
-        <div class="category-item">
-            <div class="category-img">
-                <img src="{{ asset('images/orlis_perfume.png') }}" alt="Nước hoa">
+            <div class="category-item">
+                <div class="category-img"><img src="{{ asset('images/orlis_shoes.png') }}" alt="Giày cao gót"></div>
+                <h4>{{ __('messages.high_heels') }}</h4>
             </div>
-            <h4>{{ __('messages.perfume') }}</h4>
-        </div>
-        <div class="category-item">
-            <div class="category-img">
-                <img src="{{ asset('images/orlis_scarf.png') }}" alt="Khăn lụa">
+            <div class="category-item">
+                <div class="category-img"><img src="{{ asset('images/orlis_perfume.png') }}" alt="Nước hoa"></div>
+                <h4>{{ __('messages.perfume') }}</h4>
             </div>
-            <h4>{{ __('messages.silk_scarf') }}</h4>
-        </div>
+            <div class="category-item">
+                <div class="category-img"><img src="{{ asset('images/orlis_scarf.png') }}" alt="Khăn lụa"></div>
+                <h4>{{ __('messages.silk_scarf') }}</h4>
+            </div>
+        @endif
     </section>
 
     <!-- Info Section -->
@@ -111,42 +132,47 @@
             <h2>{!! __('messages.final_touch') !!}</h2>
             <p>{{ __('messages.perfect_details') }}</p>
         </div>
-        <div class="info-card">
-            <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=600&q=80" alt="Gói Quà Nghệ Thuật">
-            <div class="info-card-content">
-                <h4>{{ __('messages.art_gifting') }}</h4>
-                <a href="#">{{ __('messages.see_more') }}</a>
+        @if(isset($services) && $services->count() > 0)
+            @foreach($services as $service)
+            <div class="info-card">
+                <img src="{{ Str::startsWith($service->image_path, 'http') ? $service->image_path : Storage::url($service->image_path) }}" alt="{{ $service->title }}">
+                <div class="info-card-content">
+                    <h4>{{ $service->title }}</h4>
+                    <a href="{{ $service->link_url ?? '#' }}">{{ __('messages.see_more') }}</a>
+                </div>
             </div>
-        </div>
-        <div class="info-card">
-            <img src="https://images.unsplash.com/photo-1580674285054-bed31e145f59?auto=format&fit=crop&w=600&q=80" alt="Giao Hàng Hỏa Tốc">
-            <div class="info-card-content">
-                <h4>{{ __('messages.express_delivery') }}</h4>
-                <a href="#">{{ __('messages.see_more') }}</a>
-            </div>
-        </div>
-        <div class="info-card">
-            <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=600&q=80" alt="Đổi Trả Dễ Dàng">
-            <div class="info-card-content">
-                <h4>{{ __('messages.easy_returns') }}</h4>
-                <a href="#">{{ __('messages.see_more') }}</a>
-            </div>
-        </div>
-        <div class="info-card">
-            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=600&q=80" alt="Tư Vấn Cá Nhân">
-            <div class="info-card-content">
-                <h4>{{ __('messages.expert_advice') }}</h4>
-                <a href="#">{{ __('messages.see_more') }}</a>
-            </div>
-        </div>
-        <div class="info-card">
-            <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=600&q=80" alt="Bảo Dưỡng Đồ Da">
-            <div class="info-card-content">
-                <h4>{{ __('messages.leather_care') }}</h4>
-                <a href="#">{{ __('messages.see_more') }}</a>
-            </div>
-        </div>
+            @endforeach
+        @endif
     </section>
 
+    <!-- Magazine / Recent Posts Section -->
+    @if(isset($recentPosts) && $recentPosts->count() > 0)
+    <section class="home-magazine" style="padding: 60px 40px; background: #fff;">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h2 style="font-family: var(--font-serif); font-size: 32px; font-weight: 400; letter-spacing: 2px;">TẠP CHÍ ORLIS</h2>
+            <p style="font-family: var(--font-sans); color: #666; text-transform: uppercase; letter-spacing: 2px; font-size: 13px; margin-top: 10px;">{{ __('messages.news_events') }}</p>
+        </div>
+        <div class="magazine-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
+            @foreach($recentPosts as $post)
+            <div class="magazine-card" style="display: flex; flex-direction: column;">
+                <a href="{{ route('magazine.show', $post->slug) }}" style="display: block; width: 100%; aspect-ratio: 4/3; overflow: hidden; margin-bottom: 20px;">
+                    <img src="{{ $post->thumbnail ? (Str::startsWith($post->thumbnail, 'http') ? $post->thumbnail : Storage::url($post->thumbnail)) : asset('images/orlis_bag.png') }}" alt="{{ $post->title }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                </a>
+                <div class="magazine-meta" style="font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">
+                    {{ $post->created_at->format('d/m/Y') }} &mdash; {{ strtoupper($post->department) }}
+                </div>
+                <a href="{{ route('magazine.show', $post->slug) }}" style="text-decoration: none; color: #111;">
+                    <h4 style="font-family: var(--font-serif); font-size: 20px; font-weight: 400; margin-bottom: 15px; line-height: 1.4;">{{ $post->title }}</h4>
+                </a>
+                <p style="font-family: var(--font-sans); font-size: 14px; color: #555; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                    {{ $post->excerpt }}
+                </p>
+            </div>
+            @endforeach
+        </div>
+        <div style="text-align: center; margin-top: 50px;">
+            <a href="{{ route('magazine.index') }}" style="display: inline-block; padding: 12px 30px; border: 1px solid #111; color: #111; text-decoration: none; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s ease;" onmouseover="this.style.background='#111'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#111';">{{ __('messages.see_more') }}</a>
+        </div>
     </section>
+    @endif
 @endsection

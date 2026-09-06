@@ -1,0 +1,192 @@
+/* Search Modal Styles */
+.search-modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 3000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+.search-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.search-modal-content {
+    background: #fff;
+    width: 100%;
+    max-width: 600px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Custom Scrollbar for Modal Body */
+.search-modal-body {
+    flex: 1;
+    overflow-y: auto;
+}
+.search-modal-body::-webkit-scrollbar {
+    width: 4px;
+}
+.search-modal-body::-webkit-scrollbar-track {
+    background: transparent; 
+}
+.search-modal-body::-webkit-scrollbar-thumb {
+    background: #444; 
+    border-radius: 4px;
+}
+.search-modal-body::-webkit-scrollbar-thumb:hover {
+    background: #222; 
+}
+
+@media (min-width: 768px) {
+    .search-modal-overlay {
+        display: block; /* to allow absolute positioning of child */
+    }
+    .search-modal-content {
+        position: absolute;
+        top: 20px;
+        right: -700px;
+        height: calc(100vh - 40px);
+        max-height: none;
+        width: 600px;
+        max-width: calc(100vw - 40px);
+        border-radius: 8px;
+        box-shadow: -10px 0 50px rgba(0,0,0,0.15);
+        transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transform: none;
+    }
+    .search-modal-overlay.active .search-modal-content {
+        right: 20px;
+        transform: none;
+    }
+}
+
+/* Close Button */
+.search-modal-close {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    align-self: flex-start;
+    padding: 0;
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+.search-modal-close svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Input Wrap */
+.search-modal-input-wrap {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+}
+.search-modal-input-wrap .search-icon {
+    width: 20px;
+    height: 20px;
+    color: #999;
+    margin-right: 15px;
+}
+.search-modal-input-wrap input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #333;
+    background: transparent;
+}
+.search-modal-input-wrap input::placeholder {
+    color: #999;
+}
+.search-submit {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #999;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+.search-submit svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Suggestions */
+.search-suggestions {
+    margin-bottom: 30px;
+}
+.search-suggestions h4 {
+    font-size: 14px;
+    font-weight: 400;
+    color: #666;
+    margin-bottom: 15px;
+}
+.search-suggestions ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.search-suggestions li {
+    margin-bottom: 15px;
+}
+.search-suggestions a {
+    text-decoration: none;
+    color: #333;
+    font-size: 15px;
+}
+.search-suggestions a:hover {
+    color: #000;
+}
+
+/* Recommended Products */
+.search-recommended h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+}
+.search-products-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+@media (min-width: 768px) {
+    .search-products-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+@media (max-width: 767px) {
+    .desktop-only-card {
+        display: none !important;
+    }
+}
+.search-product-card {
+    background: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    border-radius: 4px;
+}
+.search-product-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    mix-blend-mode: multiply;
+}

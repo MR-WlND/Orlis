@@ -21,22 +21,89 @@
 
             @if(isset($product->variants) && $product->variants->count() > 0)
                 @php
-                    $colors = $product->variants->pluck('color')->unique()->filter();
-                    $sizes = $product->variants->pluck('size')->unique()->filter();
+                    // Build variant map để JS tra cứu nhanh
+                    $variantMap = $product->variants->map(fn($v) => [
+                        'id'    => $v->id,
+                        'color' => $v->color,
+                        'size'  => $v->size,
+                        'price' => $v->price_override ?? ($product->sale_price ?? $product->price),
+                    ]);
+
+                    $colors = $product->variants->map(fn($v) => [
+                        'hex'  => $v->color,
+                        'name' => data_get(json_decode($v->getRawOriginal('attributes') ?? '{}', true), 'color_name', $v->color),
+                    ])->filter(fn($c) => $c['hex'])->unique('hex')->values();
+
+                    $sizes = $product->variants->pluck('size')->unique()->filter()->values();
+
+                    $firstVariant = $product->variants->first();
+                    $selectedColor = $firstVariant?->color;
+                    $selectedSize  = $firstVariant?->size;
                 @endphp
-                
+
+                {{-- Chọn màu sắc --}}
                 @if($colors->count() > 0)
-                    <div class="pdp-color-section" style="margin-bottom: 25px;">
-                        <p style="font-family: var(--font-sans); font-size: 13px; color: #333; margin-bottom: 10px;">{{ __('messages.other_color') }}</p>
-                        <div class="color-selector">
-                            @foreach($colors as $index => $color)
-                                <span class="color-btn {{ $index === 0 ? 'active' : '' }}" style="background: {{ $color }}; border-radius: 2px; width: 30px; height: 30px;" title="{{ $color }}"></span>
-                            @endforeach
-                        </div>
+                <div style="margin-bottom: 20px;">
+                    <p style="font-family: var(--font-sans); font-size: 12px; font-weight: 600; letter-spacing: 1px; color: #888; text-transform: uppercase; margin-bottom: 10px;">
+                        {{ __('messages.other_color') }}
+                    </p>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        @foreach($colors as $i => $colorItem)
+                        <button type="button"
+                            class="variant-color-btn"
+                            data-color="{{ $colorItem['hex'] }}"
+                            title="{{ $colorItem['name'] }}"
+                            style="
+                                width: 30px; height: 30px;
+                                background: {{ $colorItem['hex'] }};
+                                border-radius: 3px;
+                                border: 1px solid {{ $i === 0 ? '#1a1a1a' : '#e0e0e0' }};
+                                cursor: pointer;
+                                transition: border-color 0.15s;
+                                padding: 0;
+                                outline: none;
+                                box-shadow: {{ $i === 0 ? '0 0 0 1px #1a1a1a' : 'none' }};
+                            ">
+                        </button>
+                        @endforeach
                     </div>
+                </div>
                 @endif
-                
-                <!-- Sizes can go here if needed later -->
+
+                {{-- Chọn kích thước --}}
+                @if($sizes->count() > 0)
+                <div style="margin-bottom: 24px;">
+                    <p style="font-family: var(--font-sans); font-size: 12px; font-weight: 600; letter-spacing: 1px; color: #888; text-transform: uppercase; margin-bottom: 10px;">
+                        {{ __('messages.tab_size') }}
+                    </p>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        @foreach($sizes as $i => $size)
+                        <button type="button"
+                            class="variant-size-btn"
+                            data-size="{{ $size }}"
+                            style="
+                                padding: 7px 16px;
+                                font-size: 13px;
+                                font-family: var(--font-sans);
+                                border: 1px solid {{ $i === 0 ? '#1a1a1a' : '#d0d0d0' }};
+                                background: white;
+                                color: #333;
+                                cursor: pointer;
+                                transition: all 0.15s;
+                                letter-spacing: 0.5px;
+                            ">
+                            {{ $size }}
+                        </button>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
+                {{-- Giá sẽ được cập nhật trực tiếp vào nút Thêm vào giỏ hàng --}}
+
+                <script id="variant-data" type="application/json">
+                    {!! $variantMap->toJson() !!}
+                </script>
             @endif
 
             <div class="pdp-actions-modern">
@@ -46,9 +113,10 @@
                     @if(isset($product->variants) && $product->variants->count() > 0)
                         <input type="hidden" name="variant_id" id="selectedVariantId" value="{{ $product->variants->first()->id }}">
                     @endif
+                    {{-- Hiển thị giá trong nút (cập nhật qua JS) --}}
                     <button type="submit" class="btn-pdp-modern btn-dark-modern">
                         <span class="btn-left">{{ __('messages.add_to_cart') }}</span>
-                        <span class="btn-right">
+                        <span class="btn-right" id="btn-add-cart-price">
                             @if($product->sale_price && $product->sale_price < $product->price)
                                 <span style="text-decoration: line-through; opacity: 0.7; margin-right: 5px;">{{ number_format($product->price, 0, ',', '.') }} ₫</span>
                                 {{ number_format($product->sale_price, 0, ',', '.') }} ₫
@@ -57,14 +125,14 @@
                             @endif
                         </span>
                     </button>
+                    <button type="submit" name="buy_now" value="1" class="btn-pdp-modern btn-light-modern" style="margin-top: 10px;">
+                        <span class="btn-left">{{ __('messages.quick_checkout') }}</span>
+                        <span class="btn-right" style="display: flex; align-items: center; gap: 5px;">
+                            Thanh toán
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M7 15h.01"/></svg>
+                        </span>
+                    </button>
                 </form>
-                <button class="btn-pdp-modern btn-light-modern">
-                    <span class="btn-left">{{ __('messages.quick_checkout') }}</span>
-                    <span class="btn-right" style="display: flex; align-items: center; gap: 5px;">
-                        VNpay
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M7 15h.01"/></svg>
-                    </span>
-                </button>
             </div>
 
             <div class="pdp-notices">
@@ -75,88 +143,51 @@
             </div>
 
             <div class="pdp-tabs">
-                <div class="pdp-tab active">{{ __('messages.tab_desc') }}</div>
-                <div class="pdp-tab">{{ __('messages.tab_size') }}</div>
-                <div class="pdp-tab">{{ __('messages.tab_contact') }}</div>
-                <div class="pdp-tab">{{ __('messages.tab_shipping') }}</div>
+                <div class="pdp-tab active" data-target="tab-desc">{{ __('messages.tab_desc') }}</div>
+                <div class="pdp-tab" data-target="tab-size">{{ __('messages.tab_size') }}</div>
+                <div class="pdp-tab" data-target="tab-contact">{{ __('messages.tab_contact') }}</div>
+                <div class="pdp-tab" data-target="tab-shipping">{{ __('messages.tab_shipping') }}</div>
             </div>
 
-            <div class="pdp-tab-content">
+            <div class="pdp-tab-content" id="tab-desc" style="display: block; line-height: 1.8;">
                 {!! nl2br(e($product->description)) !!}
             </div>
+
+            <div class="pdp-tab-content" id="tab-size" style="display: none; line-height: 1.8;">
+                @if(!empty($product->size_guide))
+                    {!! nl2br(e($product->size_guide)) !!}
+                @else
+                    <p style="color: #888; font-style: italic;">Đang cập nhật hướng dẫn kích thước cho sản phẩm này.</p>
+                @endif
+            </div>
+            
+            <div class="pdp-tab-content" id="tab-contact" style="display: none; line-height: 1.8;">
+                <p><strong>Dịch vụ Khách hàng Orlis Concierge:</strong></p>
+                <ul style="margin-top: 10px; padding-left: 20px; line-height: 1.8;">
+                    <li><strong>Hotline đặc quyền:</strong> 1800 929 3467 (Miễn phí cước)</li>
+                    <li><strong>Email:</strong> concierge@orlis.com</li>
+                    <li><strong>Thời gian hoạt động:</strong> 24/7, bao gồm cả ngày lễ.</li>
+                </ul>
+                <p style="margin-top: 15px; color: #666;">Mọi yêu cầu về tư vấn phong cách, đặt thiết kế riêng hoặc bảo hành sẽ được chuyên viên của chúng tôi tiếp nhận và ưu tiên xử lý trong vòng 2 giờ làm việc.</p>
+            </div>
+            
+            <div class="pdp-tab-content" id="tab-shipping" style="display: none; line-height: 1.8;">
+                <p><strong>Đặc quyền giao nhận Orlis Premium:</strong></p>
+                <ul style="margin-top: 10px; padding-left: 20px; line-height: 1.8;">
+                    <li><strong>Vận chuyển miễn phí toàn cầu:</strong> Áp dụng cho mọi đơn hàng. Hàng hóa được đóng gói bảo mật 3 lớp trong kiện bảo vệ chuyên dụng.</li>
+                    <li><strong>Thời gian:</strong> 1-3 ngày làm việc đối với nội địa, 3-7 ngày làm việc đối với quốc tế thông qua các đối tác vận chuyển cao cấp.</li>
+                    <li><strong>Chính sách hoàn trả:</strong> Orlis hỗ trợ đổi trả hoặc hoàn tiền trong vòng 30 ngày kể từ khi nhận hàng. Dịch vụ thu hồi tận nơi hoàn toàn miễn phí.</li>
+                </ul>
+                <p style="margin-top: 15px; font-weight: 600;">* Mỗi kiệt tác đều được trao đến tay quý khách kèm hộp quà tặng Orlis sang trọng, ruy băng dệt nổi và thiệp viết tay theo yêu cầu cá nhân hóa.</p>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Đánh giá & Nhận xét -->
-<div class="product-reviews-section" style="padding: 60px 60px; background: #fafafa; border-top: 1px solid #eee;">
-    <h2 style="font-family: var(--font-serif); font-size: 28px; margin-bottom: 40px; text-align: center;">{{ __('messages.reviews_title') }} ({{ $product->reviews->count() }})</h2>
-    
-    <div style="max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 2fr; gap: 40px;">
-        <!-- Form đánh giá -->
-        <div class="review-form-container">
-            <h3 style="font-size: 18px; margin-bottom: 20px;">{{ __('messages.write_review') }}</h3>
-            @if(auth()->check())
-                <form action="{{ route('product.review', $product->id) }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; margin-bottom: 5px;">{{ __('messages.rating_label') }}</label>
-                        <select name="rating" required style="width: 100%; padding: 10px; border: 1px solid #ccc;">
-                            <option value="5">{{ __('messages.rating_5') }}</option>
-                            <option value="4">{{ __('messages.rating_4') }}</option>
-                            <option value="3">{{ __('messages.rating_3') }}</option>
-                            <option value="2">{{ __('messages.rating_2') }}</option>
-                            <option value="1">{{ __('messages.rating_1') }}</option>
-                        </select>
-                    </div>
-                    <div style="margin-bottom: 15px;">
-                        <label style="display: block; margin-bottom: 5px;">{{ __('messages.comment_label') }}</label>
-                        <textarea name="comment" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ccc;" placeholder="{{ __('messages.comment_ph') }}"></textarea>
-                    </div>
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; margin-bottom: 5px;">{{ __('messages.attach_images') }}</label>
-                        <input type="file" name="images[]" multiple accept="image/*" style="width: 100%;">
-                    </div>
-                    <button type="submit" class="btn-pdp-modern btn-dark-modern" style="width: 100%;">{{ __('messages.submit_review') }}</button>
-                </form>
-            @else
-                <p style="color: #666; background: #fff; padding: 20px; border: 1px solid #eee;">
-                    {{ __('messages.please_login') }} <a href="{{ route('role.login', 'customer') }}" style="color: var(--color-primary); text-decoration: underline;">{{ __('messages.login_to_review') }}</a> {{ __('messages.to_send_review') }}
-                </p>
-            @endif
-        </div>
 
-        <!-- Danh sách đánh giá -->
-        <div class="reviews-list">
-            @if($product->reviews->isEmpty())
-                <p style="color: #666; font-style: italic;">{{ __('messages.no_reviews') }}</p>
-            @else
-                @foreach($product->reviews as $review)
-                    <div class="review-item" style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
-                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                            <strong style="font-size: 16px;">{{ $review->user->name ?? __('messages.customer') }}</strong>
-                            <span style="color: #ff9800; font-size: 14px;">
-                                {!! str_repeat('★', $review->rating) !!}{!! str_repeat('☆', 5 - $review->rating) !!}
-                            </span>
-                        </div>
-                        <p style="color: #444; line-height: 1.6; margin-bottom: 10px;">{{ $review->comment }}</p>
-                        @if(!empty($review->images))
-                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                @foreach($review->images as $img)
-                                    <img src="{{ Storage::url($img) }}" alt="Review Image" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;">
-                                @endforeach
-                            </div>
-                        @endif
-                        <small style="color: #999; display: block; margin-top: 10px;">{{ __('messages.reviewed_on') }} {{ $review->created_at->format('d/m/Y') }}</small>
-                    </div>
-                @endforeach
-            @endif
-        </div>
-    </div>
-</div>
 @if(isset($relatedProducts) && $relatedProducts->count() > 0)
-<div style="padding: 80px 60px;">
-    <h2 style="font-family: var(--font-serif); font-size: 28px; text-align: center; margin-bottom: 50px;">{{ __('messages.related_products') }}</h2>
+<div style="padding: 60px 60px 40px; background: #fff;">
+    <h2 style="font-family: var(--font-serif); font-size: 32px; font-weight: 400; color: #333; text-align: center; margin-bottom: 40px;">Có thể bạn sẽ thích</h2>
     <div class="catalog-grid">
         @foreach($relatedProducts as $related)
             <a href="{{ route('product', $related->id) }}" class="product-card">
@@ -164,8 +195,27 @@
                     <img src="{{ $related->thumbnail ? Storage::url($related->thumbnail) : asset('images/orlis_model_1.png') }}" alt="{{ $related->name }}">
                 </div>
                 <div class="product-info center-info">
-                    <h3>{{ $related->name }}</h3>
-                    <p>{{ number_format($related->price, 0, ',', '.') }} ₫</p>
+                    <h3 style="font-family: var(--font-serif); font-size: 18px; font-weight: 400; color: #333; margin-bottom: 8px;">{{ $related->name }}</h3>
+                    <p style="font-size: 14px; color: #666;">{{ number_format($related->sale_price ?? $related->price, 0, ',', '.') }} ₫</p>
+                </div>
+            </a>
+        @endforeach
+    </div>
+</div>
+@endif
+
+@if(isset($recentlyViewed) && $recentlyViewed->count() > 0)
+<div style="padding: 40px 60px 80px; background: #fff;">
+    <h2 style="font-family: var(--font-serif); font-size: 32px; font-weight: 400; color: #333; text-align: center; margin-bottom: 40px;">Đã xem gần đây</h2>
+    <div class="catalog-grid">
+        @foreach($recentlyViewed as $viewed)
+            <a href="{{ route('product', $viewed->id) }}" class="product-card">
+                <div class="product-img">
+                    <img src="{{ $viewed->thumbnail ? Storage::url($viewed->thumbnail) : asset('images/orlis_model_1.png') }}" alt="{{ $viewed->name }}">
+                </div>
+                <div class="product-info center-info">
+                    <h3 style="font-family: var(--font-serif); font-size: 18px; font-weight: 400; color: #333; margin-bottom: 8px;">{{ $viewed->name }}</h3>
+                    <p style="font-size: 14px; color: #666;">{{ number_format($viewed->sale_price ?? $viewed->price, 0, ',', '.') }} ₫</p>
                 </div>
             </a>
         @endforeach
@@ -176,18 +226,79 @@
 
 @section('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const colorBtns = document.querySelectorAll('.color-btn');
-        if (colorBtns.length > 0) {
-            colorBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    colorBtns.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    // In a real app with multiple variants we'd map color to variant_id here.
-                    // For now, this just updates the UI.
-                });
+document.addEventListener('DOMContentLoaded', function() {
+    const variantData = JSON.parse(document.getElementById('variant-data')?.textContent || '[]');
+    let selectedColor = variantData[0]?.color || null;
+    let selectedSize  = variantData[0]?.size  || null;
+
+    function findVariant(color, size) {
+        return variantData.find(v => v.color === color && v.size === size)
+            || variantData.find(v => v.color === color)
+            || variantData.find(v => v.size === size)
+            || variantData[0];
+    }
+
+    function updateUI() {
+        const v = findVariant(selectedColor, selectedSize);
+        if (!v) return;
+
+        // Cập nhật variant_id
+        const input = document.getElementById('selectedVariantId');
+        if (input) input.value = v.id;
+
+        // Cập nhật giá
+        const priceEl = document.getElementById('btn-add-cart-price');
+        if (priceEl) priceEl.textContent = new Intl.NumberFormat('vi-VN').format(v.price) + ' ₫';
+    }
+
+    // Xử lý nút màu
+    document.querySelectorAll('.variant-color-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            selectedColor = this.dataset.color;
+
+            document.querySelectorAll('.variant-color-btn').forEach(b => {
+                b.style.border = '1px solid #e0e0e0';
+                b.style.boxShadow = 'none';
             });
-        }
+            this.style.border = '1px solid #1a1a1a';
+            this.style.boxShadow = '0 0 0 1px #1a1a1a';
+
+            updateUI();
+        });
     });
+
+    // Xử lý nút size
+    document.querySelectorAll('.variant-size-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            selectedSize = this.dataset.size;
+
+            document.querySelectorAll('.variant-size-btn').forEach(b => {
+                b.style.border = '1px solid #d0d0d0';
+            });
+            this.style.border = '1px solid #1a1a1a';
+
+            updateUI();
+        });
+    });
+
+    // Xử lý Tabs
+    document.querySelectorAll('.pdp-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Xóa active khỏi tất cả tabs
+            document.querySelectorAll('.pdp-tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Ẩn tất cả nội dung
+            document.querySelectorAll('.pdp-tab-content').forEach(c => c.style.display = 'none');
+            
+            // Hiện nội dung tab được chọn
+            const targetId = this.getAttribute('data-target');
+            const targetContent = document.getElementById(targetId);
+            if(targetContent) {
+                targetContent.style.display = 'block';
+            }
+        });
+    });
+});
 </script>
 @endsection

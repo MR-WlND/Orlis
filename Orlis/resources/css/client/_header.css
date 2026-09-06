@@ -6,7 +6,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 100;
+    z-index: 1000;
     transition: all 0.3s;
     color: #fff;
 }
@@ -48,7 +48,7 @@ header.header-dark-text .action-icons {
 }
 .action-icons {
     display: flex;
-    gap: 20px;
+    gap: 25px;
     align-items: center;
 }
 .action-icons a {
@@ -148,12 +148,14 @@ header.header-dark-text .cart-badge {
     border: 1px solid #e0e0e0;
     border-radius: 6px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    min-width: 160px;
+    min-width: 170px;
+    width: max-content;
+    white-space: nowrap;
     opacity: 0;
     pointer-events: none;
     transform: translateY(-10px);
     transition: opacity 0.2s, transform 0.2s;
-    z-index: 1000;
+    z-index: 1005;
 }
 
 .user-menu-wrap:hover .user-dropdown,
@@ -174,12 +176,13 @@ header.header-dark-text .cart-badge {
 
 .user-dropdown a {
     display: block;
-    padding: 12px 16px;
+    padding: 12px 18px;
     font-size: 13px;
     color: #444;
     text-decoration: none;
     transition: background 0.2s;
     text-align: left;
+    white-space: nowrap;
 }
 
 .user-dropdown a:hover {
@@ -189,4 +192,23 @@ header.header-dark-text .cart-badge {
 
 .user-dropdown a:not(:last-child) {
     border-bottom: 1px solid #f0f0f0;
+}
+
+@media (min-width: 769px) {
+    .mobile-only-item {
+        display: none !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .action-icons {
+        gap: 12px;
+    }
+    .action-icons svg {
+        width: 18px;
+        height: 18px;
+    }
+    header {
+        padding: 15px 20px;
+    }
 }

@@ -213,3 +213,25 @@
 }
 .btn-clear { background: #fff; color: #111; }
 .btn-apply { background: #111; color: #fff; }
+
+@media (max-width: 768px) {
+    .catalog-page {
+        padding: 80px 20px 60px;
+    }
+    .catalog-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px 10px;
+    }
+    .product-info h3 {
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .product-info p {
+        font-size: 12px;
+    }
+    .subcategory-fallback-banner h2, .catalog-header-clean h1 {
+        font-size: 24px;
+    }
+}

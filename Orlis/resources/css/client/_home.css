@@ -267,3 +267,109 @@
     z-index: 3;
     text-align: center;
 }
+
+.mobile-see-more {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .hero { height: 80vh; }
+    .hero-content h1 { font-size: 36px; }
+    
+    .double-banner {
+        grid-template-columns: 1fr;
+        padding: 20px;
+        gap: 20px;
+    }
+    .banner-item {
+        height: auto;
+        aspect-ratio: 4/5;
+        padding-bottom: 30px;
+        justify-content: flex-start;
+        align-items: flex-end;
+        padding-left: 20px;
+    }
+    .banner-item h3 { font-size: 20px; margin: 0; }
+    .banner-item p { margin: 5px 0 0 0; font-size: 13px; }
+    
+    .mid-banner {
+        height: auto;
+        aspect-ratio: 3/4;
+        padding-bottom: 40px;
+    }
+    .mid-banner h2 { font-size: 32px; }
+    
+    .categories {
+        grid-template-columns: 1fr 1fr;
+        padding: 20px;
+        gap: 15px;
+    }
+    
+    .category-item {
+        position: relative;
+        height: auto;
+        text-align: center;
+        display: block;
+        padding: 0;
+        overflow: hidden;
+    }
+    
+    .category-img {
+        position: relative;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 3/4;
+        margin-bottom: 10px;
+    }
+    
+    .category-item::after {
+        display: none;
+    }
+    
+    .category-item h4 {
+        position: relative;
+        color: var(--text-dark);
+        text-shadow: none;
+        font-size: 12px;
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
+    
+    .mobile-see-more {
+        display: none; /* Hide on mobile to match desktop */
+    }
+    
+    .info-section {
+        flex-direction: row; /* Keep horizontal scroll */
+        padding: 40px 20px;
+        gap: 20px;
+        background-image: none;
+    }
+    
+    .info-text {
+        flex: 0 0 280px;
+        padding: 0;
+    }
+    
+    .info-text h2 { font-size: 32px; margin-bottom: 15px; }
+    .info-text p { line-height: 1.6; }
+    
+    .info-card {
+        height: 350px;
+        flex: 0 0 260px;
+        width: auto;
+        padding-bottom: 20px;
+        justify-content: flex-start;
+        align-items: flex-end;
+        padding-left: 20px;
+    }
+    .info-card-content {
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: flex-start;
+        padding-right: 20px;
+    }
+    .info-card h4 { font-size: 16px; margin-bottom: 5px; }
+}

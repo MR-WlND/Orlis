@@ -121,6 +121,7 @@
 <div style="background:#f5f5f3; min-height: 100vh;">
 <form method="POST" action="{{ route('checkout.store') }}" id="checkout-form">
 @csrf
+<input type="hidden" name="idempotency_key" value="{{ session()->get('checkout_idempotency_key') ?? tap(\Illuminate\Support\Str::uuid()->toString(), fn($k) => session()->put('checkout_idempotency_key', $k)) }}">
 <div class="checkout-wrap">
 
     {{-- LEFT: Form --}}
@@ -268,7 +269,9 @@
             <span>{{ number_format($grandTotal, 0, ',', '.') }}₫</span>
         </div>
 
-        <button type="submit" class="btn-place-order" id="btn-submit">{{ __('messages.place_order') }}</button>
+        <button type="submit" class="btn-place-order" id="btn-submit">
+            <span id="btn-text">{{ __('messages.place_order') }}</span>
+        </button>
 
         <p style="font-size: 11px; color: #999; text-align: center; margin-top: 14px; line-height: 1.5;">
             {{ __('messages.terms_and_conditions') }}
@@ -323,5 +326,22 @@ function applyCouponCheckout() {
         }
     });
 }
+// Idempotency: vô hiệu hóa nút sau lần bấm đầu
+const checkoutForm = document.getElementById('checkout-form');
+const btnSubmit = document.getElementById('btn-submit');
+const btnText = document.getElementById('btn-text');
+let isSubmitting = false;
+
+checkoutForm.addEventListener('submit', function(e) {
+    if (isSubmitting) {
+        e.preventDefault();
+        return false;
+    }
+    isSubmitting = true;
+    btnSubmit.disabled = true;
+    btnSubmit.style.opacity = '0.6';
+    btnSubmit.style.cursor = 'not-allowed';
+    btnText.textContent = 'Đang xử lý...';
+});
 </script>
 @endsection

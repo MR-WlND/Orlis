@@ -4,10 +4,19 @@
 
 @section('content')
 <div class="catalog-page">
-    <div class="catalog-header-clean">
+    <div class="catalog-header-clean" style="margin-bottom: 30px;">
         <h1>{{ $category ? $category->translated_name : ($categoryBanner->title ?? __('messages.all_products')) }}</h1>
         <p class="catalog-desc">{{ isset($categoryBanner) && $categoryBanner->description ? $categoryBanner->description : __('messages.catalog_desc_default') }}</p>
-        <p class="catalog-count">{{ $isParentCategory ? '' : $products->total() . ' ' . __('messages.items_count') }}</p>
+        @if(!$isParentCategory)
+            <div class="catalog-meta" style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 20px;">
+                <span class="catalog-count" style="font-weight: 600; text-transform: uppercase;">{{ $products->total() }} SẢN PHẨM</span>
+                <div style="width: 1px; height: 12px; background: #ccc;"></div>
+                <button onclick="toggleFilter()" style="border: none; background: transparent; font-family: var(--font-sans); font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; text-transform: uppercase;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16"><path d="M4 6h16M10 12h10M14 18h6"/></svg>
+                    Bộ lọc
+                </button>
+            </div>
+        @endif
     </div>
 
     @if($isParentCategory)
@@ -70,11 +79,7 @@
         @endif
     @endif
 
-    <!-- Floating Filter Button -->
-    <button class="floating-filter-btn" onclick="toggleFilter()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" width="16"><path d="M4 6h16M10 12h10M14 18h6"/></svg>
-        {{ __('messages.filter_sort') }}
-    </button>
+
 
     <!-- Filter Offcanvas -->
     <div class="filter-overlay" id="filterOverlay" onclick="toggleFilter()"></div>

@@ -43,13 +43,14 @@
         .qty-control { display: inline-flex; align-items: center; background: #e2e2e2; border-radius: 4px; height: 32px; padding: 0 6px; }
         .qty-btn { width: 24px; height: 100%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; background: none; font-size: 14px; font-weight: 500; color: #333; }
         .qty-input { width: 28px; text-align: center; border: none; background: none; font-size: 14px; font-weight: 600; color: #333; }
-        .cart-footer { display: flex; justify-content: space-between; align-items: center; background: white; padding: 16px 24px; border-radius: 8px; margin-top: 15px; position: sticky; bottom: 20px; z-index: 100; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); }
+        .cart-footer { display: flex; justify-content: space-between; align-items: center; background: white; padding: 16px 24px; border-radius: 8px; margin-top: 15px; position: sticky; bottom: 20px; z-index: 90; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); }
         .footer-left { display: flex; align-items: center; gap: 12px; font-size: 14px; color: #333; }
         .footer-right { display: flex; align-items: center; gap: 30px; }
         .total-price { font-family: var(--font-sans); font-size: 14px; font-weight: 700; color: #333; }
         .btn-checkout { padding: 14px 40px; background: #444444; color: white; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; font-weight: 500; text-decoration: none; display: inline-block; }
-        input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; appearance: none; background-color: #dbdbdb; border-radius: 2px; border: none; }
-        input[type="checkbox"]:checked { background-color: #888; }
+        input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; appearance: none; background-color: #dbdbdb; border-radius: 2px; border: none; position: relative; display: inline-flex; align-items: center; justify-content: center; transition: 0.2s; }
+        input[type="checkbox"]:checked { background-color: #111; }
+        input[type="checkbox"]:checked::after { content: ''; position: absolute; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); margin-bottom: 2px; }
     </style>
 @endsection
 
@@ -137,24 +138,7 @@
             </div>
             @endforeach
 
-            <!-- Áp dụng mã giảm giá -->
-            <div class="cart-coupon" style="background: white; padding: 16px 24px; border-radius: 8px; margin-bottom: 15px; display: flex; gap: 15px; align-items: center;">
-                <input type="text" id="coupon_code" placeholder="{{ __('messages.enter_coupon') }}" style="padding: 10px; border: 1px solid #ccc; width: 250px;">
-                <button type="button" id="btn-apply-coupon" onclick="applyCoupon()" style="padding: 10px 20px; background: #333; color: white; border: none; cursor: pointer;">{{ __('messages.apply') }}</button>
-                <div id="coupon-message" style="margin-left: 10px; font-size: 13px;"></div>
-                
-                @if(session()->has('applied_coupon'))
-                    <div id="applied-coupon-info" style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
-                        <span style="color: #28a745; font-weight: bold;">{{ __('messages.applied_code') }} {{ session('applied_coupon')['code'] }} ({{ '-'.number_format(session('applied_coupon')['discount_amount'], 0, ',', '.') }}₫)</span>
-                        <button type="button" onclick="removeCoupon()" style="background: none; border: none; color: #dc3545; text-decoration: underline; cursor: pointer; font-size: 13px;">{{ __('messages.remove_coupon') }}</button>
-                    </div>
-                @else
-                    <div id="applied-coupon-info" style="margin-left: auto; display: none; align-items: center; gap: 10px;">
-                        <span id="applied-coupon-text" style="color: #28a745; font-weight: bold;"></span>
-                        <button type="button" onclick="removeCoupon()" style="background: none; border: none; color: #dc3545; text-decoration: underline; cursor: pointer; font-size: 13px;">{{ __('messages.remove_coupon') }}</button>
-                    </div>
-                @endif
-            </div>
+
 
             <div class="cart-footer">
                 <div class="footer-left">
@@ -207,51 +191,6 @@ function changeQty(variantId, unitPrice, delta) {
 
 function toggleAll(cb) {
     document.querySelectorAll('.item-cb').forEach(el => el.checked = cb.checked);
-}
-
-function applyCoupon() {
-    let code = document.getElementById('coupon_code').value;
-    if (!code) {
-        document.getElementById('coupon-message').innerHTML = '<span style="color: #dc3545;">Vui lòng nhập mã giảm giá</span>';
-        return;
-    }
-
-    fetch('{{ route("cart.coupon.apply") }}', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrfToken
-        },
-        body: JSON.stringify({ coupon_code: code })
-    })
-    .then(res => res.json())
-    .then(data => {
-        let msgEl = document.getElementById('coupon-message');
-        if (data.success) {
-            msgEl.innerHTML = '';
-            document.getElementById('applied-coupon-info').style.display = 'flex';
-            document.getElementById('applied-coupon-text').textContent = 'Đã áp dụng mã: ' + code + ' (' + data.discount_formatted + ')';
-            document.getElementById('grand-total').textContent = data.new_total_formatted;
-        } else {
-            msgEl.innerHTML = '<span style="color: #dc3545;">' + data.message + '</span>';
-        }
-    });
-}
-
-function removeCoupon() {
-    fetch('{{ route("cart.coupon.remove") }}', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrfToken
-        }
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            location.reload();
-        }
-    });
 }
 </script>
 @endsection

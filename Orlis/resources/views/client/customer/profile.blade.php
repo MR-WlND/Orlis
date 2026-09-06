@@ -1,116 +1,107 @@
-@extends('layouts.client')
-@section('title', 'Hồ sơ cá nhân - Orlis')
-@section('styles')
+@extends('layouts.customer')
+@section('customer_title', __('messages.profile') . ' - Orlis')
+@section('customer_styles')
 <style>
-    .customer-wrap { max-width: 1060px; margin: 0 auto; padding: 100px 20px 60px; display: grid; grid-template-columns: 220px 1fr; gap: 32px; }
-    .sidebar-nav { position: sticky; top: 90px; height: fit-content; }
-    .sidebar-nav .user-info { padding-bottom: 20px; border-bottom: 1px solid #e8e8e8; margin-bottom: 16px; }
-    .avatar-circle { width: 56px; height: 56px; border-radius: 50%; background: #f0ece6; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; color: var(--primary); margin-bottom: 10px; overflow: hidden; }
-    .user-name { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
-    .user-level { font-size: 12px; color: #999; }
-    .nav-link { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 6px; text-decoration: none; color: #555; font-size: 14px; transition: all 0.15s; margin-bottom: 2px; }
-    .nav-link:hover, .nav-link.active { background: #f5f0ea; color: var(--primary); font-weight: 500; }
-    .nav-link svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; flex-shrink: 0; }
-    .card { background: white; border-radius: 10px; border: 1px solid #efefef; padding: 28px; margin-bottom: 20px; }
-    .card-title { font-family: var(--font-serif); font-size: 17px; font-weight: 500; margin-bottom: 22px; }
-    .form-group { margin-bottom: 16px; }
-    .form-label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-bottom: 6px; }
-    .form-input { width: 100%; padding: 11px 14px; border: 1px solid #d0d0d0; border-radius: 4px; font-size: 14px; color: #333; box-sizing: border-box; transition: border-color 0.2s; }
-    .form-input:focus { border-color: var(--primary); outline: none; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .avatar-upload { display: flex; gap: 20px; align-items: center; margin-bottom: 24px; }
-    .avatar-preview { width: 80px; height: 80px; border-radius: 50%; background: #f0ece6; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; color: var(--primary); overflow: hidden; flex-shrink: 0; }
+    .card { background: white; border: 1px solid #eee; padding: 35px 40px; margin-bottom: 25px; transition: 0.3s; }
+    .card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.02); border-color: #e5e5e5; }
+    .card-title { font-family: var(--font-serif); font-size: 18px; font-weight: 400; color: #111; margin-bottom: 25px; border-bottom: 1px solid #f9f9f9; padding-bottom: 15px; }
+    
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 8px; }
+    .form-input { width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0; background: #fbfbfb; font-size: 14px; color: #333; box-sizing: border-box; transition: 0.3s; }
+    .form-input:focus { border-color: #111; background: white; outline: none; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    
+    .avatar-upload { display: flex; gap: 25px; align-items: center; margin-bottom: 30px; }
+    .avatar-preview { width: 80px; height: 80px; border-radius: 50%; background: #111; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; color: white; overflow: hidden; flex-shrink: 0; border: 2px solid #eee; }
     .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
-    .btn-upload { padding: 9px 18px; border: 1px solid #d0d0d0; background: white; border-radius: 4px; font-size: 13px; cursor: pointer; }
-    .btn-save { padding: 12px 32px; background: #333; color: white; border: none; border-radius: 4px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-    .btn-save:hover { background: #111; }
-    .error-msg { color: #c0392b; font-size: 12px; margin-top: 4px; }
-    @media(max-width: 768px) { .customer-wrap { grid-template-columns: 1fr; } .sidebar-nav { position: static; } .form-row { grid-template-columns: 1fr; } }
+    .btn-upload { display: inline-block; padding: 10px 20px; border: 1px solid #ddd; background: transparent; color: #111; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+    .btn-upload:hover { border-color: #111; background: #111; color: white; }
+    
+    .btn-save { padding: 14px 35px; background: #111; color: white; border: none; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; cursor: pointer; transition: 0.3s; display: block; width: fit-content; margin-top: 30px; }
+    .btn-save:hover { background: #333; }
+    
+    .error-msg { color: #c0392b; font-size: 11px; margin-top: 6px; letter-spacing: 0.5px; }
+    
+    @media(max-width: 768px) { .form-row { grid-template-columns: 1fr; } .avatar-upload { flex-direction: column; text-align: center; } }
 </style>
 @endsection
-@section('content')
-<div style="background: #f8f7f5; min-height: 100vh;">
-<div class="customer-wrap">
-    @include('client.customer._sidebar')
+@section('customer_content')
+<div class="section-header">
     <div>
-        @if(session('success'))
-            <div style="background:#d4edda;color:#155724;padding:12px 16px;border-radius:6px;margin-bottom:20px;font-size:13px;">{{ session('success') }}</div>
-        @endif
-        @if(session('error'))
-            <div style="background:#f8d7da;color:#721c24;padding:12px 16px;border-radius:6px;margin-bottom:20px;font-size:13px;">{{ session('error') }}</div>
-        @endif
-
-        <form method="POST" action="{{ route('customer.profile.update') }}" enctype="multipart/form-data">
-            @csrf
-            @method('PATCH')
-
-            {{-- Thông tin cơ bản --}}
-            <div class="card">
-                <div class="card-title">Thông tin cá nhân</div>
-
-                <div class="avatar-upload">
-                    <div class="avatar-preview" id="avatar-preview">
-                        @if($user->avatar)
-                            <img src="{{ Storage::url($user->avatar) }}" id="avatar-img" alt="Avatar">
-                        @else
-                            <span id="avatar-initials">{{ strtoupper(substr($user->name, 0, 2)) }}</span>
-                        @endif
-                    </div>
-                    <div>
-                        <label class="btn-upload" style="cursor:pointer;">
-                            Thay ảnh đại diện
-                            <input type="file" name="avatar" accept="image/*" style="display:none;" onchange="previewAvatar(this)">
-                        </label>
-                        <div style="font-size:12px;color:#aaa;margin-top:6px;">JPEG, PNG, WebP – tối đa 2MB</div>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Họ và tên *</label>
-                        <input type="text" name="name" class="form-input" value="{{ old('name', $user->name) }}" required>
-                        @error('name')<div class="error-msg">{{ $message }}</div>@enderror
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Số điện thoại</label>
-                        <input type="text" name="phone" class="form-input" value="{{ old('phone', $user->phone) }}" placeholder="0912 345 678">
-                        @error('phone')<div class="error-msg">{{ $message }}</div>@enderror
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-input" value="{{ $user->email }}" disabled style="opacity:0.6;">
-                    <div style="font-size:12px;color:#aaa;margin-top:4px;">Email không thể thay đổi.</div>
-                </div>
-            </div>
-
-            {{-- Đổi mật khẩu --}}
-            <div class="card">
-                <div class="card-title">Đổi mật khẩu</div>
-                <div class="form-group">
-                    <label class="form-label">Mật khẩu hiện tại</label>
-                    <input type="password" name="current_password" class="form-input" placeholder="Nhập mật khẩu hiện tại để xác nhận">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Mật khẩu mới</label>
-                        <input type="password" name="new_password" class="form-input" placeholder="Tối thiểu 8 ký tự">
-                        @error('new_password')<div class="error-msg">{{ $message }}</div>@enderror
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Xác nhận mật khẩu mới</label>
-                        <input type="password" name="new_password_confirmation" class="form-input" placeholder="Nhập lại mật khẩu mới">
-                    </div>
-                </div>
-                <p style="font-size:12px;color:#aaa;">Bỏ trống nếu bạn không muốn thay đổi mật khẩu.</p>
-            </div>
-
-            <button type="submit" class="btn-save">Lưu thay đổi</button>
-        </form>
+        <div class="subtitle">THÔNG TIN CÁ NHÂN & THẺ</div>
+        <h2 class="section-title">Hồ sơ của tôi</h2>
     </div>
 </div>
-</div>
+
+<form method="POST" action="{{ route('customer.profile.update') }}" enctype="multipart/form-data">
+    @csrf
+    @method('PATCH')
+
+    {{-- Thông tin cơ bản --}}
+    <div class="card">
+        <div class="card-title">{{ __('messages.personal_info') }}</div>
+
+        <div class="avatar-upload">
+            <div class="avatar-preview" id="avatar-preview">
+                @if($user->avatar)
+                    <img src="{{ Storage::url($user->avatar) }}" id="avatar-img" alt="Avatar">
+                @else
+                    <span id="avatar-initials">{{ strtoupper(substr($user->name, 0, 2)) }}</span>
+                @endif
+            </div>
+            <div>
+                <label class="btn-upload">
+                    {{ __('messages.change_avatar') }}
+                    <input type="file" name="avatar" accept="image/*" style="display:none;" onchange="previewAvatar(this)">
+                </label>
+                <div style="font-size:11px;color:#aaa;margin-top:8px;">{{ __('messages.avatar_notice') }}</div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">{{ __('messages.fullname') }} *</label>
+                <input type="text" name="name" class="form-input" value="{{ old('name', $user->name) }}" required>
+                @error('name')<div class="error-msg">{{ $message }}</div>@enderror
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ __('messages.phone_number') }}</label>
+                <input type="text" name="phone" class="form-input" value="{{ old('phone', $user->phone) }}" placeholder="0912 345 678">
+                @error('phone')<div class="error-msg">{{ $message }}</div>@enderror
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" value="{{ $user->email }}" disabled style="opacity:0.6; cursor:not-allowed;">
+            <div style="font-size:11px;color:#aaa;margin-top:6px;">{{ __('messages.email_cannot_change') }}</div>
+        </div>
+    </div>
+
+    {{-- Đổi mật khẩu --}}
+    <div class="card">
+        <div class="card-title">{{ __('messages.change_password') }}</div>
+        <div class="form-group">
+            <label class="form-label">{{ __('messages.current_password') }}</label>
+            <input type="password" name="current_password" class="form-input" placeholder="{{ __('messages.current_password_ph') }}">
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">{{ __('messages.new_password') }}</label>
+                <input type="password" name="new_password" class="form-input" placeholder="{{ __('messages.new_password_ph') }}">
+                @error('new_password')<div class="error-msg">{{ $message }}</div>@enderror
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ __('messages.confirm_new_password') }}</label>
+                <input type="password" name="new_password_confirmation" class="form-input" placeholder="{{ __('messages.confirm_new_password_ph') }}">
+            </div>
+        </div>
+        <p style="font-size:11px;color:#aaa;margin-top:10px;">{{ __('messages.leave_blank_password') }}</p>
+    </div>
+
+    <button type="submit" class="btn-save">{{ __('messages.save_changes') }}</button>
+</form>
 
 <script>
 function previewAvatar(input) {
