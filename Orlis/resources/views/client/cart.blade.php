@@ -25,17 +25,17 @@
         .page-title span { font-size: 13px; color: #666; }
         .empty-state { display: flex; flex-direction: column; align-items: center; text-align: center; }
         .login-banner { width: 100%; background-color: var(--primary); color: white; padding: 15px; border-radius: 4px; font-size: 14px; margin-bottom: 15px; cursor: pointer; }
-        .login-note { font-size: 12px; color: var(--text-light); margin-bottom: 60px; max-width: 600px; line-height: 1.5; }
+        .login-note { font-size: 12px; color: #555; margin-bottom: 60px; max-width: 600px; line-height: 1.5; }
         .bag-icon { margin-bottom: 20px; }
-        .bag-icon svg { width: 32px; height: 32px; stroke: var(--text-light); fill: none; stroke-width: 1.5; }
-        .empty-msg { font-size: 13px; color: var(--text-light); margin-bottom: 30px; }
+        .bag-icon svg { width: 32px; height: 32px; stroke: #333; fill: none; stroke-width: 1.5; }
+        .empty-msg { font-size: 13px; color: #555; margin-bottom: 30px; }
         .btn-continue { padding: 12px 30px; border: 1px solid var(--text-dark); background: transparent; font-size: 14px; cursor: pointer; transition: all 0.2s; }
         .btn-continue:hover { background: var(--text-dark); color: white; }
         .cart-header { display: grid; grid-template-columns: 16px 4fr 1fr 1.5fr 1fr; gap: 24px; padding-bottom: 15px; padding-left: 24px; padding-right: 24px; border-bottom: 1px solid #d0d0d0; font-size: 13px; color: #666; text-align: center; margin-bottom: 15px; font-weight: 400; }
         .cart-header > :nth-child(2) { text-align: left; }
         .cart-item { display: grid; grid-template-columns: 16px 4fr 1fr 1.5fr 1fr; gap: 24px; align-items: center; background: white; padding: 16px 24px; border-radius: 8px; margin-bottom: 15px; text-align: center; }
         .cart-item > :nth-child(2) { display: flex; gap: 24px; text-align: left; align-items: center; }
-        .item-img { width: 90px; height: 120px; object-fit: cover; border: 1px solid #e0e0e0; background: #ffffff; border-radius: 2px; }
+        .item-img { width: 90px; height: 120px; min-width: 90px; min-height: 120px; max-width: 90px; max-height: 120px; flex-shrink: 0; object-fit: cover; border: 1px solid #e0e0e0; background: #ffffff; border-radius: 2px; }
         .item-info h4 { font-family: var(--font-sans); font-size: 14px; margin-bottom: 5px; font-weight: 600; color: #333; }
         .item-info p { font-family: var(--font-sans); font-size: 13px; color: #666; margin-bottom: 15px; line-height: 1.5; }
         .item-remove { font-size: 12px; color: #555; text-decoration: underline; cursor: pointer; }
@@ -58,8 +58,8 @@
     <div class="container">
 
         <div class="page-title">
-            <h1>Túi của bạn</h1>
-            <span id="item-count">{{ $cart ? $cart->total_quantity : 0 }} mặt hàng</span>
+            <h1>{{ __('messages.your_bag') }}</h1>
+            <span id="item-count">{{ $cart ? $cart->total_quantity : 0 }} {{ __('messages.items') }}</span>
         </div>
 
         @if(session('success'))
@@ -72,14 +72,14 @@
         @guest
         <div class="empty-state">
             <a href="{{ route('role.login', 'customer') }}" style="width:100%;display:flex;justify-content:center;">
-                <button class="login-banner" style="max-width:600px;">Đăng nhập hoặc tạo tài khoản Orlis</button>
+                <button class="login-banner" style="max-width:600px;">{{ __('messages.login_or_create') }}</button>
             </a>
-            <p class="login-note">Nhận quà tặng và phần thưởng dành riêng cho thành viên khi thanh toán.</p>
+            <p class="login-note">{{ __('messages.member_rewards') }}</p>
             <div class="bag-icon">
                 <svg viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
             </div>
-            <p class="empty-msg">Đăng nhập để xem giỏ hàng của bạn</p>
-            <a href="/"><button class="btn-continue">Tiếp tục mua sắm</button></a>
+            <p class="empty-msg">{{ __('messages.login_to_view_cart') }}</p>
+            <a href="/"><button class="btn-continue">{{ __('messages.continue_shopping') }}</button></a>
         </div>
         @endguest
 
@@ -89,17 +89,17 @@
             <div class="bag-icon">
                 <svg viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
             </div>
-            <p class="empty-msg">Giỏ hàng của bạn đang trống.</p>
-            <a href="{{ route('catalog') }}"><button class="btn-continue">Tiếp tục mua sắm</button></a>
+            <p class="empty-msg">{{ __('messages.cart_empty') }}</p>
+            <a href="{{ route('catalog') }}"><button class="btn-continue">{{ __('messages.continue_shopping') }}</button></a>
         </div>
         @else
         <div style="display: block;">
             <div class="cart-header">
                 <div></div>
-                <div>Thông tin chi tiết</div>
-                <div>Đơn giá</div>
-                <div>Số lượng</div>
-                <div>Tổng giá</div>
+                <div>{{ __('messages.item_details') }}</div>
+                <div>{{ __('messages.unit_price') }}</div>
+                <div>{{ __('messages.quantity') }}</div>
+                <div>{{ __('messages.total_price') }}</div>
             </div>
 
             @foreach($cart->items as $item)
@@ -116,12 +116,12 @@
                         <div class="item-img" style="display:flex;align-items:center;justify-content:center;background:#f5f5f5;color:#ccc;font-size:32px;">🧴</div>
                     @endif
                     <div class="item-info">
-                        <h4>{{ $product?->name ?? 'Sản phẩm' }}</h4>
+                        <h4>{{ $product?->name ?? __('messages.product') }}</h4>
                         <p>{{ $item->variant?->display_name }}</p>
                         <form method="POST" action="{{ route('cart.remove', $item->variant_id) }}" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="item-remove" style="background:none;border:none;padding:0;">Xóa</button>
+                            <button type="submit" class="item-remove" style="background:none;border:none;padding:0;">{{ __('messages.remove') }}</button>
                         </form>
                     </div>
                 </div>
@@ -139,19 +139,19 @@
 
             <!-- Áp dụng mã giảm giá -->
             <div class="cart-coupon" style="background: white; padding: 16px 24px; border-radius: 8px; margin-bottom: 15px; display: flex; gap: 15px; align-items: center;">
-                <input type="text" id="coupon_code" placeholder="Nhập mã giảm giá..." style="padding: 10px; border: 1px solid #ccc; width: 250px;">
-                <button type="button" id="btn-apply-coupon" onclick="applyCoupon()" style="padding: 10px 20px; background: #333; color: white; border: none; cursor: pointer;">Áp dụng</button>
+                <input type="text" id="coupon_code" placeholder="{{ __('messages.enter_coupon') }}" style="padding: 10px; border: 1px solid #ccc; width: 250px;">
+                <button type="button" id="btn-apply-coupon" onclick="applyCoupon()" style="padding: 10px 20px; background: #333; color: white; border: none; cursor: pointer;">{{ __('messages.apply') }}</button>
                 <div id="coupon-message" style="margin-left: 10px; font-size: 13px;"></div>
                 
                 @if(session()->has('applied_coupon'))
                     <div id="applied-coupon-info" style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
-                        <span style="color: #28a745; font-weight: bold;">Đã áp dụng mã: {{ session('applied_coupon')['code'] }} ({{ '-'.number_format(session('applied_coupon')['discount_amount'], 0, ',', '.') }}₫)</span>
-                        <button type="button" onclick="removeCoupon()" style="background: none; border: none; color: #dc3545; text-decoration: underline; cursor: pointer; font-size: 13px;">Gỡ bỏ</button>
+                        <span style="color: #28a745; font-weight: bold;">{{ __('messages.applied_code') }} {{ session('applied_coupon')['code'] }} ({{ '-'.number_format(session('applied_coupon')['discount_amount'], 0, ',', '.') }}₫)</span>
+                        <button type="button" onclick="removeCoupon()" style="background: none; border: none; color: #dc3545; text-decoration: underline; cursor: pointer; font-size: 13px;">{{ __('messages.remove_coupon') }}</button>
                     </div>
                 @else
                     <div id="applied-coupon-info" style="margin-left: auto; display: none; align-items: center; gap: 10px;">
                         <span id="applied-coupon-text" style="color: #28a745; font-weight: bold;"></span>
-                        <button type="button" onclick="removeCoupon()" style="background: none; border: none; color: #dc3545; text-decoration: underline; cursor: pointer; font-size: 13px;">Gỡ bỏ</button>
+                        <button type="button" onclick="removeCoupon()" style="background: none; border: none; color: #dc3545; text-decoration: underline; cursor: pointer; font-size: 13px;">{{ __('messages.remove_coupon') }}</button>
                     </div>
                 @endif
             </div>
@@ -159,11 +159,11 @@
             <div class="cart-footer">
                 <div class="footer-left">
                     <input type="checkbox" id="check-all" onclick="toggleAll(this)">
-                    <label for="check-all">Chọn tất cả</label>
+                    <label for="check-all">{{ __('messages.select_all') }}</label>
                 </div>
                 <div class="footer-right">
-                    <div class="total-price">Tổng: <span id="grand-total">{{ number_format($cart->total, 0, ',', '.') }}₫</span></div>
-                    <a href="{{ route('checkout.index') }}" class="btn-checkout">Thanh toán</a>
+                    <div class="total-price">{{ __('messages.total') }} <span id="grand-total">{{ number_format($cart->total, 0, ',', '.') }}₫</span></div>
+                    <a href="{{ route('checkout.index') }}" class="btn-checkout">{{ __('messages.checkout') }}</a>
                 </div>
             </div>
         </div>
@@ -178,7 +178,7 @@ const csrfToken = '{{ csrf_token() }}';
 
 function changeQty(variantId, unitPrice, delta) {
     const input = document.getElementById('qty-' + variantId);
-    const newQty = Math.max(0, parseInt(input.value) + delta);
+    const newQty = Math.max(1, parseInt(input.value) + delta);
     input.value = newQty;
 
     // Update local total immediately

@@ -1,7 +1,9 @@
 /* Footer */
 footer {
     padding: 60px 40px 20px;
-    border-top: 1px solid var(--border);
+    background: #f9f9fa;
+    border-top: 1px solid #eee;
+    color: #333;
 }
 
 .footer-top {
@@ -15,39 +17,73 @@ footer {
     margin-bottom: 15px;
 }
 
+/* Footer Newsletter */
+.footer-newsletter {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin-bottom: 40px;
+}
+
+.footer-newsletter p {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    color: #444;
+    margin-bottom: 20px;
+}
+
 .subscribe-form {
     display: flex;
-    gap: 10px;
+    gap: 12px;
+    max-width: 420px;
 }
 
 .subscribe-form input {
     flex: 1;
-    padding: 12px;
-    border: 1px solid var(--border);
+    padding: 12px 16px;
+    border: 1px solid #e0e0e0;
     outline: none;
+    font-size: 13px;
+    border-radius: 4px;
+    background: #fff;
+    color: #333;
+    transition: border-color 0.2s;
+}
+
+.subscribe-form input:focus {
+    border-color: #bbb;
 }
 
 .subscribe-form button {
     padding: 12px 24px;
-    background: var(--text-dark);
-    color: var(--text-light);
+    background: #606060;
+    color: white;
     border: none;
     cursor: pointer;
-    font-weight: bold;
+    font-size: 13px;
+    font-weight: 400;
+    border-radius: 4px;
+    white-space: nowrap;
+    transition: background 0.2s;
+}
+
+.subscribe-form button:hover {
+    background: #333;
 }
 
 .footer-links {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 30px;
-    margin-bottom: 60px;
+    margin-bottom: 40px;
 }
 
 .link-column h5 {
-    font-size: 14px;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-weight: 400;
+    color: #444;
+    margin-bottom: 22px;
 }
 
 .link-column ul {
@@ -55,34 +91,130 @@ footer {
 }
 
 .link-column ul li {
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .link-column ul li a {
     font-size: 13px;
-    color: #666;
-    transition: color 0.3s;
+    color: #555;
+    font-weight: 400;
+    text-decoration: none;
+    transition: color 0.2s;
 }
 
 .link-column ul li a:hover {
-    color: var(--text-dark);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    color: #111;
 }
 
 .footer-bottom {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
+    align-items: flex-end;
+    padding-top: 40px;
+    border-top: none;
     font-size: 12px;
-    color: #999;
+    color: #555;
 }
 
 .social-links {
+    display: block;
+}
+
+.social-links span {
+    color: #555;
+    font-size: 13px;
+    margin-right: 5px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.social-links a {
+    color: #333;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
+    margin-right: 15px;
+}
+
+.social-links a:hover {
+    color: #000;
+}
+
+/* Language popup (upward) */
+.lang-popup-wrap {
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.lang-popup-trigger {
+    background: none;
+    border: none;
+    border-radius: 4px;
+    padding: 7px 0;
+    font-size: 13px;
+    color: #555;
+    cursor: pointer;
     display: flex;
-    gap: 15px;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s;
+    white-space: nowrap;
+}
+
+.lang-popup-trigger:hover {
+    color: #111;
+}
+
+.lang-popup-menu {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.10);
+    min-width: 160px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 999;
+}
+
+.lang-popup-wrap.open .lang-popup-menu {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.lang-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 11px 16px;
+    font-size: 13px;
+    color: #444;
+    text-decoration: none;
+    transition: background 0.15s;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.lang-option:last-child {
+    border-bottom: none;
+}
+
+.lang-option:hover {
+    background: #f8f8f8;
+    color: #111;
+}
+
+.lang-option.active {
+    font-weight: 600;
+    color: #111;
 }
 
 /* Responsive */

@@ -126,7 +126,7 @@
     {{-- LEFT: Form --}}
     <div>
         {{-- Địa chỉ giao hàng --}}
-        <h2 class="section-title">Địa chỉ giao hàng</h2>
+        <h2 class="section-title">{{ __('messages.shipping_address') }}</h2>
 
         @if($addresses->isNotEmpty())
         <div style="margin-bottom: 16px;">
@@ -138,18 +138,18 @@
                 <span style="color:#888;">{{ $addr->full_address }}</span>
             </label>
             @endforeach
-            <button type="button" onclick="clearAddress()" style="font-size:12px;color:var(--primary);background:none;border:none;cursor:pointer;padding:0;margin-bottom:16px;text-decoration:underline;">+ Dùng địa chỉ mới</button>
+            <button type="button" onclick="clearAddress()" style="font-size:12px;color:var(--primary);background:none;border:none;cursor:pointer;padding:0;margin-bottom:16px;text-decoration:underline;">{{ __('messages.use_new_address') }}</button>
         </div>
         @endif
 
         <div class="form-row">
             <div class="form-group">
-                <label class="form-label">Tên người nhận *</label>
+                <label class="form-label">{{ __('messages.recipient_name') }}</label>
                 <input type="text" name="recipient_name" id="f_name" class="form-input" value="{{ old('recipient_name', $addresses->firstWhere('is_default', true)?->recipient_name ?? auth()->user()->name) }}" required>
                 @error('recipient_name')<div class="error-msg">{{ $message }}</div>@enderror
             </div>
             <div class="form-group">
-                <label class="form-label">Số điện thoại *</label>
+                <label class="form-label">{{ __('messages.phone_number') }}</label>
                 <input type="text" name="recipient_phone" id="f_phone" class="form-input" value="{{ old('recipient_phone', $addresses->firstWhere('is_default', true)?->phone ?? auth()->user()->phone) }}" required>
                 @error('recipient_phone')<div class="error-msg">{{ $message }}</div>@enderror
             </div>
@@ -157,52 +157,52 @@
 
         <div class="form-row">
             <div class="form-group">
-                <label class="form-label">Tỉnh / Thành phố *</label>
-                <input type="text" name="province" id="f_province" class="form-input" value="{{ old('province', $addresses->firstWhere('is_default', true)?->province) }}" required placeholder="Ví dụ: TP. Hồ Chí Minh">
+                <label class="form-label">{{ __('messages.province') }}</label>
+                <input type="text" name="province" id="f_province" class="form-input" value="{{ old('province', $addresses->firstWhere('is_default', true)?->province) }}" required placeholder="{{ __('messages.province_placeholder') }}">
                 @error('province')<div class="error-msg">{{ $message }}</div>@enderror
             </div>
             <div class="form-group">
-                <label class="form-label">Quận / Huyện *</label>
-                <input type="text" name="district" id="f_district" class="form-input" value="{{ old('district', $addresses->firstWhere('is_default', true)?->district) }}" required placeholder="Ví dụ: Quận 1">
+                <label class="form-label">{{ __('messages.district') }}</label>
+                <input type="text" name="district" id="f_district" class="form-input" value="{{ old('district', $addresses->firstWhere('is_default', true)?->district) }}" required placeholder="{{ __('messages.district_placeholder') }}">
                 @error('district')<div class="error-msg">{{ $message }}</div>@enderror
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-group">
-                <label class="form-label">Phường / Xã *</label>
-                <input type="text" name="ward" id="f_ward" class="form-input" value="{{ old('ward', $addresses->firstWhere('is_default', true)?->ward) }}" required placeholder="Ví dụ: Phường Bến Nghé">
+                <label class="form-label">{{ __('messages.ward') }}</label>
+                <input type="text" name="ward" id="f_ward" class="form-input" value="{{ old('ward', $addresses->firstWhere('is_default', true)?->ward) }}" required placeholder="{{ __('messages.ward_placeholder') }}">
                 @error('ward')<div class="error-msg">{{ $message }}</div>@enderror
             </div>
             <div class="form-group">
-                <label class="form-label">Địa chỉ chi tiết *</label>
-                <input type="text" name="detail_address" id="f_detail" class="form-input" value="{{ old('detail_address', $addresses->firstWhere('is_default', true)?->detail_address) }}" required placeholder="Số nhà, tên đường...">
+                <label class="form-label">{{ __('messages.detail_address') }}</label>
+                <input type="text" name="detail_address" id="f_detail" class="form-input" value="{{ old('detail_address', $addresses->firstWhere('is_default', true)?->detail_address) }}" required placeholder="{{ __('messages.detail_address_placeholder') }}">
                 @error('detail_address')<div class="error-msg">{{ $message }}</div>@enderror
             </div>
         </div>
 
         <div class="form-group">
-            <label class="form-label">Ghi chú quà tặng (tùy chọn)</label>
-            <textarea name="gift_note" class="form-input" rows="2" placeholder="Ví dụ: Gói quà, viết thiệp...">{{ old('gift_note') }}</textarea>
+            <label class="form-label">{{ __('messages.gift_note') }}</label>
+            <textarea name="gift_note" class="form-input" rows="2" placeholder="{{ __('messages.gift_note_placeholder') }}">{{ old('gift_note') }}</textarea>
         </div>
 
         <div class="form-group">
             <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;">
                 <input type="checkbox" name="save_address" value="1" style="width:15px;height:15px;accent-color:var(--primary);">
-                Lưu địa chỉ này cho lần sau
+                {{ __('messages.save_address_for_next_time') }}
             </label>
         </div>
 
         {{-- Phương thức thanh toán --}}
-        <h2 class="section-title" style="margin-top: 28px;">Phương thức thanh toán</h2>
+        <h2 class="section-title" style="margin-top: 28px;">{{ __('messages.payment_method') }}</h2>
         <div class="payment-options">
             <label class="payment-option">
                 <input type="radio" name="payment_method" value="cod" checked>
-                <span>💵 Thanh toán khi nhận hàng (COD)</span>
+                <span>💵 {{ __('messages.cod') }}</span>
             </label>
             <label class="payment-option">
                 <input type="radio" name="payment_method" value="vnpay">
-                <span>🏦 Thanh toán qua VNPAY</span>
+                <span>🏦 {{ __('messages.vnpay') }}</span>
             </label>
         </div>
         @error('payment_method')<div class="error-msg">{{ $message }}</div>@enderror
@@ -210,7 +210,7 @@
 
     {{-- RIGHT: Order Summary --}}
     <div class="order-summary">
-        <h2 class="section-title" style="border:none;margin-bottom:14px;">Đơn hàng ({{ $cart->total_quantity }} sản phẩm)</h2>
+        <h2 class="section-title" style="border:none;margin-bottom:14px;">{{ __('messages.order_summary') }} ({{ $cart->total_quantity }} {{ __('messages.items') }})</h2>
 
         @foreach($cart->items as $item)
         @php
@@ -224,7 +224,7 @@
                 <div class="summary-item-img" style="display:flex;align-items:center;justify-content:center;color:#ccc;font-size:22px;">🧴</div>
             @endif
             <div style="flex:1;">
-                <div class="summary-item-name">{{ $product?->name ?? 'Sản phẩm' }}</div>
+                <div class="summary-item-name">{{ $product?->name ?? __('messages.product') }}</div>
                 <div class="summary-item-variant">{{ $item->variant?->display_name }} × {{ $item->quantity }}</div>
             </div>
             <div class="summary-item-price">{{ number_format($item->subtotal, 0, ',', '.') }}₫</div>
@@ -235,17 +235,18 @@
         <div class="divider"></div>
         <div class="coupon-row" style="margin-bottom: 5px;">
             <input type="text" id="checkout_coupon_code" name="coupon_code" class="form-input" placeholder="Mã giảm giá" value="{{ session('applied_coupon')['code'] ?? old('coupon_code') }}">
-            <button type="button" onclick="applyCouponCheckout()">Áp dụng</button>
+            <input type="text" id="checkout_coupon_code" name="coupon_code" class="form-input" placeholder="{{ __('messages.coupon_code') }}" value="{{ session('applied_coupon')['code'] ?? old('coupon_code') }}">
+            <button type="button" onclick="applyCouponCheckout()">{{ __('messages.apply') }}</button>
         </div>
         <div id="checkout-coupon-msg" style="font-size: 12px; margin-bottom: 15px;"></div>
 
         <div class="summary-row">
-            <span>Tạm tính</span>
+            <span>{{ __('messages.subtotal') }}</span>
             <span>{{ number_format($cart->total, 0, ',', '.') }}₫</span>
         </div>
         <div class="summary-row">
-            <span>Phí vận chuyển</span>
-            <span style="color:#52c41a;">Miễn phí</span>
+            <span>{{ __('messages.shipping_fee') }}</span>
+            <span style="color:#52c41a;">{{ __('messages.free') }}</span>
         </div>
         
         @php
@@ -253,21 +254,24 @@
             $grandTotal = max(0, $cart->total - $discount);
         @endphp
         
-        <div class="summary-row" id="discount-row" style="{{ $discount > 0 ? '' : 'display: none;' }}">
-            <span>Giảm giá</span>
-            <span style="color:#dc3545;" id="discount-amount">-{{ number_format($discount, 0, ',', '.') }}₫</span>
+        @if($discount > 0)
+        <div class="summary-row" style="color:#28a745;">
+            <span>{{ __('messages.discount') }} ({{ session('applied_coupon')['code'] }})</span>
+            <span>-{{ number_format($discount, 0, ',', '.') }}₫</span>
+            <input type="hidden" name="coupon_code" value="{{ session('applied_coupon')['code'] }}">
         </div>
-        
+        @endif
+
         <div class="divider"></div>
         <div class="summary-row grand">
-            <span>Tổng cộng</span>
-            <span id="checkout-grand-total">{{ number_format($grandTotal, 0, ',', '.') }}₫</span>
+            <span>{{ __('messages.grand_total') }}</span>
+            <span>{{ number_format($grandTotal, 0, ',', '.') }}₫</span>
         </div>
 
-        <button type="submit" class="btn-place-order">ĐẶT HÀNG NGAY</button>
+        <button type="submit" class="btn-place-order" id="btn-submit">{{ __('messages.place_order') }}</button>
 
         <p style="font-size: 11px; color: #999; text-align: center; margin-top: 14px; line-height: 1.5;">
-            Bằng cách đặt hàng, bạn đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của Orlis.
+            {{ __('messages.terms_and_conditions') }}
         </p>
     </div>
 

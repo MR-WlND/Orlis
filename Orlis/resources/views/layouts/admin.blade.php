@@ -23,68 +23,98 @@
 
 
         <div class="sidebar-menu">
+            @php
+                $role = auth('admin')->user() ? auth('admin')->user()->role : null;
+            @endphp
             <ul class="menu-list">
                 <li class="menu-item">
-                    <a href="/admin" class="menu-link {{ request()->is('admin') ? 'active' : '' }}">
+                    <a href="/admin" class="menu-link {{ request()->is('admin') || request()->is($role) ? 'active' : '' }}">
                         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                         TỔNG QUAN
                     </a>
                 </li>
+                @if(in_array($role, ['admin', 'manager']))
                 <li class="menu-item">
                     <a href="{{ route('admin.categories.index') }}" class="menu-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                         <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
                         DANH MỤC
                     </a>
                 </li>
+                @endif
+                
+                @if(in_array($role, ['admin', 'manager', 'editor']))
                 <li class="menu-item">
                     <a href="{{ route('admin.banners.index') }}" class="menu-link {{ request()->routeIs('admin.banners.*') ? 'active' : '' }}">
                         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                         BANNERS
                     </a>
                 </li>
+                @endif
+
+                @if(in_array($role, ['admin', 'manager']))
                 <li class="menu-item">
                     <a href="{{ route('admin.products.index') }}" class="menu-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
                         <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
                         SẢN PHẨM
                     </a>
                 </li>
+                @endif
+
+                @if(in_array($role, ['admin', 'editor']))
                 <li class="menu-item">
                     <a href="{{ route('admin.posts.index') }}" class="menu-link {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                         TẠP CHÍ
                     </a>
                 </li>
+                @endif
+
+                @if(in_array($role, ['admin', 'manager']))
                 <li class="menu-item">
                     <a href="{{ route('admin.coupons.index') }}" class="menu-link {{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
                         MÃ GIẢM GIÁ
                     </a>
                 </li>
+                @endif
+
+                @if(in_array($role, ['admin', 'manager', 'staff']))
                 <li class="menu-item">
                     <a href="{{ route('admin.reviews.index') }}" class="menu-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
                         ĐÁNH GIÁ
                     </a>
                 </li>
+                @endif
+
+                @if(in_array($role, ['admin', 'manager', 'staff', 'warehouse_staff', 'shipper']))
                 <li class="menu-item">
                     <a href="{{ route('admin.orders.index') }}" class="menu-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
                         <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
                         ĐƠN HÀNG
                     </a>
                 </li>
+                @endif
+
+                @if(in_array($role, ['admin', 'manager', 'staff']))
                 <li class="menu-item">
                     <a href="{{ route('admin.appointments.index') }}" class="menu-link {{ request()->routeIs('admin.appointments.*') ? 'active' : '' }}">
                         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                         LỊCH HẸN
                     </a>
                 </li>
+                @endif
+
+                @if(in_array($role, ['admin', 'manager', 'warehouse_staff']))
                 <li class="menu-item">
                     <a href="{{ route('admin.inventory.index') }}" class="menu-link {{ request()->routeIs('admin.inventory.*') ? 'active' : '' }}">
                         <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
                         KHO HÀNG
                     </a>
                 </li>
+                @endif
 
+                @if(in_array($role, ['admin']))
                 @php
                     $isAccountActive = request()->routeIs('admin.admins.*') || request()->routeIs('admin.users.*');
                 @endphp
@@ -109,6 +139,7 @@
                         </li>
                     </ul>
                 </li>
+                @endif
             </ul>
         </div>
         
