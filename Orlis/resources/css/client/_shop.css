@@ -83,8 +83,8 @@
     .checkout-radio-block.active { border-color: #111; }
     .checkout-radio-block input[type="radio"] { accent-color: #111; width: 18px; height: 18px; margin-top: 2px; }
     .cr-title { font-size: 14px; color: #111; margin-bottom: 4px; }
-    .cr-desc { font-size: 13px; color: #666; line-height: 1.5; }
-    .cr-price { font-size: 13px; font-weight: 600; color: #111; }
+    .cr-desc { font-size: 13px; color: #666; line-height: 1.5; padding-right: 12px; }
+    .cr-price { font-size: 13px; font-weight: 600; color: #111; white-space: nowrap; flex-shrink: 0; }
     .cr-price.highlight { color: #111; font-weight: 700; }
     .payment-icon { display: flex; align-items: center; justify-content: center; }
     .badge-default { background: #111; color: #fff; font-size: 9px; padding: 2px 6px; border-radius: 2px; margin-left: 8px; vertical-align: middle; }
