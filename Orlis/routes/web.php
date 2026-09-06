@@ -113,6 +113,7 @@ Route::middleware(['auth:admin', 'role:admin'])->group(function () {
     Route::resource('admin/posts', App\Http\Controllers\Admin\PostController::class, ['as' => 'admin']);
     Route::resource('admin/products.variants', ProductVariantController::class, ['as' => 'admin']);
     Route::resource('admin/coupons', CouponController::class, ['as' => 'admin']);
+    Route::resource('admin/shipping-methods', App\Http\Controllers\Admin\ShippingMethodController::class, ['as' => 'admin']);
     Route::resource('admin/reviews', App\Http\Controllers\Admin\ReviewController::class, ['as' => 'admin'])->only(['index', 'destroy']);
     Route::patch('admin/reviews/{review}/status', [App\Http\Controllers\Admin\ReviewController::class, 'updateStatus'])->name('admin.reviews.updateStatus');
     Route::resource('admin/orders', OrderController::class, ['as' => 'admin'])->only(['index', 'show', 'destroy']);
