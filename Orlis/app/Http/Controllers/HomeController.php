@@ -50,6 +50,14 @@ class HomeController extends Controller
                 ->get();
         }
 
+        // Fallback nếu không có sản phẩm nước hoa nào, hiện ngẫu nhiên sản phẩm khác
+        if ($recommendedPerfumes->isEmpty()) {
+            $recommendedPerfumes = \App\Models\Product::where('is_active', true)->inRandomOrder()->take(4)->get();
+        }
+        if ($bestSellingPerfumes->isEmpty()) {
+            $bestSellingPerfumes = \App\Models\Product::where('is_active', true)->orderBy('price', 'desc')->take(4)->get();
+        }
+
         return view('client.perfume', compact('beautyHero', 'beautyDouble', 'beautyWide', 'recommendedPerfumes', 'bestSellingPerfumes'));
     }
 
