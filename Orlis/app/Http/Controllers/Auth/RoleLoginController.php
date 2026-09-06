@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,12 +15,15 @@ class RoleLoginController extends Controller
 {
     public function showLoginForm(string $role): View|RedirectResponse
     {
-        $allRoles = array_merge(\App\Models\User::ROLES, \App\Models\Admin::ROLES);
+        $allRoles = array_merge(User::ROLES, Admin::ROLES);
         if (! array_key_exists($role, $allRoles)) {
             abort(404);
         }
 
-        if (Auth::check()) {
+        $isAdminRole = in_array($role, array_keys(Admin::ROLES));
+        $guard = $isAdminRole ? 'admin' : 'web';
+
+        if (Auth::guard($guard)->check()) {
             return redirect($this->redirectTo($role));
         }
 
@@ -39,7 +43,7 @@ class RoleLoginController extends Controller
 
     public function login(Request $request, string $role): RedirectResponse
     {
-        $allRoles = array_merge(\App\Models\User::ROLES, \App\Models\Admin::ROLES);
+        $allRoles = array_merge(User::ROLES, Admin::ROLES);
         if (! array_key_exists($role, $allRoles)) {
             abort(404);
         }
@@ -54,11 +58,11 @@ class RoleLoginController extends Controller
         ]);
 
         // Xác định model và guard tương ứng với role
-        $isAdminRole = in_array($role, array_keys(\App\Models\Admin::ROLES));
+        $isAdminRole = in_array($role, array_keys(Admin::ROLES));
         $guard = $isAdminRole ? 'admin' : 'web';
-        
+
         if ($isAdminRole) {
-            $user = \App\Models\Admin::where('email', $request->email)->first();
+            $user = Admin::where('email', $request->email)->first();
         } else {
             $user = User::where('email', $request->email)->first();
         }
@@ -84,6 +88,8 @@ class RoleLoginController extends Controller
         Auth::guard($guard)->login($user, $request->boolean('remember'));
         $request->session()->regenerate();
 
+        \Log::info('User logged in: '.$user->email.' with role '.$user->role.'. Guard: '.$guard.'. Redirecting to: '.$this->redirectTo($role));
+
         return redirect()->intended($this->redirectTo($role));
     }
 
@@ -108,6 +114,7 @@ class RoleLoginController extends Controller
             Auth::guard('admin')->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
+
             return redirect('/login/admin');
         }
 
@@ -115,6 +122,7 @@ class RoleLoginController extends Controller
             Auth::guard('web')->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
+
             return redirect('/login/customer');
         }
 

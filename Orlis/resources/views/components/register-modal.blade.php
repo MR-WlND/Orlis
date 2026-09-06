@@ -240,19 +240,19 @@
             </svg>
         </div>
 
-        <h2 class="register-modal-title">Tạo tài khoản mới</h2>
-        <p class="register-modal-subtitle">Nhập thông tin của bạn để tạo tài khoản và tham gia Orlis.</p>
+        <h2 class="register-modal-title">{{ __('messages.create_new_account') }}</h2>
+        <p class="register-modal-subtitle">{{ __('messages.register_subtitle') }}</p>
 
         <form method="POST" action="{{ route('register.post') }}">
             @csrf
             <div class="register-form-box">
                 <div class="register-input-group">
-                    <input type="text" name="name" placeholder="Họ và tên" value="{{ old('name') }}" required>
+                    <input type="text" name="name" placeholder="{{ __('messages.fullname_ph') }}" value="{{ old('name') }}" required>
                     @error('name') <div class="register-error">{{ $message }}</div> @enderror
                 </div>
                 
                 <div class="register-input-group">
-                    <input type="email" name="email" placeholder="Địa chỉ email" value="{{ old('email') }}" required>
+                    <input type="email" name="email" placeholder="{{ __('messages.email_addr_ph') }}" value="{{ old('email') }}" required>
                     @error('email') <div class="register-error">{{ $message }}</div> @enderror
                 </div>
                 
@@ -265,7 +265,7 @@
                 </div>
                 
                 <div class="register-input-group" style="position: relative;">
-                    <input type="password" id="regPasswordConfirm" name="password_confirmation" placeholder="Xác nhận mật khẩu" required style="padding-right: 35px;">
+                    <input type="password" id="regPasswordConfirm" name="password_confirmation" placeholder="{{ __('messages.confirm_password_ph') }}" required style="padding-right: 35px;">
                     <span onclick="togglePasswordVisibility('regPasswordConfirm', this)" style="position: absolute; right: 0; top: 12px; cursor: pointer; color: #666;" title="Hiện/Ẩn mật khẩu">
                         <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                     </span>
@@ -273,18 +273,18 @@
 
                 <div class="register-checkbox-group">
                     <input type="checkbox" name="terms" id="agreeTerms" {{ old('terms') ? 'checked' : '' }} required>
-                    <label for="agreeTerms">Đồng ý với Điều khoản & Chính sách</label>
+                    <label for="agreeTerms">{{ __('messages.agree_terms') }}</label>
                 </div>
                 @error('terms') <div class="register-error" style="margin-top: -10px; margin-bottom: 15px;">{{ $message }}</div> @enderror
 
-                <button type="submit" class="register-btn-submit">Tạo tài khoản</button>
+                <button type="submit" class="register-btn-submit">{{ __('messages.create_account') }}</button>
                 <div class="register-btn-login">
-                    Đã có tài khoản? <a href="#" onclick="switchToLoginModal(event)">Đăng nhập</a>
+                    {{ __('messages.already_have_account') }} <a href="#" onclick="switchToLoginModal(event)">{{ __('messages.login') }}</a>
                 </div>
             </div>
         </form>
 
-        <div class="register-divider">hoặc tiếp tục với</div>
+        <div class="register-divider">{{ __('messages.or_continue_with') }}</div>
 
         <div class="register-social">
             <a href="{{ route('social.redirect', ['provider' => 'google']) }}" class="register-btn-social" style="text-decoration: none;">
@@ -300,8 +300,8 @@
         <div class="register-member-banner">
             <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=200&q=80" alt="Gifts">
             <div class="register-member-info">
-                <h4>Đặc quyền dành riêng cho Hội viên</h4>
-                <p>Nâng tầm trải nghiệm với những ưu đãi thượng hạng. Đặc biệt, món quà bất ngờ từ Orlis đang chờ đón bạn ngay khi sở hữu sản phẩm thứ hai.</p>
+                <h4>{{ __('messages.member_privileges') }}</h4>
+                <p>{{ __('messages.member_privileges_desc') }}</p>
             </div>
         </div>
     </div>

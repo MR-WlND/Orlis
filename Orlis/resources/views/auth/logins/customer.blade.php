@@ -204,8 +204,15 @@
             </svg>
         </a>
 
-        <h2 class="modal-title">Đăng nhập hoặc tạo tài khoản</h2>
-        <p class="modal-subtitle">Nhập địa chỉ email của bạn để đăng nhập hoặc tạo tài khoản và tham gia Orlis.</p>
+        <!-- Language Switcher -->
+        <div style="position: absolute; top: 20px; left: 20px; display: flex; gap: 5px; font-size: 13px; align-items: center;">
+            <a href="{{ route('lang.switch', 'vi') }}" style="color: inherit; text-decoration: {{ app()->getLocale() == 'vi' ? 'underline' : 'none' }}; font-weight: {{ app()->getLocale() == 'vi' ? 'bold' : 'normal' }};">VN</a>
+            <span>|</span>
+            <a href="{{ route('lang.switch', 'en') }}" style="color: inherit; text-decoration: {{ app()->getLocale() == 'en' ? 'underline' : 'none' }}; font-weight: {{ app()->getLocale() == 'en' ? 'bold' : 'normal' }};">EN</a>
+        </div>
+
+        <h2 class="modal-title">{{ __('messages.login') }}</h2>
+        <p class="modal-subtitle">{{ app()->getLocale() == 'en' ? 'Enter your email address to log in or create an account and join Orlis.' : 'Nhập địa chỉ email của bạn để đăng nhập hoặc tạo tài khoản và tham gia Orlis.' }}</p>
 
         <form method="POST" action="{{ route('role.login.post', ['role' => $role]) }}">
             @csrf
@@ -220,8 +227,8 @@
                     @error('password') <div class="error">{{ $message }}</div> @enderror
                 </div>
 
-                <button type="submit" class="btn-submit">Đăng nhập</button>
-                <a href="#" onclick="document.getElementById('registerModalOverlay').style.display='flex'; document.querySelector('.modal').style.display='none'; return false;" class="btn-create">Tạo tài khoản</a>
+                <button type="submit" class="btn-submit">{{ __('messages.login') }}</button>
+                <a href="#" onclick="document.getElementById('registerModalOverlay').style.display='flex'; document.querySelector('.modal').style.display='none'; return false;" class="btn-create">{{ __('messages.register') }}</a>
             </div>
         </form>
 

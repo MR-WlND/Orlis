@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use App\Models\Admin;
 
 class AccountSeeder extends Seeder
 {
@@ -26,13 +26,13 @@ class AccountSeeder extends Seeder
 
         foreach ($adminRoles as $role => $name) {
             Admin::updateOrCreate(
-                ['email' => $role . '@example.com'],
+                ['email' => $role.'@example.com'],
                 [
                     'name' => $name,
                     'password' => $password,
                     'role' => $role,
                     'status' => 1,
-                    'phone' => '090' . rand(1000000, 9999999),
+                    'phone' => '090'.rand(1000000, 9999999),
                 ]
             );
         }
@@ -40,20 +40,18 @@ class AccountSeeder extends Seeder
         // ==== USERS ====
         $userRoles = [
             'customer' => 'Customer Orlis',
-            'shipper' => 'Shipper Orlis',
-            'supplier' => 'Supplier Orlis',
             'guest' => 'Guest Orlis',
         ];
 
         foreach ($userRoles as $role => $name) {
             User::updateOrCreate(
-                ['email' => $role . '@example.com'],
+                ['email' => $role.'@example.com'],
                 [
                     'name' => $name,
                     'password' => $password,
                     'role' => $role,
                     'membership_level' => 'classic',
-                    'phone' => '091' . rand(1000000, 9999999),
+                    'phone' => '091'.rand(1000000, 9999999),
                 ]
             );
         }

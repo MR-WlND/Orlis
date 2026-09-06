@@ -217,31 +217,31 @@
             </svg>
         </div>
 
-        <h2 class="login-modal-title">Đăng nhập hoặc tạo tài khoản</h2>
-        <p class="login-modal-subtitle">Nhập địa chỉ email của bạn để đăng nhập hoặc tạo tài khoản và tham gia Orlis.</p>
+        <h2 class="login-modal-title">{{ __('messages.login_or_create') }}</h2>
+        <p class="login-modal-subtitle">{{ __('messages.login_subtitle') }}</p>
 
         <form method="POST" action="{{ route('role.login.post', ['role' => 'customer']) }}">
             @csrf
             <div class="login-form-box">
                 <div class="login-input-group">
-                    <input type="email" name="email" placeholder="*E-mail" value="{{ old('email') }}" required>
+                    <input type="email" name="email" placeholder="{{ __('messages.email_ph') }}" value="{{ old('email') }}" required>
                     @error('email') <div class="login-error">{{ $message }}</div> @enderror
                 </div>
                 
                 <div class="login-input-group" style="position: relative;">
-                    <input type="password" id="loginPassword" name="password" placeholder="*Mật khẩu" required style="padding-right: 35px;">
+                    <input type="password" id="loginPassword" name="password" placeholder="{{ __('messages.password_ph') }}" required style="padding-right: 35px;">
                     <span onclick="togglePasswordVisibility('loginPassword', this)" style="position: absolute; right: 0; top: 12px; cursor: pointer; color: #666;" title="Hiện/Ẩn mật khẩu">
                         <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="1.5" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                     </span>
                     @error('password') <div class="login-error">{{ $message }}</div> @enderror
                 </div>
 
-                <button type="submit" class="login-btn-submit">Đăng nhập</button>
-                <a href="#" onclick="switchToRegisterModal(event)" class="login-btn-create">Tạo tài khoản</a>
+                <button type="submit" class="login-btn-submit">{{ __('messages.login') }}</button>
+                <a href="#" onclick="switchToRegisterModal(event)" class="login-btn-create">{{ __('messages.create_account') }}</a>
             </div>
         </form>
 
-        <div class="login-divider">hoặc tiếp tục với</div>
+        <div class="login-divider">{{ __('messages.or_continue_with') }}</div>
 
         <div class="login-social">
             <a href="{{ route('social.redirect', ['provider' => 'google']) }}" class="login-btn-social" style="text-decoration: none;">
@@ -257,8 +257,8 @@
         <div class="login-member-banner">
             <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=200&q=80" alt="Gifts">
             <div class="login-member-info">
-                <h4>Đặc quyền dành riêng cho Hội viên</h4>
-                <p>Nâng tầm trải nghiệm với những ưu đãi thượng hạng. Đặc biệt, món quà bất ngờ từ Orlis Beauty đang chờ đón bạn ngay khi sở hữu sản phẩm thứ hai.</p>
+                <h4>{{ __('messages.member_privileges') }}</h4>
+                <p>{{ __('messages.member_privileges_desc') }}</p>
             </div>
         </div>
     </div>
@@ -303,8 +303,8 @@
         }
     }
     
-    @if($errors->any() && !$errors->has('name') && !$errors->has('password_confirmation'))
-    // Auto-open modal if there are validation errors after submit
+    @if(($errors->has('email') || $errors->has('password')) && !$errors->has('name') && !$errors->has('password_confirmation'))
+    // Auto-open modal if there are login validation errors after submit
     document.addEventListener('DOMContentLoaded', function() {
         var overlay = document.getElementById('loginModalOverlay');
         overlay.style.display = 'flex';

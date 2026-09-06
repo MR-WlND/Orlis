@@ -174,8 +174,8 @@
     <div class="login-page">
         <div class="login-container">
             
-            <h2 class="title">Đăng nhập {{ $roleLabel }}</h2>
-            <p class="subtitle">Nhập địa chỉ email của bạn để đăng nhập hệ thống quản trị nội bộ Orlis.</p>
+            <h2 class="title">{{ __('messages.login_role_title', ['role' => $roleLabel]) }}</h2>
+            <p class="subtitle">{{ __('messages.login_role_subtitle') }}</p>
 
             <form method="POST" action="{{ route('role.login.post', ['role' => $role]) }}">
                 @csrf
@@ -189,7 +189,7 @@
                     </div>
 
                     <div class="input-group">
-                        <label for="password">Mật khẩu</label>
+                        <label for="password">{{ __('messages.password_ph') }}</label>
                         <input type="password" id="password" name="password" required placeholder="••••••••" style="padding-right: 32px;">
                         <button type="button" onclick="togglePassword()" style="position: absolute; right: 0; bottom: 10px; background: none; border: none; cursor: pointer; color: #52525b; padding: 0; display: flex;">
                             <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
@@ -199,15 +199,15 @@
                         @enderror
                     </div>
 
-                    <button type="submit" class="btn-submit">Đăng nhập</button>
+                    <button type="submit" class="btn-submit">{{ __('messages.login') }}</button>
                 </div>
             </form>
 
             <div class="security-notice">
                 <div class="security-icon">🛡️</div>
                 <div class="security-text">
-                    <h4>Hệ thống quản trị nội bộ</h4>
-                    <p>Mọi hành vi truy cập trái phép vào hệ thống này đều bị nghiêm cấm và bị ghi log địa chỉ IP.</p>
+                    <h4>{{ __('messages.internal_system') }}</h4>
+                    <p>{{ __('messages.internal_warning') }}</p>
                 </div>
             </div>
         </div>
