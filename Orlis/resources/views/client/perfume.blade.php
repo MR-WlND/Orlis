@@ -8,34 +8,31 @@
         <!-- Hero Section -->
         <section class="beauty-hero-grid">
             @if(isset($beautyHero) && $beautyHero->count() > 0)
-                @php 
-                    $banner1 = $beautyHero->first(); 
-                    $banner2 = $beautyHero->skip(1)->first() ?? $banner1;
-                @endphp
-                <a href="{{ $banner1->link_url ?: '#' }}" class="beauty-hero-item">
-                    <div class="beauty-hero-bg" style="background-image: url('{{ Storage::url($banner1->image_mobile_path ?: $banner1->image_path) }}');"></div>
-                    <div class="beauty-item-content content-bottom">
-                        <p class="beauty-item-desc">Một loại chypre vani đầy gợi cảm</p>
-                        <span class="beauty-hero-btn">Khám phá</span>
-                    </div>
-                </a>
-                <div class="beauty-hero-item">
-                    <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
-                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                    </video>
-                    <div class="beauty-item-content content-center">
-                        <h4 class="beauty-hero-subtitle">Hoa hậu Dior Eau de Parfum</h4>
-                        <h2 class="beauty-hero-title">Biểu tượng<br>thời trang<br>cao cấp mới</h2>
-                        <a href="#" class="beauty-hero-btn">Khám phá</a>
-                    </div>
-                </div>
-                <a href="{{ $banner2->link_url ?: '#' }}" class="beauty-hero-item">
-                    <div class="beauty-hero-bg" style="background-image: url('{{ Storage::url($banner2->image_mobile_path ?: $banner2->image_path) }}');"></div>
-                    <div class="beauty-item-content content-bottom">
-                        <p class="beauty-item-desc">Hoa Dior trong hương Dior</p>
-                        <span class="beauty-hero-btn">Khám phá</span>
-                    </div>
-                </a>
+                @foreach($beautyHero->take(3) as $banner)
+                    @php $ext = pathinfo($banner->image_path, PATHINFO_EXTENSION); @endphp
+                    @if(in_array(strtolower($ext), ['mp4', 'webm', 'ogg']))
+                        <div class="beauty-hero-item">
+                            <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
+                                <source src="{{ Storage::url($banner->image_path) }}" type="video/{{ $ext }}">
+                            </video>
+                            <div class="beauty-item-content content-center">
+                                <h4 class="beauty-hero-subtitle">{{ $banner->description }}</h4>
+                                <h2 class="beauty-hero-title">{{ $banner->title }}</h2>
+                                @if($banner->link_url)
+                                <a href="{{ $banner->link_url }}" class="beauty-hero-btn">Khám phá</a>
+                                @endif
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ $banner->link_url ?: '#' }}" class="beauty-hero-item">
+                            <div class="beauty-hero-bg" style="background-image: url('{{ Storage::url($banner->image_mobile_path ?: $banner->image_path) }}');"></div>
+                            <div class="beauty-item-content content-bottom">
+                                <p class="beauty-item-desc">{{ $banner->description }}</p>
+                                <span class="beauty-hero-btn">Khám phá</span>
+                            </div>
+                        </a>
+                    @endif
+                @endforeach
             @else
                 <a href="/catalog/nuoc-hoa-lam-dep-nuoc-hoa" class="beauty-hero-item">
                     <div class="beauty-hero-bg" style="background-image: url('https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=600&q=80');"></div>

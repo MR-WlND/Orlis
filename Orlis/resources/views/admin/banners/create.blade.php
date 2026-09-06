@@ -112,6 +112,20 @@
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group mb-4">
+                    <label class="form-label fw-bold">Hình ảnh / Video Banner <span class="text-danger">*</span></label>
+                    <input type="file" name="image" class="form-control" accept="image/*,video/*" required>
+                    <small class="text-muted">Định dạng hỗ trợ: JPG, PNG, WEBP, MP4... Kích thước tối đa 20MB.</small>
+                    @error('image') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="form-label fw-bold">Hình ảnh / Video Mobile (Tùy chọn)</label>
+                    <input type="file" name="image_mobile" class="form-control" accept="image/*,video/*">
+                    <small class="text-muted">Hiển thị riêng trên thiết bị di động.</small>
+                    @error('image_mobile') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+            </div>
                 <div class="form-group">
                     <label>Thời gian Bắt đầu (Tùy chọn)</label>
                     <input type="datetime-local" name="start_time" class="form-control" value="{{ old('start_time') }}">

@@ -44,29 +44,39 @@
         @method('PUT')
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div class="form-group">
-                <label>Hình Ảnh Desktop Hiện Tại</label>
-                <div style="margin-bottom: 15px; border-radius: 4px; overflow: hidden; max-width: 400px; border: 1px solid #eee;">
-                    <img src="{{ Storage::url($banner->image_path) }}" alt="Preview Desktop" style="width: 100%; display: block;">
-                </div>
-                <label>Đổi Ảnh Desktop Mới (Ngang 16:9)</label>
-                <input type="file" name="image" class="form-control" accept="image/*">
-                @error('image') <span class="text-danger">{{ $message }}</span> @enderror
-            </div>
-            <div class="form-group">
-                <label>Hình Ảnh Mobile Hiện Tại</label>
-                <div style="margin-bottom: 15px; border-radius: 4px; overflow: hidden; max-width: 200px; border: 1px solid #eee; background: #fafafa; min-height: 100px; display: flex; align-items: center; justify-content: center;">
-                    @if($banner->image_mobile_path)
-                        <img src="{{ Storage::url($banner->image_mobile_path) }}" alt="Preview Mobile" style="width: 100%; display: block;">
-                    @else
-                        <span style="font-size: 11px; color: #999;">Dùng ảnh Desktop mặc định</span>
+                <div class="form-group mb-4">
+                    <label class="form-label fw-bold">Thay Hình ảnh / Video Banner (Tùy chọn)</label>
+                    <input type="file" name="image" class="form-control" accept="image/*,video/*">
+                    <small class="text-muted">Chỉ chọn file mới nếu muốn thay đổi. Hỗ trợ JPG, PNG, WEBP, MP4... (Tối đa 20MB)</small>
+                    @if($banner->image_path)
+                        <div class="mt-2">
+                            @php $ext = pathinfo($banner->image_path, PATHINFO_EXTENSION); @endphp
+                            @if(in_array(strtolower($ext), ['mp4', 'webm', 'ogg']))
+                                <video src="{{ Storage::url($banner->image_path) }}" autoplay loop muted style="height: 100px; border-radius: 4px; object-fit: cover;"></video>
+                            @else
+                                <img src="{{ Storage::url($banner->image_path) }}" style="height: 100px; border-radius: 4px; object-fit: cover;" alt="Current Image">
+                            @endif
+                        </div>
                     @endif
+                    @error('image') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
-                <label>Đổi Ảnh Mobile Mới (Dọc 9:16)</label>
-                <input type="file" name="image_mobile" class="form-control" accept="image/*">
-                @error('image_mobile') <span class="text-danger">{{ $message }}</span> @enderror
+
+                <div class="form-group mb-4">
+                    <label class="form-label fw-bold">Thay Hình ảnh / Video Mobile (Tùy chọn)</label>
+                    <input type="file" name="image_mobile" class="form-control" accept="image/*,video/*">
+                    @if($banner->image_mobile_path)
+                        <div class="mt-2">
+                            @php $ext = pathinfo($banner->image_mobile_path, PATHINFO_EXTENSION); @endphp
+                            @if(in_array(strtolower($ext), ['mp4', 'webm', 'ogg']))
+                                <video src="{{ Storage::url($banner->image_mobile_path) }}" autoplay loop muted style="height: 100px; border-radius: 4px; object-fit: cover;"></video>
+                            @else
+                                <img src="{{ Storage::url($banner->image_mobile_path) }}" style="height: 100px; border-radius: 4px; object-fit: cover;" alt="Current Mobile Image">
+                            @endif
+                        </div>
+                    @endif
+                    @error('image_mobile') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
             </div>
-        </div>
 
         <div style="background: #fcfcfc; padding: 20px; border: 1px solid #eee; margin-bottom: 25px;">
             <h4 style="margin: 0 0 15px 0; font-size: 14px; text-transform: uppercase;">Luật Hiển Thị (Rule-based)</h4>
@@ -146,6 +156,14 @@
             @error('description') <span class="text-danger">{{ $message }}</span> @enderror
         </div>
 
+
+
+        <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; text-transform: none; font-size: 14px;">
+                <input type="checkbox" name="is_active" value="1" {{ $banner->is_active ? 'checked' : '' }} style="width: 18px; height: 18px;"> Kích hoạt (Hiển thị ngay)
+            </label>
+        </div>
+
         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
             <div class="form-group">
                 <label>Đường dẫn liên kết (Link URL)</label>
@@ -162,11 +180,6 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; text-transform: none; font-size: 14px;">
-                <input type="checkbox" name="is_active" value="1" {{ $banner->is_active ? 'checked' : '' }} style="width: 18px; height: 18px;"> Kích hoạt (Hiển thị ngay)
-            </label>
-        </div>
 
         <div style="margin-top: 40px;">
             <button type="submit" class="btn-submit">Cập nhật Banner</button>
