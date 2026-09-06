@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Orlis - Thương Hiệu Thời Trang Cao Cấp')</title>
@@ -16,14 +17,8 @@
         </div>
         <a href="{{ session('department') === 'beauty' ? url('/beauty') : url('/') }}" class="logo">Orlis</a>
         <div class="action-icons">
-            <div class="search-container" id="searchContainer">
-                <input type="text" class="search-input" placeholder="{{ __('messages.search') }}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" onclick="toggleSearch()"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
-            </div>
-            
-
-            <a href="{{ route('track-order') }}" title="{{ __('messages.track_order') }}" style="margin-right: 10px;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM23 17a2 2 0 11-4 0 2 2 0 014 0z"/><path d="M9 17H5a2 2 0 01-2-2V5a2 2 0 012-2h11l4 9v5a2 2 0 01-2 2h-2M16 17h-3M16 3v8"/></svg>
+            <a href="#" onclick="toggleSearchModal(); event.preventDefault();" title="{{ __('messages.search') }}" class="search-trigger" style="color: inherit;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
             </a>
 
             <a href="{{ route('cart') }}" title="{{ __('messages.cart') }}" class="cart-icon-wrap">
@@ -39,9 +34,9 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     </a>
                     <div class="user-dropdown">
-                        <a href="{{ route('customer.orders') }}">Xem đơn hàng</a>
-                        <a href="{{ route('tickets.index') }}">Hỗ trợ</a>
-                        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Đăng xuất</a>
+                        <a href="{{ route('customer.dashboard') }}">{{ __('messages.profile') }}</a>
+                        <a href="{{ route('tickets.index') }}">{{ __('messages.customer_support') }}</a>
+                        <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('messages.logout') }}</a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             @csrf
                         </form>
@@ -72,37 +67,50 @@
 
         <!-- Links grid -->
         <div class="footer-links">
-            <div class="link-column">
-                <h5>{{ __('messages.orlis_fashion_boutiques') }}</h5>
-                <ul>
-                    <li><a href="#">{{ __('messages.christian_orlis_couture') }}</a></li>
-                    <li><a href="#">{{ __('messages.parfums_christian_orlis') }}</a></li>
-                    <li><a href="#">{{ __('messages.careers') }}</a></li>
-                </ul>
-            </div>
-            <div class="link-column">
-                <h5>{{ __('messages.customer_service') }}</h5>
-                <ul>
-                    <li><a href="#">{{ __('messages.return_policy') }}</a></li>
-                    <li><a href="#">{{ __('messages.size_guide') }}</a></li>
-                    <li><a href="#">{{ __('messages.shipping_policy') }}</a></li>
-                </ul>
-            </div>
-            <div class="link-column">
-                <h5>{{ __('messages.house_of_orlis') }}</h5>
-                <ul>
-                    <li><a href="#">{{ __('messages.quality_commitment') }}</a></li>
-                    <li><a href="#">{{ __('messages.social_responsibility') }}</a></li>
-                </ul>
-            </div>
-            <div class="link-column">
-                <h5>{{ __('messages.legal_terms') }}</h5>
-                <ul>
-                    <li><a href="#">{{ __('messages.privacy_notice') }}</a></li>
-                    <li><a href="#">{{ __('messages.terms_of_use') }}</a></li>
-                    <li><a href="#">{{ __('messages.payment_policy') }}</a></li>
-                </ul>
-            </div>
+            @if(isset($footerLinks) && $footerLinks->count() > 0)
+                @foreach($footerLinks as $groupName => $links)
+                <div class="link-column">
+                    <h5>{{ $groupName }}</h5>
+                    <ul>
+                        @foreach($links as $link)
+                        <li><a href="{{ $link->url ?? '#' }}">{{ $link->title }}</a></li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endforeach
+            @else
+                <div class="link-column">
+                    <h5>{{ __('messages.orlis_fashion_boutiques') }}</h5>
+                    <ul>
+                        <li><a href="#">{{ __('messages.christian_orlis_couture') }}</a></li>
+                        <li><a href="#">{{ __('messages.parfums_christian_orlis') }}</a></li>
+                        <li><a href="#">{{ __('messages.careers') }}</a></li>
+                    </ul>
+                </div>
+                <div class="link-column">
+                    <h5>{{ __('messages.customer_service') }}</h5>
+                    <ul>
+                        <li><a href="#">{{ __('messages.return_policy') }}</a></li>
+                        <li><a href="#">{{ __('messages.size_guide') }}</a></li>
+                        <li><a href="#">{{ __('messages.shipping_policy') }}</a></li>
+                    </ul>
+                </div>
+                <div class="link-column">
+                    <h5>{{ __('messages.house_of_orlis') }}</h5>
+                    <ul>
+                        <li><a href="#">{{ __('messages.quality_commitment') }}</a></li>
+                        <li><a href="#">{{ __('messages.social_responsibility') }}</a></li>
+                    </ul>
+                </div>
+                <div class="link-column">
+                    <h5>{{ __('messages.legal_terms') }}</h5>
+                    <ul>
+                        <li><a href="#">{{ __('messages.privacy_notice') }}</a></li>
+                        <li><a href="#">{{ __('messages.terms_of_use') }}</a></li>
+                        <li><a href="#">{{ __('messages.payment_policy') }}</a></li>
+                    </ul>
+                </div>
+            @endif
         </div>
 
         <!-- Bottom bar -->
@@ -115,7 +123,7 @@
                 <a href="#">Instagram</a>
                 <a href="#">Pinterest</a>
             </div>
-            <a href="/" class="logo" style="font-size: 28px; color: #111; letter-spacing: 0.05em; text-decoration: none;">Orlis</a>
+            <a href="/" style="font-family: var(--font-serif); font-size: 28px; color: #111; letter-spacing: 0.15em; text-decoration: none; position: relative; left: 0; transform: none; text-align: center;">Orlis</a>
 
             <!-- Language popup -->
             <div class="lang-popup-wrap" id="langPopupWrap">
@@ -205,10 +213,45 @@
                                     @endif
                                 </li>
                             @endforeach
-                            @if($index === 0)
-                                <li style="margin-top: 40px;"><a href="#" style="text-decoration: none; color: inherit; display: block; width: 100%;">{{ __('messages.contact_us') }}</a></li>
-                                <li><a href="{{ route('cart') }}" style="text-decoration: none; color: inherit; display: block; width: 100%;">{{ __('messages.cart') }}</a></li>
-                            @endif
+                            <li style="margin-top: 35px; border-top: 1px solid #ddd; padding-top: 15px;"><a href="#" style="text-decoration: none; color: inherit; display: block; width: 100%;">{{ __('messages.contact_us') }}</a></li>
+                            <li><a href="{{ route('appointments.create') }}" style="text-decoration: none; color: inherit; display: block; width: 100%;">{{ Lang::has('messages.book_appointment') ? __('messages.book_appointment') : 'Đặt lịch hẹn' }}</a></li>
+                            <li><a href="{{ route('track-order') }}" style="text-decoration: none; color: inherit; display: block; width: 100%;">{{ __('messages.track_order') }}</a></li>
+                            <li class="mobile-only-item" style="border-top: 1px solid #eee; margin-top: 5px; padding-top: 10px;">
+                                @auth
+                                    <a href="{{ route('customer.dashboard') }}" style="text-decoration: none; color: inherit; display: block; width: 100%;">{{ __('messages.my_account') }}</a>
+                                @else
+                                    <a href="#" onclick="toggleDrawer(); toggleLoginModal(event)" style="text-decoration: none; color: inherit; display: block; width: 100%;">{{ __('messages.login') }}</a>
+                                @endauth
+                            </li>
+                            <li class="mobile-only-item">
+                                <a href="{{ route('cart') }}" style="text-decoration: none; color: inherit; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                    {{ __('messages.cart') }}
+                                </a>
+                            </li>
+                            <li style="display: flex; flex-direction: column; align-items: flex-start; cursor: pointer;" onclick="toggleDrawerLangMenu(event)">
+                                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                    <span>{{ __('messages.choose_language') }}</span>
+                                    <svg class="drawer-lang-chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" style="transition: transform 0.25s;"><path d="M6 9l6 6 6-6"/></svg>
+                                </div>
+                                <div class="drawer-lang-options" style="display: none; padding-top: 10px; padding-left: 10px; flex-direction: column; gap: 8px; width: 100%;">
+                                    <a href="{{ route('lang.switch', 'vi') }}" data-no-swup style="font-size: 13px; color: {{ app()->getLocale() == 'vi' ? '#111; font-weight:600;' : '#666;' }} text-decoration: none; padding: 4px 0; display: flex; align-items: center; justify-content: space-between;">
+                                        <span>{{ __('messages.vietnamese') }}</span>
+                                        @if(app()->getLocale() == 'vi')<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>@endif
+                                    </a>
+                                    <a href="{{ route('lang.switch', 'en') }}" data-no-swup style="font-size: 13px; color: {{ app()->getLocale() == 'en' ? '#111; font-weight:600;' : '#666;' }} text-decoration: none; padding: 4px 0; display: flex; align-items: center; justify-content: space-between;">
+                                        <span>{{ __('messages.english') }}</span>
+                                        @if(app()->getLocale() == 'en')<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>@endif
+                                    </a>
+                                    <a href="{{ route('lang.switch', 'fr') }}" data-no-swup style="font-size: 13px; color: {{ app()->getLocale() == 'fr' ? '#111; font-weight:600;' : '#666;' }} text-decoration: none; padding: 4px 0; display: flex; align-items: center; justify-content: space-between;">
+                                        <span>{{ __('messages.french') }}</span>
+                                        @if(app()->getLocale() == 'fr')<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>@endif
+                                    </a>
+                                    <a href="{{ route('lang.switch', 'ja') }}" data-no-swup style="font-size: 13px; color: {{ app()->getLocale() == 'ja' ? '#111; font-weight:600;' : '#666;' }} text-decoration: none; padding: 4px 0; display: flex; align-items: center; justify-content: space-between;">
+                                        <span>{{ __('messages.japanese') }}</span>
+                                        @if(app()->getLocale() == 'ja')<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>@endif
+                                    </a>
+                                </div>
+                            </li>
                         </ul>
                     @endforeach
                 </div>
@@ -268,11 +311,24 @@
 
 
 
+    @include('components.search-modal')
     @include('components.login-modal')
     @include('components.register-modal')
 
     <script src="https://unpkg.com/swup@4"></script>
     <script>
+        function toggleDrawerLangMenu(e) {
+            if (e) e.stopPropagation();
+            const target = e.currentTarget;
+            const options = target.querySelector('.drawer-lang-options');
+            const chevron = target.querySelector('.drawer-lang-chevron');
+            if (options) {
+                const isOpen = options.style.display === 'flex';
+                options.style.display = isOpen ? 'none' : 'flex';
+                if (chevron) chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             if (!window.swup) {
                 window.swup = new Swup({
@@ -282,5 +338,6 @@
             }
         });
     </script>
+    @yield('scripts')
 </body>
 </html>

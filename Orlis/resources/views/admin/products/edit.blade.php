@@ -70,9 +70,16 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label>Mô tả chi tiết</label>
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label style="display:block; margin-bottom:5px; font-weight:600;">Mô tả chi tiết</label>
             <textarea name="description" class="form-control" rows="5">{{ old('description', $product->description) }}</textarea>
+            @error('description') <span style="color:red; font-size:12px;">{{ $message }}</span> @enderror
+        </div>
+
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label style="display:block; margin-bottom:5px; font-weight:600;">Hướng dẫn Size (Bảng kích thước)</label>
+            <textarea name="size_guide" class="form-control" rows="5" placeholder="Ví dụ: Form dáng chuẩn Âu, lùi 1 size so với kích thước Châu Á thông thường...">{{ old('size_guide', $product->size_guide) }}</textarea>
+            @error('size_guide') <span style="color:red; font-size:12px;">{{ $message }}</span> @enderror
         </div>
         
         <div class="form-group">
