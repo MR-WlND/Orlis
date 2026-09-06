@@ -1,0 +1,65 @@
+
+
+/* Appointments CSS */
+
+    .booking-wrap { max-width: 680px; margin: 0 auto; padding: 100px 20px 80px; }
+    .page-hero { text-align: center; margin-bottom: 48px; }
+    .page-hero h1 { font-family: var(--font-serif); font-size: 34px; font-weight: 400; margin-bottom: 12px; }
+    .page-hero p { font-size: 15px; color: #777; line-height: 1.7; max-width: 500px; margin: 0 auto; }
+    .form-card { background: white; border-radius: 12px; border: 1px solid #ebebeb; padding: 32px; margin-bottom: 20px; }
+    .form-card-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #aaa; margin-bottom: 20px; }
+    .form-group { margin-bottom: 18px; }
+    .form-label { display: block; font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 7px; }
+    .form-input, .form-select, .form-textarea {
+        width: 100%; padding: 12px 14px; border: 1px solid #d8d8d8; border-radius: 6px;
+        font-size: 14px; color: #333; background: white; box-sizing: border-box;
+        transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--primary); outline: none; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .service-options { display: flex; flex-direction: column; gap: 10px; }
+    .service-option {
+        border: 2px solid #e8e8e8; border-radius: 8px; padding: 14px 16px;
+        cursor: pointer; transition: all 0.2s; display: flex; gap: 14px; align-items: flex-start;
+    }
+    .service-option:has(input:checked) { border-color: var(--primary); background: rgba(139,111,71,0.03); }
+    .service-option input[type="radio"] { accent-color: var(--primary); width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; }
+    .service-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+    .service-desc { font-size: 12px; color: #999; line-height: 1.5; }
+    .timeslot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .timeslot-btn {
+        border: 1px solid #e0e0e0; border-radius: 6px; padding: 10px; text-align: center;
+        cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.15s;
+        background: white; color: #555; position: relative;
+    }
+    .timeslot-btn:has(input:checked) { border-color: var(--primary); background: var(--primary); color: white; }
+    .timeslot-btn input { position: absolute; opacity: 0; pointer-events: none; margin: 0; left: 50%; top: 50%; }
+    .btn-submit {
+        width: 100%; padding: 15px; background: #333; color: white; border: none;
+        border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer;
+        letter-spacing: 0.3px; transition: background 0.2s; margin-top: 8px;
+    }
+    .btn-submit:hover { background: #111; }
+    .error-msg { color: #c0392b; font-size: 12px; margin-top: 4px; }
+    .alert { padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; font-size: 13px; }
+    .alert-success { background: #d4edda; color: #155724; }
+    .alert-error { background: #f8d7da; color: #721c24; }
+    @media(max-width: 600px) { .form-row { grid-template-columns: 1fr; } .timeslot-grid { grid-template-columns: repeat(3, 1fr); } }
+
+
+    .apt-card { background: white; border: 1px solid #eee; margin-bottom: 20px; transition: 0.3s; }
+    .apt-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.03); border-color: #ddd; }
+    .apt-card-head { display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: center; padding: 20px 25px; border-bottom: 1px solid #f9f9f9; }
+    .apt-code { font-weight: 600; font-size: 14px; color: #111; letter-spacing: 0.5px; }
+    .apt-date { font-size: 12px; color: #888; margin-top: 5px; }
+    .apt-body { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; padding: 25px; font-size: 13px; }
+    .apt-field-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 6px; }
+    .apt-field-value { font-weight: 500; color: #111; }
+    .apt-foot { display: flex; justify-content: flex-end; padding: 15px 25px; gap: 10px; background: #fbfbfb; border-top: 1px solid #f9f9f9; }
+    .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+    .btn-danger-sm { padding: 8px 16px; border: 1px solid #f5c6c6; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; color: #c0392b; background: transparent; cursor: pointer; transition: 0.3s; }
+    .btn-danger-sm:hover { background: #c0392b; color: white; border-color: #c0392b; }
+    .btn-primary-sm { display: inline-block; padding: 12px 25px; background: #111; color: white; border: none; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; text-decoration: none; transition: 0.3s; cursor: pointer; }
+    .btn-primary-sm:hover { background: #333; }
+    @media(max-width: 768px) { .apt-body { grid-template-columns: 1fr; } }
+

@@ -1,23 +1,6 @@
 @extends('layouts.customer')
 @section('customer_title', 'Lịch hẹn của tôi - Orlis')
 @section('customer_styles')
-<style>
-    .apt-card { background: white; border: 1px solid #eee; margin-bottom: 20px; transition: 0.3s; }
-    .apt-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.03); border-color: #ddd; }
-    .apt-card-head { display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: center; padding: 20px 25px; border-bottom: 1px solid #f9f9f9; }
-    .apt-code { font-weight: 600; font-size: 14px; color: #111; letter-spacing: 0.5px; }
-    .apt-date { font-size: 12px; color: #888; margin-top: 5px; }
-    .apt-body { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; padding: 25px; font-size: 13px; }
-    .apt-field-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-bottom: 6px; }
-    .apt-field-value { font-weight: 500; color: #111; }
-    .apt-foot { display: flex; justify-content: flex-end; padding: 15px 25px; gap: 10px; background: #fbfbfb; border-top: 1px solid #f9f9f9; }
-    .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-    .btn-danger-sm { padding: 8px 16px; border: 1px solid #f5c6c6; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; color: #c0392b; background: transparent; cursor: pointer; transition: 0.3s; }
-    .btn-danger-sm:hover { background: #c0392b; color: white; border-color: #c0392b; }
-    .btn-primary-sm { display: inline-block; padding: 12px 25px; background: #111; color: white; border: none; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; text-decoration: none; transition: 0.3s; cursor: pointer; }
-    .btn-primary-sm:hover { background: #333; }
-    @media(max-width: 768px) { .apt-body { grid-template-columns: 1fr; } }
-</style>
 @endsection
 @section('customer_content')
 @php
