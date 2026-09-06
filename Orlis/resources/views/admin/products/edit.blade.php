@@ -3,17 +3,7 @@
 @section('title', 'Cập Nhật Sản Phẩm')
 
 @section('page-style')
-<style>
-    .form-group { margin-bottom: 15px; }
-    .form-control {
-        width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;
-    }
-    .btn { padding: 10px 20px; background-color: var(--accent); color: white; border: none; border-radius: 4px; cursor: pointer; }
-    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 800px; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 20px; }
-    .checkbox-group input { width: 18px; height: 18px; }
-</style>
+
 @endsection
 
 @section('content')

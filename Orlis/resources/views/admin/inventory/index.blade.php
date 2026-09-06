@@ -1,43 +1,7 @@
 @extends('layouts.admin')
 @section('title', 'Quản lý Kho Hàng')
 @section('page-style')
-<style>
-    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-    .stat-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px 20px; }
-    .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-    .stat-value { font-family: var(--font-serif); font-size: 24px; font-weight: 600; color: var(--accent); margin-top: 4px; }
-    .filter-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
-    .filter-bar input, .filter-bar select { padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px; background: var(--bg-card); color: var(--text-primary); }
-    .btn { padding: 8px 16px; border-radius: 4px; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; text-decoration: none; }
-    .btn-primary { background: var(--accent); color: white; }
-    .btn-sm { padding: 5px 10px; font-size: 12px; }
-    .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); }
-    .btn-warning { background: #faad14; color: white; }
-    .table { width: 100%; border-collapse: collapse; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
-    .table th, .table td { padding: 11px 16px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; }
-    .table th { font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
-    .table tbody tr:last-child td { border-bottom: none; }
-    .table tbody tr:hover { background: rgba(0,0,0,0.02); }
-    .stock-bar-wrap { width: 100px; background: var(--border-color); border-radius: 4px; height: 6px; overflow: hidden; }
-    .stock-bar { height: 6px; border-radius: 4px; }
-    .qty-tag { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; }
-    .qty-ok { color: #52c41a; background: #f6ffed; }
-    .qty-low { color: #faad14; background: #fffbe6; }
-    .qty-out { color: #f5222d; background: #fff1f0; }
-    .alert { padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; font-size: 13px; }
-    .alert-success { background: #d4edda; color: #155724; }
-    .alert-error { background: #f8d7da; color: #721c24; }
-    /* Modal */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; }
-    .modal-overlay.open { display: flex; }
-    .modal { background: var(--bg-card); border-radius: 10px; padding: 28px; width: 420px; max-width: 90vw; }
-    .modal-title { font-family: var(--font-serif); font-size: 18px; font-weight: 500; margin-bottom: 20px; }
-    .modal label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
-    .modal select, .modal input { width: 100%; padding: 9px 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px; background: var(--bg-card); color: var(--text-primary); margin-bottom: 14px; box-sizing: border-box; }
-    .modal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .btn-close { float: right; background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-muted); }
-</style>
+
 @endsection
 @section('content')
 

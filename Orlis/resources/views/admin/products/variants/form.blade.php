@@ -3,12 +3,7 @@
 @section('title', isset($variant) ? 'Sửa Biến thể' : 'Thêm Biến thể')
 
 @section('page-style')
-<style>
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-    .form-control { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-    .btn-submit { background: #000; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
-</style>
+
 @endsection
 
 @section('content')

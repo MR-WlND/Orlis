@@ -1,4 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Castoro:ital,wght@0,400;1,400&display=swap');
+@import './admin/_views.css';
+
+/* Cache buster */
+:root { --admin-cache: 'v1'; }
 
 :root {
     --bg-main: #f9f9f9;

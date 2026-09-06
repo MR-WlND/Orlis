@@ -1,28 +1,7 @@
 @extends('layouts.admin')
 @section('title', 'Chi tiết lịch hẹn ' . $appointment->appointment_code)
 @section('page-style')
-<style>
-    .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--text-muted); text-decoration: none; font-size: 13px; margin-bottom: 20px; }
-    .back-link:hover { color: var(--accent); }
-    .page-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
-    .apt-code { font-family: var(--font-serif); font-size: 24px; font-weight: 600; }
-    .apt-date { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
-    .grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-    .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 16px; }
-    .card-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 600; margin-bottom: 16px; }
-    .info-row { display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid var(--border-color); }
-    .info-row:last-child { border-bottom: none; }
-    .info-label { color: var(--text-muted); }
-    .info-val { font-weight: 500; }
-    .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; }
-    .form-select, .form-textarea { width: 100%; padding: 9px 12px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px; background: var(--bg-card); color: var(--text-primary); margin-bottom: 10px; }
-    .btn { padding: 9px 18px; border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
-    .btn-primary { background: var(--accent); color: white; width: 100%; justify-content: center; }
-    .btn-secondary { background: #1890ff; color: white; width: 100%; justify-content: center; }
-    .alert { padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; font-size: 13px; }
-    .alert-success { background: #d4edda; color: #155724; }
-    .alert-error { background: #f8d7da; color: #721c24; }
-</style>
+
 @endsection
 @section('content')
 @php

@@ -3,33 +3,7 @@
 @section('title', 'Chỉnh sửa Banner')
 
 @section('page-style')
-<style>
-    .form-container {
-        background: #fff;
-        border: 1px solid var(--border-color);
-        padding: 40px;
-        max-width: 800px;
-    }
-    .form-group { margin-bottom: 25px; }
-    .form-group label {
-        display: block; font-size: 11px; font-weight: 600; color: #555;
-        text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
-    }
-    .form-control {
-        width: 100%; padding: 12px 15px; font-family: inherit; font-size: 14px;
-        border: 1px solid #ddd; border-radius: 4px; outline: none; transition: border-color 0.2s;
-    }
-    .form-control:focus { border-color: #333; }
-    textarea.form-control { resize: vertical; min-height: 100px; }
-    select.form-control { background-color: #fff; cursor: pointer; }
-    .btn-submit {
-        background-color: #111; color: #fff; padding: 12px 30px; font-size: 12px;
-        font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;
-        border: none; cursor: pointer; transition: background-color 0.2s;
-    }
-    .btn-submit:hover { background-color: #333; }
-    .text-danger { color: #d93025; font-size: 12px; margin-top: 5px; display: block; }
-</style>
+
 @endsection
 
 @section('content')

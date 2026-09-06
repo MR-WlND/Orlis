@@ -3,16 +3,7 @@
 @section('title', isset($coupon) ? 'Sửa Mã giảm giá' : 'Thêm Mã giảm giá')
 
 @section('page-style')
-<style>
-    .form-group { margin-bottom: 20px; }
-    .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #333; }
-    .form-control { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-    .form-control:focus { border-color: #000; outline: none; }
-    .row { display: flex; gap: 20px; }
-    .col { flex: 1; }
-    .text-danger { color: #f5222d; font-size: 13px; margin-top: 5px; display: block; }
-    .hint { color: #888; font-size: 12px; margin-top: 4px; display: block; }
-</style>
+
 @endsection
 
 @section('content')

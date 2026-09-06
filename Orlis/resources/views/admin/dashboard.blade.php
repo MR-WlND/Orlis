@@ -3,62 +3,7 @@
 @section('title', 'Tổng Quan')
 
 @section('page-style')
-<style>
-    .dashboard-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        margin-bottom: 24px;
-    }
-    .card {
-        background-color: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 20px 24px;
-    }
-    .card-title {
-        font-size: 11px;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 10px;
-    }
-    .card-value {
-        font-family: var(--font-serif);
-        font-size: 28px;
-        font-weight: 600;
-        color: var(--accent);
-    }
-    .card-trend {
-        font-size: 12px;
-        margin-top: 8px;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-    .trend-up { color: #52c41a; }
-    .trend-down { color: #f5222d; }
-    .trend-neutral { color: var(--text-muted); }
-    .bottom-grid {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 20px;
-        margin-top: 24px;
-    }
-    .table { width: 100%; border-collapse: collapse; }
-    .table th, .table td { padding: 10px 0; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; }
-    .table th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600; }
-    .table tbody tr:last-child td { border-bottom: none; }
-    .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
-    .chart-wrap { height: 220px; position: relative; }
-    canvas { width: 100% !important; }
-    .top-product { display: flex; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border-color); }
-    .top-product:last-child { border-bottom: none; }
-    .top-product-img { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; background: #f0f0f0; flex-shrink: 0; }
-    .top-product-info { flex: 1; font-size: 13px; font-weight: 500; }
-    .top-product-sold { font-size: 12px; color: var(--text-muted); }
-    .top-product-rev { font-size: 13px; font-weight: 600; color: var(--accent); white-space: nowrap; }
-</style>
+
 @endsection
 
 @section('content')

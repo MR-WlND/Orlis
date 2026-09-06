@@ -3,78 +3,7 @@
 @section('title', 'Quản lý Sản phẩm')
 
 @section('page-style')
-<style>
-    .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-    .btn {
-        padding: 8px 16px;
-        border-radius: 4px;
-        text-decoration: none;
-        display: inline-block;
-        font-weight: 500;
-        cursor: pointer;
-        border: none;
-    }
-    .btn-primary {
-        background-color: var(--accent);
-        color: white;
-    }
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-        background: white;
-        border: 1px solid var(--border-color);
-    }
-    .table th, .table td {
-        padding: 12px 15px;
-        text-align: left;
-        border-bottom: 1px solid var(--border-color);
-    }
-    .table th {
-        background-color: var(--bg-card);
-        font-weight: 600;
-    }
-    .btn-sm { padding: 4px 8px; font-size: 12px; }
-    .btn-danger { background-color: #f5222d; color: white; }
-    .btn-info { background-color: #1890ff; color: white; }
-    .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
-    .badge-success { background: #d4edda; color: #155724; }
-    .badge-warning { background: #fff3cd; color: #856404; }
 
-    /* Custom Pagination (Orlis Design System) */
-    .pagination-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 30px;
-    }
-    .pagination-info {
-        font-size: 11px;
-        color: var(--text-secondary);
-    }
-    .pagination-buttons {
-        display: flex;
-        gap: 10px;
-    }
-    .btn-page {
-        padding: 10px 15px;
-        font-size: 10px;
-        font-weight: 600;
-        color: var(--text-primary);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        border: 1px solid var(--border-color);
-        background: #fff;
-        cursor: pointer;
-        transition: all 0.2s;
-        text-decoration: none;
-    }
-    .btn-page:hover { background: #f5f5f5; }
-</style>
 @endsection
 
 @section('content')
