@@ -18,6 +18,7 @@ class Appointment extends Model
         'staff_id',
         'appointment_date',
         'time_slot',
+        'appointment_datetime',
         'service_type',
         'status',
         'transfer_status',

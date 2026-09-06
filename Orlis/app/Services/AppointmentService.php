@@ -56,7 +56,7 @@ class AppointmentService
 
         // 2. Rào chắn Lead Time
         $minDays = $hasItemsNeedingTransfer ? 3 : 1;
-        if ($appointmentDate->diffInDays($now->startOfDay()) < $minDays) {
+        if ($now->startOfDay()->diffInDays($appointmentDate->startOfDay(), false) < $minDays) {
             $msg = $hasItemsNeedingTransfer 
                 ? "Sản phẩm yêu cầu luân chuyển giữa các Showroom. Vui lòng đặt lịch trước ít nhất 3 ngày." 
                 : "Vui lòng đặt lịch hẹn trước ít nhất 24 giờ.";
@@ -71,6 +71,7 @@ class AppointmentService
                 'store_id' => $storeId,
                 'appointment_date' => $appointmentDate->toDateString(),
                 'time_slot' => $timeSlot,
+                'appointment_datetime' => $appointmentDate->toDateString() . ' ' . $timeSlot . ':00',
                 'status' => 'pending',
                 'transfer_status' => $hasItemsNeedingTransfer ? 'needs_transfer' : 'available',
                 'note' => $note,
