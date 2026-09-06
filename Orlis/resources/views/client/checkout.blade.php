@@ -144,7 +144,10 @@
                             <div class="cr-desc">
                                 Dành riêng cho khu vực Nội thành Hà Nội & TP. HCM. Khách hàng lựa chọn khung giờ nhận hàng.
                                 @if($isFreeExpress)
-                                    <span style="display:block; color:#b8860b; font-size:12px; font-weight:500; margin-top:3px;">✨ Đơn hàng từ 10.000.000đ được tặng đặc quyền miễn phí giao Hỏa tốc</span>
+                                    <span style="display:flex; align-items:center; gap:4px; color:#b8860b; font-size:12px; font-weight:500; margin-top:4px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8860b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z"/></svg>
+                                        Đơn hàng từ 10.000.000đ được tặng đặc quyền miễn phí giao Hỏa tốc
+                                    </span>
                                 @endif
                             </div>
                         </div>
