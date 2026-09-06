@@ -28,8 +28,8 @@ class BannerController extends Controller
         $request->validate([
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg,webp,mp4,webm,ogg|max:20480',
-            'image_mobile' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,mp4,webm,ogg|max:20480',
+            'image' => 'required|file|extensions:jpeg,png,jpg,gif,svg,webp,mp4,webm,ogg|max:20480',
+            'image_mobile' => 'nullable|file|extensions:jpeg,png,jpg,gif,svg,webp,mp4,webm,ogg|max:20480',
             'link_url' => 'nullable|string|max:255',
             'link_target' => 'required|in:_self,_blank',
             'text_color' => 'nullable|string|max:50',
@@ -80,8 +80,8 @@ class BannerController extends Controller
         $request->validate([
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,mp4,webm,ogg|max:20480',
-            'image_mobile' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,mp4,webm,ogg|max:20480',
+            'image' => 'nullable|file|extensions:jpeg,png,jpg,gif,svg,webp,mp4,webm,ogg|max:20480',
+            'image_mobile' => 'nullable|file|extensions:jpeg,png,jpg,gif,svg,webp,mp4,webm,ogg|max:20480',
             'link_url' => 'nullable|string|max:255',
             'link_target' => 'required|in:_self,_blank',
             'text_color' => 'nullable|string|max:50',
