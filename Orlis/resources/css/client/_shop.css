@@ -85,10 +85,12 @@
     .cr-title { font-size: 14px; color: #111; margin-bottom: 4px; }
     .cr-desc { font-size: 13px; color: #666; line-height: 1.5; }
     .cr-price { font-size: 13px; font-weight: 600; color: #111; }
-    .cr-price.highlight { color: #52c41a; }
+    .cr-price.highlight { color: #111; font-weight: 700; }
     .payment-icon { display: flex; align-items: center; justify-content: center; }
     .badge-default { background: #111; color: #fff; font-size: 9px; padding: 2px 6px; border-radius: 2px; margin-left: 8px; vertical-align: middle; }
     .badge-tag { background: #f0f0f0; color: #555; font-size: 10px; padding: 2px 6px; border-radius: 2px; margin-left: 6px; }
+    .badge-gift-icon { display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; margin-left: 6px; color: #b8860b; }
+    .badge-vip { background: #111; color: #d4af37; font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.5px; margin-left: 6px; text-transform: uppercase; display: inline-block; vertical-align: middle; }
     .badge-pay { background: #005A9E; color: white; font-size: 10px; padding: 2px 6px; border-radius: 2px; font-weight: 700; }
     .badge-pay:last-child { background: #E31837; }
     .btn-text-link { font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 1px; background: none; border: none; cursor: pointer; padding: 0; }
@@ -122,7 +124,7 @@
 
     .summary-rows .s-row { display: flex; justify-content: space-between; font-size: 13px; color: #555; margin-bottom: 12px; }
     .summary-rows .s-row:last-child { margin-bottom: 0; }
-    .summary-rows .s-row .highlight { color: #52c41a; font-weight: 600; }
+    .summary-rows .s-row .highlight { color: #111; font-weight: 600; }
     
     .summary-grand { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
     .sg-label { font-size: 14px; font-weight: 600; color: #333; text-transform: uppercase; letter-spacing: 1px; }

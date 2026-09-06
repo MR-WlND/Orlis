@@ -111,25 +111,50 @@
                 <span class="checkout-card-step">TIÊU CHUẨN MAISON</span>
             </div>
             <div class="checkout-card-body">
-                <label class="checkout-radio-block active">
-                    <input type="radio" name="shipping_method_dummy" value="standard" checked>
+                @php
+                    $isFreeExpress = ($cart->total >= 10000000);
+                @endphp
+
+                <label class="checkout-radio-block active" id="shipping-std-label">
+                    <input type="radio" name="shipping_method_dummy" value="standard" checked onchange="updateShippingSelect(this)">
                     <div class="cr-content" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
                         <div>
-                            <div class="cr-title">Giao hàng bảo an Orlis Privé <span class="badge-tag">ĐỀ XUẤT</span></div>
-                            <div class="cr-desc">Thời gian dự kiến: 2 - 3 ngày làm việc - Kiểm tra trước khi nhận</div>
+                            <div class="cr-title" style="display:flex; align-items:center; gap:6px; font-weight: 600;">
+                                Giao hàng Bảo an Orlis Privé
+                                <span class="badge-gift-icon" title="Đóng gói hộp quà Maison Orlis đặc biệt & kiểm tra tận tay">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+                                </span>
+                            </div>
+                            <div class="cr-desc">Miễn phí vận chuyển. Đóng gói hộp quà Maison Orlis đặc biệt & kiểm tra sản phẩm tận tay.</div>
                         </div>
                         <div class="cr-price highlight">MIỄN PHÍ</div>
                     </div>
                 </label>
                 
-                <label class="checkout-radio-block">
-                    <input type="radio" name="shipping_method_dummy" value="express" disabled>
-                    <div class="cr-content" style="display:flex; justify-content:space-between; align-items:center; width:100%; opacity:0.6;">
+                <label class="checkout-radio-block" id="shipping-exp-label">
+                    <input type="radio" name="shipping_method_dummy" value="express" onchange="updateShippingSelect(this)">
+                    <div class="cr-content" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
                         <div>
-                            <div class="cr-title">Giao hỏa tốc 2H Couture Express</div>
-                            <div class="cr-desc">Áp dụng nội thành Hà Nội & TP. Hồ Chí Minh</div>
+                            <div class="cr-title" style="display:flex; align-items:center; gap:6px; font-weight: 600;">
+                                Giao hàng Hỏa tốc Couture Express (Trong ngày)
+                                @if($isFreeExpress)
+                                    <span class="badge-vip">ĐẶC QUYỀN VIP</span>
+                                @endif
+                            </div>
+                            <div class="cr-desc">
+                                Dành riêng cho khu vực Nội thành Hà Nội & TP. HCM. Khách hàng lựa chọn khung giờ nhận hàng.
+                                @if($isFreeExpress)
+                                    <span style="display:block; color:#b8860b; font-size:12px; font-weight:500; margin-top:3px;">✨ Đơn hàng từ 10.000.000đ được tặng đặc quyền miễn phí giao Hỏa tốc</span>
+                                @endif
+                            </div>
                         </div>
-                        <div class="cr-price">150.000₫</div>
+                        <div class="cr-price {{ $isFreeExpress ? 'highlight' : '' }}">
+                            @if($isFreeExpress)
+                                MIỄN PHÍ
+                            @else
+                                150.000₫
+                            @endif
+                        </div>
                     </div>
                 </label>
             </div>
@@ -313,6 +338,11 @@ function updatePaymentSelect() {
     document.getElementById('label-vnpay').classList.remove('active');
     const checked = document.querySelector('input[name="payment_method"]:checked').value;
     document.getElementById('label-'+checked).classList.add('active');
+}
+
+function updateShippingSelect(input) {
+    document.querySelectorAll('#shipping-std-label, #shipping-exp-label').forEach(el => el.classList.remove('active'));
+    input.closest('.checkout-radio-block').classList.add('active');
 }
 
 function applyCouponCheckout() {
