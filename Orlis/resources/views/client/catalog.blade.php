@@ -1,6 +1,6 @@
 @extends('layouts.client')
 
-@section('title', 'Orlis - Danh mục {{ __('messages.product_label') }}')
+@section('title', 'Orlis - Danh mục ' . __('messages.product_label'))
 
 @section('content')
 <div class="catalog-page">

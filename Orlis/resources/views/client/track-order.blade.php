@@ -1,5 +1,5 @@
 @extends('layouts.client')
-@section('title', '{{ __('messages.track_order_title_caps') }} – Maison Orlis')
+@section('title', __('messages.track_order_title_caps') . ' – Maison Orlis')
 
 @section('content')
 

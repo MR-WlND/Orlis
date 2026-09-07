@@ -1,5 +1,5 @@
 @extends('layouts.client')
-@section('title', '{{ __('messages.book_appointment') }} Trải Nghiệm Boutique – Orlis')
+@section('title', __('messages.book_appointment') . ' Trải Nghiệm Boutique – Orlis')
 
 @section('content')
 

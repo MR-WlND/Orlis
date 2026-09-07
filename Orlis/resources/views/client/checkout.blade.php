@@ -16,6 +16,22 @@
     {{-- LEFT: Form --}}
     <div class="checkout-left">
         
+        @if(session('error'))
+            <div style="background: #fff1f0; color: #f5222d; padding: 15px; border-radius: 4px; margin-bottom: 20px; border: 1px solid #ffa39e;">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div style="background: #fff1f0; color: #f5222d; padding: 15px; border-radius: 4px; margin-bottom: 20px; border: 1px solid #ffa39e;">
+                <ul style="margin: 0; padding-left: 20px;">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        
         {{-- Card 1: Địa chỉ giao hàng --}}
         <div class="checkout-card">
             <div class="checkout-card-header">
@@ -280,7 +296,7 @@
             </div>
 
             <button type="submit" class="btn-place-order" id="btn-submit">
-                <span id="btn-text">{{ __('messages.place_order') }} NGAY &rarr;</span>
+                <span id="btn-text">{{ mb_strtoupper(__('messages.place_order'), 'UTF-8') }} &rarr;</span>
             </button>
             
             <div class="checkout-policy">
@@ -456,10 +472,13 @@ checkoutForm.addEventListener('submit', function(e) {
         return false;
     }
     isSubmitting = true;
-    btnSubmit.disabled = true;
-    btnSubmit.style.opacity = '0.6';
-    btnSubmit.style.cursor = 'not-allowed';
-    btnText.textContent = 'ĐANG XỬ LÝ...';
+    
+    setTimeout(() => {
+        btnSubmit.disabled = true;
+        btnSubmit.style.opacity = '0.6';
+        btnSubmit.style.cursor = 'not-allowed';
+        btnText.textContent = 'ĐANG XỬ LÝ...';
+    }, 10);
 });
 </script>
 @endsection

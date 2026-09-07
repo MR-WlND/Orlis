@@ -94,7 +94,6 @@ class CheckoutController extends Controller
         $couponId = null;
         if ($request->filled('coupon_code')) {
             $coupon = Coupon::where('code', $request->coupon_code)
-                ->where('is_active', true)
                 ->where(function ($q) {
                     $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
                 })

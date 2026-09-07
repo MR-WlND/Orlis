@@ -140,7 +140,6 @@ class CartController extends Controller
         }
 
         $coupon = \App\Models\Coupon::where('code', $request->coupon_code)
-            ->where('is_active', true)
             ->where(function ($q) {
                 $q->whereNull('expires_at')->orWhere('expires_at', '>=', now());
             })
@@ -160,13 +159,10 @@ class CartController extends Controller
 
         // Tính toán số tiền giảm
         $discountAmount = 0;
-        if ($coupon->type === 'fixed') {
-            $discountAmount = $coupon->value;
-        } else {
-            $discountAmount = $cart->total * ($coupon->value / 100);
-            if ($coupon->max_discount && $discountAmount > $coupon->max_discount) {
-                $discountAmount = $coupon->max_discount;
-            }
+        if ($coupon->discount_amount) {
+            $discountAmount = $coupon->discount_amount;
+        } elseif ($coupon->discount_percent) {
+            $discountAmount = $cart->total * ($coupon->discount_percent / 100);
         }
 
         // Store coupon in session

@@ -41,19 +41,24 @@ class CheckoutService
                 $allocationsData[$item['variant_id']] = $this->inventoryService->reserveStock($item['variant_id'], $item['quantity']);
             }
 
-            // Xử lý Coupon nếu có
-            $discountAmount = 0;
-            if ($couponId) {
-                $this->couponService->applyCoupon($couponId, $userId);
-                // Giả lập discount (thực tế lấy rule từ bảng coupons)
-                $discountAmount = DB::table('coupons')->where('id', $couponId)->value('discount_amount') ?? 0;
-            }
-
             // Tính subtotal
             $subtotal = collect($cartData)->sum(function ($item) {
                 return $item['price'] * $item['quantity'];
             });
-            
+
+            // Xử lý Coupon nếu có
+            $discountAmount = 0;
+            if ($couponId) {
+                $this->couponService->applyCoupon($couponId, $userId);
+                $coupon = DB::table('coupons')->where('id', $couponId)->first();
+                if ($coupon) {
+                    if ($coupon->discount_amount) {
+                        $discountAmount = $coupon->discount_amount;
+                    } elseif ($coupon->discount_percent) {
+                        $discountAmount = $subtotal * ($coupon->discount_percent / 100);
+                    }
+                }
+            }
             // Xử lý phí giao hàng
             $shippingMethod = DB::table('shipping_methods')->where('id', $shippingMethodId)->first();
             $shippingFee = $shippingMethod->cost;

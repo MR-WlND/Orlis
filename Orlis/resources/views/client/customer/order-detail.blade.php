@@ -1,5 +1,5 @@
 @extends('layouts.customer')
-@section('customer_title', '{{ __('messages.details_btn') }} đơn hàng - Orlis')
+@section('customer_title', __('messages.details_btn') . ' đơn hàng - Orlis')
 @section('customer_styles')
 @endsection
 @section('customer_content')
