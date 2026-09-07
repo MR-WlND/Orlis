@@ -97,7 +97,7 @@
                     
                     <!-- Subject Summary -->
                     <div style="margin-bottom: 25px;">
-                        <label style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 1px; color: #333; margin-bottom: 10px; text-transform: uppercase;">{{ __('messages.subject_label') ?? '{{ __('messages.request_subject') }}' }} <span style="color: #cda873;">*</span></label>
+                        <label style="display: block; font-size: 11px; font-weight: 700; letter-spacing: 1px; color: #333; margin-bottom: 10px; text-transform: uppercase;">{{ __('messages.subject_label') ?? __('messages.request_subject') }} <span style="color: #cda873;">*</span></label>
                         <input type="text" name="subject_summary" required placeholder="{{ __('messages.subject_placeholder') ?? 'Tóm tắt ngắn gọn nguyện vọng hoặc vấn đề cần hỗ trợ...' }}" class="luxury-input">
                     </div>
                     
@@ -126,7 +126,7 @@
                     <div style="display: flex; gap: 15px; justify-content: flex-end; align-items: center; padding-top: 20px; border-top: 1px solid #f0f0f0;">
                         <a href="{{ route('tickets.index') }}" class="btn-ghost">{{ __('messages.cancel') ?? 'HỦY BỎ' }}</a>
                         <button type="submit" class="btn-solid">
-                            {{ __('messages.submit_request') ?? 'GỬI {{ __('messages.support_requests_caps') }}' }} 
+                            {{ __('messages.submit_request') ?? 'GỬI ' . __('messages.support_requests_caps') }} 
                             <svg style="width: 14px; height: 14px; margin-left: 8px; stroke: currentColor; fill: none; stroke-width: 2;" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                         </button>
                     </div>

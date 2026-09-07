@@ -23,7 +23,7 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket)
     {
-        $ticket->load('replies.user');
+        $ticket->load('replies.user', 'replies.admin');
         return view('admin.tickets.show', compact('ticket'));
     }
 
@@ -33,7 +33,8 @@ class TicketController extends Controller
 
         TicketReply::create([
             'ticket_id' => $ticket->id,
-            'user_id' => Auth::id(), // Admin ID
+            'user_id' => $ticket->user_id, // Satisfy foreign key constraint
+            'admin_id' => Auth::id(), // Actually an admin reply
             'message' => $request->message
         ]);
 
