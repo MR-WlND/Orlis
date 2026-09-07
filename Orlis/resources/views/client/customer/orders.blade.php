@@ -12,14 +12,14 @@
 
 <form method="GET" action="{{ route('customer.orders') }}" class="filter-bar">
     <select name="status">
-        <option value="">-- Tất cả trạng thái --</option>
+        <option value="">-- {{ __('messages.all_tab') }} trạng thái --</option>
         @foreach($statuses as $key => $label)
             <option value="{{ $key }}" @selected(request('status') === $key)>{{ $label }}</option>
         @endforeach
     </select>
     <button type="submit">Lọc</button>
     @if(request('status'))
-        <a href="{{ route('customer.orders') }}">Xóa lọc</a>
+        <a href="{{ route('customer.orders') }}">{{ __('messages.delete') }} lọc</a>
     @endif
 </form>
 

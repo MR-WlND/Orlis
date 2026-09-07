@@ -62,11 +62,23 @@
                 <h2 class="card-title">Phân quyền</h2>
                 <div class="form-group">
                     <label>Vai trò</label>
-                    <select name="role" class="form-control" required>
+                    <select name="role" class="form-control" required id="role-select">
                         <option value="">Chọn vai trò...</option>
                         @foreach($roles as $key => $label)
                             <option value="{{ $key }}" {{ old('role', $admin->role) == $key ? 'selected' : '' }}>
                                 {{ $label }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group" id="shipping-method-group" style="display: none;">
+                    <label>Phụ trách Kiểu giao hàng (Chỉ dành cho Shipper)</label>
+                    <select name="shipping_method_id" class="form-control">
+                        <option value="">-- Tất cả kiểu giao hàng --</option>
+                        @foreach($shippingMethods as $method)
+                            <option value="{{ $method->id }}" {{ old('shipping_method_id', $admin->shipping_method_id) == $method->id ? 'selected' : '' }}>
+                                {{ $method->name }}
                             </option>
                         @endforeach
                     </select>
@@ -93,4 +105,22 @@
         </div>
     </div>
 </form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const roleSelect = document.getElementById('role-select');
+        const shippingGroup = document.getElementById('shipping-method-group');
+
+        function toggleShippingGroup() {
+            if (roleSelect.value === 'shipper') {
+                shippingGroup.style.display = 'block';
+            } else {
+                shippingGroup.style.display = 'none';
+            }
+        }
+
+        roleSelect.addEventListener('change', toggleShippingGroup);
+        toggleShippingGroup();
+    });
+</script>
 @endsection

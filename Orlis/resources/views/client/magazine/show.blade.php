@@ -23,7 +23,7 @@
 
     @if(isset($relatedPosts) && $relatedPosts->count() > 0)
     <div class="related-articles">
-        <h2 class="related-title">Bài viết liên quan</h2>
+        <h2 class="related-title">{{ __('messages.related_posts') }}</h2>
         <div class="related-grid">
             @foreach($relatedPosts as $related)
             <a href="{{ route('magazine.show', $related->slug) }}" class="magazine-card">

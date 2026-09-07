@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập {{ $roleLabel }} - Orlis</title>
     @vite(['resources/css/client.css'])
+    <style>
+        /* Ẩn icon mắt mặc định của trình duyệt Edge */
+        input::-ms-reveal,
+        input::-ms-clear {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <div class="login-page">

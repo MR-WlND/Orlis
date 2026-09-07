@@ -5,8 +5,8 @@
 @section('customer_content')
 <div class="section-header">
     <div>
-        <div class="subtitle">THÔNG TIN CÁ NHÂN & THẺ</div>
-        <h2 class="section-title">Hồ sơ của tôi</h2>
+        <div class="subtitle">{{ __('messages.personal_information') }} & THẺ</div>
+        <h2 class="section-title">{{ __('messages.my_profile') }}</h2>
     </div>
 </div>
 

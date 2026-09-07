@@ -25,7 +25,7 @@
         </form>
         
         <div style="text-align: center; margin-top: 20px;">
-            <a href="{{ route('role.login', 'customer') }}" style="color: #666; font-size: 13px; text-decoration: underline;">Quay lại Đăng nhập</a>
+            <a href="{{ route('role.login', 'customer') }}" style="color: #666; font-size: 13px; text-decoration: underline;">Quay lại {{ __('messages.login') }}</a>
         </div>
     </div>
 </div>

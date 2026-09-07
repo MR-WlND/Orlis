@@ -1,9 +1,20 @@
 @extends('layouts.client')
 
-@section('title', 'Orlis - Danh mục Sản phẩm')
+@section('title', 'Orlis - Danh mục {{ __('messages.product_label') }}')
 
 @section('content')
 <div class="catalog-page">
+    <style>
+        @media (max-width: 768px) {
+            .catalog-page { padding: 80px 20px 60px !important; }
+            .catalog-grid { 
+                display: grid !important; 
+                grid-template-columns: repeat(2, 1fr) !important; 
+                gap: 20px 10px !important;
+                width: 100% !important;
+            }
+        }
+    </style>
     <div class="catalog-header-clean" style="margin-bottom: 30px;">
         <h1>{{ $category ? $category->translated_name : ($categoryBanner->title ?? __('messages.all_products')) }}</h1>
         <p class="catalog-desc">{{ isset($categoryBanner) && $categoryBanner->description ? $categoryBanner->description : __('messages.catalog_desc_default') }}</p>

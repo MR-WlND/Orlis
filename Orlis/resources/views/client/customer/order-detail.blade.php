@@ -1,9 +1,9 @@
 @extends('layouts.customer')
-@section('customer_title', 'Chi tiết đơn hàng - Orlis')
+@section('customer_title', '{{ __('messages.details_btn') }} đơn hàng - Orlis')
 @section('customer_styles')
 @endsection
 @section('customer_content')
-<a href="{{ route('customer.orders') }}" class="back-link">← Quay lại danh sách đơn hàng</a>
+<a href="{{ route('customer.orders') }}" class="back-link">← {{ __('messages.back_to_list') }} đơn hàng</a>
 
 @php
     $statusFlow = ['pending', 'confirmed', 'processing', 'shipping', 'delivered'];
@@ -14,7 +14,7 @@
     <div>
         <div class="subtitle">CHI TIẾT ĐƠN HÀNG</div>
         <h2 class="section-title">{{ $order->order_code }}</h2>
-        <div style="font-size:12px;color:#888;margin-top:5px;">Ngày đặt: {{ $order->created_at->format('H:i, d/m/Y') }}</div>
+        <div style="font-size:12px;color:#888;margin-top:5px;">{{ __('messages.date_label') }} đặt: {{ $order->created_at->format('H:i, d/m/Y') }}</div>
     </div>
     <span class="status-badge" style="color:{{ $order->status_color }};background:{{ $order->status_color }}15;border: 1px solid {{ $order->status_color }}33;">
         {{ $order->status_label }}
@@ -73,15 +73,15 @@
         @if($order->discount_amount > 0)
         <div class="summary-row" style="color:#28a745;"><span class="info-label">Giảm giá</span><span>-{{ number_format($order->discount_amount, 0, ',', '.') }}₫</span></div>
         @endif
-        <div class="summary-row"><span class="info-label">Phí vận chuyển</span><span>Miễn phí</span></div>
+        <div class="summary-row"><span class="info-label">{{ __('messages.shipping_fee_label') }}</span><span>Miễn phí</span></div>
         <div class="summary-row grand"><span>Tổng thanh toán</span><span>{{ number_format($order->grand_total, 0, ',', '.') }}₫</span></div>
     </div>
 </div>
 
-{{-- Địa chỉ giao hàng --}}
+{{-- {{ __('messages.shipping_address_label') }} --}}
 <div class="card">
     <div class="card-title">Thông tin giao hàng</div>
-    <div class="info-row"><span class="info-label">Người nhận</span><span style="font-weight:600;">{{ $order->recipient_name }}</span></div>
+    <div class="info-row"><span class="info-label">{{ __('messages.recipient_label') }}</span><span style="font-weight:600;">{{ $order->recipient_name }}</span></div>
     <div class="info-row"><span class="info-label">SĐT liên hệ</span><span>{{ $order->recipient_phone }}</span></div>
     @if($order->shipping_address_snapshot)
     <div class="info-row" style="align-items:flex-start;">

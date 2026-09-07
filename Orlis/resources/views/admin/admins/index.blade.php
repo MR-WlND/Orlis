@@ -26,7 +26,7 @@
         <div class="filter-dropdown" style="position: relative;">
             <select name="role" onchange="document.getElementById('filterForm').submit()" style="appearance: none; background: transparent; border: none; font-size: 10px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; cursor: pointer; outline: none; padding-right: 15px;">
                 <option value="">VAI TRÒ (ROLE)</option>
-                @foreach(App\Http\Controllers\Admin\AdminAccountController::ROLES as $key => $label)
+                @foreach(App\Models\Admin::ROLES as $key => $label)
                     <option value="{{ $key }}" {{ request('role') == $key ? 'selected' : '' }}>{{ $label }}</option>
                 @endforeach
             </select>
@@ -74,7 +74,7 @@
                     </td>
                     <td>{{ $admin->email }}</td>
                     <td style="white-space: nowrap;">{{ $admin->phone ?? '--' }}</td>
-                    <td>{{ App\Http\Controllers\Admin\AdminAccountController::ROLES[$admin->role] ?? $admin->role }}</td>
+                    <td>{{ App\Models\Admin::ROLES[$admin->role] ?? $admin->role }}</td>
                     <td style="white-space: nowrap;">
                         @if($admin->status == 1)
                             <span class="status-active">Hoạt động</span>

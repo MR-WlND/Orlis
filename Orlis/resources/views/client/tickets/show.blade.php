@@ -1,12 +1,17 @@
-@extends('layouts.client')
-@section('title', __('messages.ticket_hash') . $ticket->id)
-@section('content')
-<div style="background: #f9f9f9; padding: 100px 0 60px; min-height: 80vh;">
-    <div class="container" style="max-width: 800px; margin: 0 auto; padding: 0 20px;">
-        
-        <div style="margin-bottom: 20px;">
-            <a href="{{ route('tickets.index') }}" style="color: #666; text-decoration: none; font-size: 14px;">{!! __('messages.back_to_list') !!}</a>
+@extends('layouts.customer')
+@section('customer_title', __('messages.ticket_hash') . $ticket->id)
+@section('customer_content')
+<div>
+    <div class="section-header">
+        <div>
+            <div class="subtitle">{{ __('messages.support_requests_caps') }}</div>
+            <h2 class="section-title" style="margin-bottom:0;">Chi tiết Ticket #{{ $ticket->id }}</h2>
         </div>
+        <a href="{{ route('tickets.index') }}" class="btn-primary-sm">← Quay lại danh sách</a>
+    </div>
+
+    <div style="padding: 20px 0;">
+
 
         @if(session('success'))
             <div style="padding: 12px; background: #d4edda; color: #155724; border-radius: 4px; margin-bottom: 20px;">{{ session('success') }}</div>

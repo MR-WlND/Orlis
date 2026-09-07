@@ -8,19 +8,6 @@
 @section('content')
 <div style="background:#f9f9f9; min-height: 100vh; font-family: var(--font-sans); color: #333; padding-bottom: 80px;">
 
-{{-- Stepper --}}
-<div class="checkout-stepper-container">
-    <div class="checkout-stepper">
-        <div class="step"><span class="step-num">1</span> <span class="step-text">GIỎ HÀNG</span></div>
-        <div class="step-divider"></div>
-        <div class="step active"><span class="step-num">2</span> <span class="step-text">THÔNG TIN & GIAO NHẬN</span></div>
-        <div class="step-divider"></div>
-        <div class="step"><span class="step-num">3</span> <span class="step-text">THANH TOÁN</span></div>
-        <div class="step-divider"></div>
-        <div class="step"><span class="step-num">4</span> <span class="step-text">HOÀN TẤT</span></div>
-    </div>
-</div>
-
 <form method="POST" action="{{ route('checkout.store') }}" id="checkout-form">
 @csrf
 <input type="hidden" name="idempotency_key" value="{{ session()->get('checkout_idempotency_key') ?? tap(\Illuminate\Support\Str::uuid()->toString(), fn($k) => session()->put('checkout_idempotency_key', $k)) }}">
@@ -32,8 +19,8 @@
         {{-- Card 1: Địa chỉ giao hàng --}}
         <div class="checkout-card">
             <div class="checkout-card-header">
-                <h2 class="checkout-card-title">1. Địa chỉ giao hàng</h2>
-                <span class="checkout-card-step">BƯỚC 1 / 3</span>
+                <h2 class="checkout-card-title">1. {{ __('messages.shipping_address') }}</h2>
+                <span class="checkout-card-step">{{ __('messages.step_1_3') }}</span>
             </div>
             <div class="checkout-card-body">
                 @if($addresses->isNotEmpty())
@@ -42,25 +29,25 @@
                     <label class="checkout-radio-block">
                         <input type="radio" name="saved_address_id" value="{{ $addr->id }}" {{ $addr->is_default ? 'checked' : '' }} onchange="fillAddress({{ json_encode($addr) }})">
                         <div class="cr-content">
-                            <div class="cr-title"><strong>{{ $addr->recipient_name }}</strong> — {{ $addr->phone }} @if($addr->is_default)<span class="badge-default">MẶC ĐỊNH</span>@endif</div>
+                            <div class="cr-title"><strong>{{ $addr->recipient_name }}</strong> — {{ $addr->phone }} @if($addr->is_default)<span class="badge-default">{{ __('messages.default') }}</span>@endif</div>
                             <div class="cr-desc">{{ $addr->full_address }}</div>
                         </div>
                     </label>
                     @endforeach
                     <div style="text-align: right;">
-                        <button type="button" onclick="clearAddress()" class="btn-text-link">DÙNG ĐỊA CHỈ MỚI</button>
+                        <button type="button" onclick="clearAddress()" class="btn-text-link">{{ __('messages.use_new_address') }}</button>
                     </div>
                 </div>
                 @endif
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">HỌ VÀ TÊN NGƯỜI NHẬN *</label>
+                        <label class="form-label">{{ __('messages.recipient_name') }} *</label>
                         <input type="text" name="recipient_name" id="f_name" class="form-input" value="{{ old('recipient_name', $addresses->firstWhere('is_default', true)?->recipient_name ?? auth()->user()->name) }}" required>
                         @error('recipient_name')<div class="error-msg">{{ $message }}</div>@enderror
                     </div>
                     <div class="form-group">
-                        <label class="form-label">SỐ ĐIỆN THOẠI LIÊN HỆ *</label>
+                        <label class="form-label">{{ __('messages.phone_number') }} *</label>
                         <input type="text" name="recipient_phone" id="f_phone" class="form-input" value="{{ old('recipient_phone', $addresses->firstWhere('is_default', true)?->phone ?? auth()->user()->phone) }}" required>
                         @error('recipient_phone')<div class="error-msg">{{ $message }}</div>@enderror
                     </div>
@@ -68,37 +55,37 @@
 
                 <div class="form-row three-cols">
                     <div class="form-group">
-                        <label class="form-label">TỈNH / THÀNH PHỐ *</label>
-                        <input type="text" name="province" id="f_province" class="form-input" value="{{ old('province', $addresses->firstWhere('is_default', true)?->province) }}" required placeholder="Ví dụ: Hà Nội">
+                        <label class="form-label">{{ __('messages.province') }} *</label>
+                        <input type="text" name="province" id="f_province" class="form-input" value="{{ old('province', $addresses->firstWhere('is_default', true)?->province) }}" required placeholder="{{ __('messages.province_placeholder') }}">
                         @error('province')<div class="error-msg">{{ $message }}</div>@enderror
                     </div>
                     <div class="form-group">
-                        <label class="form-label">QUẬN / HUYỆN *</label>
-                        <input type="text" name="district" id="f_district" class="form-input" value="{{ old('district', $addresses->firstWhere('is_default', true)?->district) }}" required placeholder="Ví dụ: Hoàn Kiếm">
+                        <label class="form-label">{{ __('messages.district') }} *</label>
+                        <input type="text" name="district" id="f_district" class="form-input" value="{{ old('district', $addresses->firstWhere('is_default', true)?->district) }}" required placeholder="{{ __('messages.district_placeholder') }}">
                         @error('district')<div class="error-msg">{{ $message }}</div>@enderror
                     </div>
                     <div class="form-group">
-                        <label class="form-label">PHƯỜNG / XÃ *</label>
-                        <input type="text" name="ward" id="f_ward" class="form-input" value="{{ old('ward', $addresses->firstWhere('is_default', true)?->ward) }}" required placeholder="Ví dụ: Hàng Bài">
+                        <label class="form-label">{{ __('messages.ward') }} *</label>
+                        <input type="text" name="ward" id="f_ward" class="form-input" value="{{ old('ward', $addresses->firstWhere('is_default', true)?->ward) }}" required placeholder="{{ __('messages.ward_placeholder') }}">
                         @error('ward')<div class="error-msg">{{ $message }}</div>@enderror
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">ĐỊA CHỈ CHI TIẾT (SỐ NHÀ, NGÕ, TÊN ĐƯỜNG) *</label>
-                    <input type="text" name="detail_address" id="f_detail" class="form-input" value="{{ old('detail_address', $addresses->firstWhere('is_default', true)?->detail_address) }}" required placeholder="Ví dụ: Số nhà 12, ngõ 34">
+                    <label class="form-label">{{ __('messages.detail_address') }} *</label>
+                    <input type="text" name="detail_address" id="f_detail" class="form-input" value="{{ old('detail_address', $addresses->firstWhere('is_default', true)?->detail_address) }}" required placeholder="{{ __('messages.detail_address_placeholder') }}">
                     @error('detail_address')<div class="error-msg">{{ $message }}</div>@enderror
                 </div>
 
                 <div class="form-group" style="position: relative;">
-                    <label class="form-label">LỜI NHẮN QUÀ TẶNG & GHI CHÚ GIAO HÀNG <span style="float:right;color:#aaa;text-transform:none;">(tùy chọn)</span></label>
-                    <textarea name="gift_note" class="form-input" rows="3" placeholder="Nhập lời chúc riêng để in trên thiệp Maison Orlis hoặc ghi chú thời gian nhận hàng...">{{ old('gift_note') }}</textarea>
+                    <label class="form-label">{{ __('messages.gift_note') }} <span style="float:right;color:#aaa;text-transform:none;">({{ __('messages.optional') }})</span></label>
+                    <textarea name="gift_note" class="form-input" rows="3" placeholder="{{ __('messages.gift_note_placeholder') }}">{{ old('gift_note') }}</textarea>
                 </div>
 
                 <div class="form-group" style="margin-bottom:0;">
                     <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;color:#555;">
                         <input type="checkbox" name="save_address" value="1" style="width:16px;height:16px;accent-color:#111;">
-                        Lưu địa chỉ này vào sổ địa chỉ Maison Orlis cho lần mua sắm tiếp theo
+                        {{ __('messages.save_address_for_next_time') }}
                     </label>
                 </div>
             </div>
@@ -107,8 +94,8 @@
         {{-- Card 2: Phương thức giao hàng --}}
         <div class="checkout-card">
             <div class="checkout-card-header">
-                <h2 class="checkout-card-title">2. Phương thức giao hàng</h2>
-                <span class="checkout-card-step">TIÊU CHUẨN MAISON</span>
+                <h2 class="checkout-card-title">2. {{ __('messages.shipping_method') }}</h2>
+                <span class="checkout-card-step">{{ __('messages.maison_standard') }}</span>
             </div>
             <div class="checkout-card-body">
                 @foreach($shippingMethods as $index => $method)
@@ -129,10 +116,10 @@
                                 <div class="cr-title" style="display:flex; align-items:center; gap:6px; font-weight: 600;">
                                     {{ $method->name }}
                                     @if(str_contains(strtolower($method->name), 'hỏa tốc') && $isFree)
-                                        <span class="badge-vip">ĐẶC QUYỀN VIP</span>
+                                        <span class="badge-vip">{{ __('messages.vip_privilege') }}</span>
                                     @endif
                                     @if($method->cost == 0)
-                                        <span class="badge-gift-icon" title="Đóng gói hộp quà Maison Orlis đặc biệt & kiểm tra tận tay">
+                                        <span class="badge-gift-icon" title="{{ __('messages.gift_packaging') }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
                                         </span>
                                     @endif
@@ -143,17 +130,17 @@
                                         @if($isFree)
                                             <span style="display:flex; align-items:center; gap:4px; color:#b8860b; font-size:12px; font-weight:500; margin-top:4px;">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b8860b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4L12 2z"/></svg>
-                                                Đơn hàng từ {{ number_format($method->min_order_amount_for_free_shipping, 0, ',', '.') }}đ được tặng đặc quyền miễn phí
+                                                {{ __('messages.orders_from') }} {{ number_format($method->min_order_amount_for_free_shipping, 0, ',', '.') }}đ {{ __('messages.free_privilege') }}
                                             </span>
                                         @else
-                                            <span style="display:block; font-size:11px; color:#999; margin-top:4px;">(Miễn phí cho đơn từ {{ number_format($method->min_order_amount_for_free_shipping, 0, ',', '.') }}đ)</span>
+                                            <span style="display:block; font-size:11px; color:#999; margin-top:4px;">({{ __('messages.free_shipping_from') }} {{ number_format($method->min_order_amount_for_free_shipping, 0, ',', '.') }}đ)</span>
                                         @endif
                                     @endif
                                 </div>
                             </div>
                             <div class="cr-price {{ $isFree ? 'highlight' : '' }}" style="font-size: 12px; margin-top: 2px;">
                                 @if($isFree)
-                                    MIỄN PHÍ
+                                    {{ __('messages.free') }}
                                 @else
                                     {{ number_format($method->cost, 0, ',', '.') }}₫
                                 @endif
@@ -167,17 +154,17 @@
         {{-- Card 3: Phương thức thanh toán --}}
         <div class="checkout-card">
             <div class="checkout-card-header">
-                <h2 class="checkout-card-title">3. Phương thức thanh toán</h2>
-                <span class="checkout-card-step"><svg style="width:12px;height:12px;vertical-align:middle;margin-right:4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>BẢO MẬT SSL 256-BIT</span>
+                <h2 class="checkout-card-title">3. {{ __('messages.payment_method') }}</h2>
+                <span class="checkout-card-step"><svg style="width:12px;height:12px;vertical-align:middle;margin-right:4px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>{{ __('messages.ssl_secure') }}</span>
             </div>
             <div class="checkout-card-body">
                 <label class="checkout-radio-block active" id="label-cod">
                     <input type="radio" name="payment_method" value="cod" checked onchange="updatePaymentSelect()">
                     <div class="cr-content" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
                         <div class="cr-title" style="display:flex;align-items:center;gap:8px;">
-                            <span class="payment-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg></span> Thanh toán khi nhận hàng (COD)
+                            <span class="payment-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg></span> {{ __('messages.cod') }}
                         </div>
-                        <div class="cr-desc" style="text-align:right;">Kiểm tra kỹ trước khi thanh toán</div>
+                        <div class="cr-desc" style="text-align:right;">{{ __('messages.check_before_pay') }}</div>
                     </div>
                 </label>
                 
@@ -185,7 +172,7 @@
                     <input type="radio" name="payment_method" value="vnpay" onchange="updatePaymentSelect()">
                     <div class="cr-content" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
                         <div class="cr-title" style="display:flex;align-items:center;gap:8px;">
-                            <span class="payment-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span> Thanh toán qua VNPAY / VietQR
+                            <span class="payment-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span> {{ __('messages.vnpay') }}
                         </div>
                         <div class="cr-desc"><span class="badge-pay">VNPAY</span> <span class="badge-pay">QR</span></div>
                     </div>
@@ -200,7 +187,7 @@
     <div class="checkout-right">
         <div class="checkout-summary-card">
             <div class="checkout-summary-header">
-                <h2>Tóm tắt đơn hàng</h2>
+                <h2>{{ __('messages.order_summary') }}</h2>
                 <span>({{ $cart->total_quantity }} SẢN PHẨM)</span>
             </div>
             
@@ -241,6 +228,19 @@
 
             <div class="summary-divider"></div>
 
+            @if(auth()->check() && auth()->user()->points > 0)
+            <div class="checkout-points">
+                <label class="form-label" style="font-size:10px;">SỬ DỤNG {{ __('messages.points') }} THƯỞNG (HIỆN CÓ: {{ number_format(auth()->user()->points, 0, ',', '.') }})</label>
+                <div class="coupon-flex">
+                    <input type="number" id="use_points_input" name="use_points" class="form-input" placeholder="Nhập số điểm..." min="0" max="{{ auth()->user()->points }}" value="0" oninput="updatePointsDiscount()">
+                    <button type="button" class="btn-apply" onclick="document.getElementById('use_points_input').value={{ auth()->user()->points }}; updatePointsDiscount();">DÙNG TẤT CẢ</button>
+                </div>
+                <div style="font-size: 11px; margin-top: 8px; color: #888;">1 điểm = 1.000₫. <span id="points_discount_text" style="color:#28a745; font-weight:600;">Giảm: 0₫</span></div>
+            </div>
+            
+            <div class="summary-divider"></div>
+            @endif
+
             <div class="summary-rows">
                 <div class="s-row">
                     <span>Tạm tính</span>
@@ -248,7 +248,7 @@
                 </div>
                 <div class="s-row">
                     <span>Phí vận chuyển bảo hiểm</span>
-                    <span class="highlight" id="summary-shipping-fee">MIỄN PHÍ</span>
+                    <span class="highlight" id="summary-shipping-fee">{{ __('messages.free') }}</span>
                 </div>
                 <div class="s-row">
                     <span>Hộp quà & Ruy băng Couture</span>
@@ -280,7 +280,7 @@
             </div>
 
             <button type="submit" class="btn-place-order" id="btn-submit">
-                <span id="btn-text">ĐẶT HÀNG NGAY &rarr;</span>
+                <span id="btn-text">{{ __('messages.place_order') }} NGAY &rarr;</span>
             </button>
             
             <div class="checkout-policy">
@@ -357,15 +357,52 @@ function updateShippingSelect(input) {
     let cost = parseFloat(input.getAttribute('data-cost')) || 0;
     let feeEl = document.getElementById('summary-shipping-fee');
     if(cost === 0) {
-        feeEl.innerText = 'MIỄN PHÍ';
+        feeEl.innerText = '{{ __('messages.free') }}';
     } else {
         feeEl.innerText = cost.toLocaleString('vi-VN') + '₫';
     }
 
-    // Cập nhật tổng
+    updateTotals();
+}
+
+function updatePointsDiscount() {
+    let input = document.getElementById('use_points_input');
+    if (!input) return;
+    let points = parseInt(input.value) || 0;
+    let maxPoints = parseInt(input.getAttribute('max')) || 0;
+    
+    if (points > maxPoints) {
+        points = maxPoints;
+        input.value = points;
+    }
+    if (points < 0) {
+        points = 0;
+        input.value = points;
+    }
+    
+    let discountAmount = points * 1000;
+    document.getElementById('points_discount_text').innerText = 'Giảm: -' + discountAmount.toLocaleString('vi-VN') + '₫';
+    
+    updateTotals();
+}
+
+function updateTotals() {
+    let checkedShipping = document.querySelector('input[name="shipping_method_id"]:checked');
+    let cost = 0;
+    if (checkedShipping) {
+        cost = parseFloat(checkedShipping.getAttribute('data-cost')) || 0;
+    }
+
     let subtotal = {{ $cart->total }};
     let discount = {{ session('applied_coupon')['discount_amount'] ?? 0 }};
-    let grandTotal = Math.max(0, subtotal + cost - discount);
+    
+    let pointsInput = document.getElementById('use_points_input');
+    let pointsDiscount = 0;
+    if (pointsInput) {
+        pointsDiscount = (parseInt(pointsInput.value) || 0) * 1000;
+    }
+    
+    let grandTotal = Math.max(0, subtotal + cost - discount - pointsDiscount);
     document.getElementById('summary-grand-total').innerText = grandTotal.toLocaleString('vi-VN') + '₫';
 }
 

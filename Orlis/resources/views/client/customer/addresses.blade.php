@@ -14,7 +14,7 @@
 <div class="address-card {{ $addr->is_default ? 'default' : '' }}">
     <div class="address-card-head">
         <div class="address-name">{{ $addr->recipient_name }}</div>
-        @if($addr->is_default)<span class="default-badge">Mặc định</span>@endif
+        @if($addr->is_default)<span class="default-badge">{{ __('messages.default_label') }}</span>@endif
     </div>
     <div class="address-phone">{{ $addr->phone }}</div>
     <div class="address-text">{{ $addr->full_address }}</div>
@@ -29,7 +29,7 @@
         <form method="POST" action="{{ route('customer.addresses.destroy', $addr) }}" onsubmit="return confirm('Quý khách có chắc chắn muốn xóa địa chỉ này?');">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn-sm btn-danger">Xóa</button>
+            <button type="submit" class="btn-sm btn-danger">{{ __('messages.delete') }}</button>
         </form>
     </div>
 </div>
@@ -50,24 +50,24 @@
                 @error('recipient_name')<div style="color:#c0392b;font-size:12px;margin-top:5px;">{{ $message }}</div>@enderror
             </div>
             <div class="form-group">
-                <label class="form-label">Số điện thoại *</label>
+                <label class="form-label">{{ __('messages.phone_number') }} *</label>
                 <input type="text" name="phone" class="form-input" required value="{{ old('phone') }}">
                 @error('phone')<div style="color:#c0392b;font-size:12px;margin-top:5px;">{{ $message }}</div>@enderror
             </div>
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label class="form-label">Tỉnh / Thành phố *</label>
+                <label class="form-label">{{ __('messages.province_label') }} *</label>
                 <input type="text" name="province" class="form-input" required value="{{ old('province') }}">
             </div>
             <div class="form-group">
-                <label class="form-label">Quận / Huyện *</label>
+                <label class="form-label">{{ __('messages.district_label') }} *</label>
                 <input type="text" name="district" class="form-input" required value="{{ old('district') }}">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label class="form-label">Phường / Xã *</label>
+                <label class="form-label">{{ __('messages.ward_label') }} *</label>
                 <input type="text" name="ward" class="form-input" required value="{{ old('ward') }}">
             </div>
             <div class="form-group">

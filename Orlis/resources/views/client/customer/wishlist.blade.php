@@ -48,7 +48,7 @@
                 <form method="POST" action="{{ route('wishlist.toggle') }}">
                     @csrf
                     <input type="hidden" name="variant_id" value="{{ $variant?->id }}">
-                    <button type="submit" class="btn-remove" title="Xóa khỏi yêu thích">
+                    <button type="submit" class="btn-remove" title="{{ __('messages.delete') }} khỏi yêu thích">
                         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v6M14 11v6"></path></svg>
                     </button>
                 </form>

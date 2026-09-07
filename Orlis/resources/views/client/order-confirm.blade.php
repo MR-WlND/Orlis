@@ -13,7 +13,7 @@
         <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
     </div>
 
-    <div class="confirm-title">Đặt hàng thành công!</div>
+    <div class="confirm-title">{{ __('messages.order_success_title') }}</div>
     <p class="confirm-subtitle">
         Cảm ơn bạn đã tin tưởng Orlis. Chúng tôi sẽ xác nhận và xử lý đơn hàng của bạn sớm nhất có thể.<br>
         Mã đơn hàng của bạn: <strong>{{ $order->order_code }}</strong>
@@ -57,7 +57,7 @@
 
     {{-- Products --}}
     <div class="order-card">
-        <div class="order-card-title">Sản phẩm đã đặt</div>
+        <div class="order-card-title">{{ __('messages.product_label') }} đã đặt</div>
         @foreach($order->items as $item)
         @php $product = $item->variant?->product; @endphp
         <div class="order-item">

@@ -99,7 +99,7 @@
                 </div>
                 @endif
 
-                {{-- Giá sẽ được cập nhật trực tiếp vào nút Thêm vào giỏ hàng --}}
+                {{-- Giá sẽ được cập nhật trực tiếp vào nút {{ __('messages.add_to_cart_btn') }} --}}
 
                 <script id="variant-data" type="application/json">
                     {!! $variantMap->toJson() !!}
@@ -166,7 +166,7 @@
                 <ul style="margin-top: 10px; padding-left: 20px; line-height: 1.8;">
                     <li><strong>Hotline đặc quyền:</strong> 1800 929 3467 (Miễn phí cước)</li>
                     <li><strong>Email:</strong> concierge@orlis.com</li>
-                    <li><strong>Thời gian hoạt động:</strong> 24/7, bao gồm cả ngày lễ.</li>
+                    <li><strong>{{ __('messages.time_label') }} hoạt động:</strong> 24/7, bao gồm cả ngày lễ.</li>
                 </ul>
                 <p style="margin-top: 15px; color: #666;">Mọi yêu cầu về tư vấn phong cách, đặt thiết kế riêng hoặc bảo hành sẽ được chuyên viên của chúng tôi tiếp nhận và ưu tiên xử lý trong vòng 2 giờ làm việc.</p>
             </div>
@@ -174,8 +174,8 @@
             <div class="pdp-tab-content" id="tab-shipping" style="display: none; line-height: 1.8;">
                 <p><strong>Đặc quyền giao nhận Orlis Premium:</strong></p>
                 <ul style="margin-top: 10px; padding-left: 20px; line-height: 1.8;">
-                    <li><strong>Vận chuyển miễn phí toàn cầu:</strong> Áp dụng cho mọi đơn hàng. Hàng hóa được đóng gói bảo mật 3 lớp trong kiện bảo vệ chuyên dụng.</li>
-                    <li><strong>Thời gian:</strong> 1-3 ngày làm việc đối với nội địa, 3-7 ngày làm việc đối với quốc tế thông qua các đối tác vận chuyển cao cấp.</li>
+                    <li><strong>{{ __('messages.shipping_tab') }} miễn phí toàn cầu:</strong> Áp dụng cho mọi đơn hàng. Hàng hóa được đóng gói bảo mật 3 lớp trong kiện bảo vệ chuyên dụng.</li>
+                    <li><strong>{{ __('messages.time_label') }}:</strong> 1-3 ngày làm việc đối với nội địa, 3-7 ngày làm việc đối với quốc tế thông qua các đối tác vận chuyển cao cấp.</li>
                     <li><strong>Chính sách hoàn trả:</strong> Orlis hỗ trợ đổi trả hoặc hoàn tiền trong vòng 30 ngày kể từ khi nhận hàng. Dịch vụ thu hồi tận nơi hoàn toàn miễn phí.</li>
                 </ul>
                 <p style="margin-top: 15px; font-weight: 600;">* Mỗi kiệt tác đều được trao đến tay quý khách kèm hộp quà tặng Orlis sang trọng, ruy băng dệt nổi và thiệp viết tay theo yêu cầu cá nhân hóa.</p>

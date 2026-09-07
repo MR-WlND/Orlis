@@ -99,10 +99,10 @@
             </a>
         @endif
 
-        <!-- Sản phẩm bán chạy -->
+        <!-- {{ __('messages.product_label') }} bán chạy -->
         @if(isset($bestSellingPerfumes) && $bestSellingPerfumes->count() > 0)
         <section class="perfume-products-section">
-            <h2 class="perfume-section-title">Sản phẩm bán chạy</h2>
+            <h2 class="perfume-section-title">{{ __('messages.product_label') }} bán chạy</h2>
             <div class="perfume-product-grid">
                 @foreach($bestSellingPerfumes as $perfume)
                 <a href="{{ route('product', $perfume->id) }}" class="perfume-product-card" style="text-decoration: none; color: inherit; display: block;">

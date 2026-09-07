@@ -86,11 +86,11 @@
                     </div>
                     <div class="timeline-content">
                         <div>
-                            <strong>{{ \App\Models\Order::STATUSES[$log->old_status] ?? $log->old_status }}</strong>
-                            → <strong style="color: var(--accent);">{{ \App\Models\Order::STATUSES[$log->new_status] ?? $log->new_status }}</strong>
+                            <strong>{{ \App\Models\Order::STATUSES[$log->from_status] ?? $log->from_status }}</strong>
+                            → <strong style="color: var(--accent);">{{ \App\Models\Order::STATUSES[$log->to_status] ?? $log->to_status }}</strong>
                         </div>
-                        @if($log->note)
-                            <div style="color: var(--text-muted); margin-top: 2px;">{{ $log->note }}</div>
+                        @if($log->reason)
+                            <div style="color: var(--text-muted); margin-top: 2px;">{{ $log->reason }}</div>
                         @endif
                         @if($log->changedByAdmin)
                             <div class="timeline-time">bởi {{ $log->changedByAdmin->name }} &bull; {{ $log->created_at->format('H:i d/m/Y') }}</div>
@@ -107,6 +107,7 @@
 
     {{-- RIGHT --}}
     <div>
+        @if(in_array(auth('admin')->user()->role, ['admin', 'manager', 'staff']))
         {{-- Cập nhật trạng thái --}}
         <div class="card" style="margin-bottom: 20px;">
             <div class="card-title">Cập nhật trạng thái</div>
@@ -122,6 +123,7 @@
                 <button type="submit" class="btn btn-primary">Cập nhật trạng thái</button>
             </form>
         </div>
+        @endif
 
         {{-- Thông tin khách hàng --}}
         <div class="card" style="margin-bottom: 20px;">

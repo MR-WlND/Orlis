@@ -93,7 +93,26 @@
             </td>
             <td style="font-size: 12px; color: var(--text-muted);">{{ $order->created_at->format('d/m/Y H:i') }}</td>
             <td>
-                <a href="{{ route('admin.orders.show', $order) }}" class="btn btn-sm btn-outline">Chi tiết</a>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <a href="{{ route('admin.orders.show', $order) }}" class="btn btn-sm btn-outline">Chi tiết</a>
+                    @if(in_array(auth('admin')->user()->role, ['admin', 'manager', 'staff']))
+                        @if($order->order_status == 'pending')
+                            <form action="{{ route('admin.orders.updateStatus', $order) }}" method="POST" style="margin: 0;">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="order_status" value="processing">
+                                <button type="submit" class="btn btn-sm btn-dark" style="padding: 4px 10px; font-size: 12px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer;">Xác nhận</button>
+                            </form>
+                        @elseif($order->order_status == 'processing')
+                            <form action="{{ route('admin.orders.updateStatus', $order) }}" method="POST" style="margin: 0;">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="order_status" value="shipping">
+                                <button type="submit" class="btn btn-sm btn-dark" style="padding: 4px 10px; font-size: 12px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer;">Giao ĐVVC</button>
+                            </form>
+                        @endif
+                    @endif
+                </div>
             </td>
         </tr>
         @empty

@@ -149,7 +149,7 @@
     @if(isset($recentPosts) && $recentPosts->count() > 0)
     <section class="home-magazine" style="padding: 60px 40px; background: #fff;">
         <div style="text-align: center; margin-bottom: 40px;">
-            <h2 style="font-family: var(--font-serif); font-size: 32px; font-weight: 400; letter-spacing: 2px;">TẠP CHÍ ORLIS</h2>
+            <h2 style="font-family: var(--font-serif); font-size: 32px; font-weight: 400; letter-spacing: 2px;">{{ __('messages.orlis_magazine_caps') }}</h2>
             <p style="font-family: var(--font-sans); color: #666; text-transform: uppercase; letter-spacing: 2px; font-size: 13px; margin-top: 10px;">{{ __('messages.news_events') }}</p>
         </div>
         <div class="magazine-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">

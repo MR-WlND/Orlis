@@ -30,17 +30,18 @@
                                     <span class="badge bg-warning">Chờ xử lý</span>
                                 @elseif($order->order_status == 'processing')
                                     <span class="badge bg-primary">Đang xử lý</span>
-                                @elseif($order->order_status == 'shipped')
-                                    <span class="badge bg-info">Đã giao ĐVVC</span>
+                                @elseif($order->order_status == 'shipping')
+                                    <span class="badge bg-info">Đang giao hàng</span>
                                 @endif
                             </td>
-                            <td>
+                            <td style="display: flex; gap: 8px;">
+                                <a href="{{ route('admin.orders.show', $order) }}" class="btn btn-sm btn-outline-dark">Chi tiết</a>
                                 @if(in_array($order->order_status, ['pending', 'processing']))
-                                <form action="{{ route('staff.orders.process', $order->id) }}" method="POST">
+                                <form action="{{ route('staff.orders.process', $order->id) }}" method="POST" style="margin: 0;">
                                     @csrf
                                     @method('PATCH')
                                     <button class="btn btn-sm btn-dark">
-                                        {{ $order->order_status == 'pending' ? 'Xác nhận xử lý' : 'Báo đã giao kho/ĐVVC' }}
+                                        {{ $order->order_status == 'pending' ? 'Xác nhận' : 'Giao kho' }}
                                     </button>
                                 </form>
                                 @endif

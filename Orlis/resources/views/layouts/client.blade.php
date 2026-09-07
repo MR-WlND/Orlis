@@ -11,7 +11,10 @@
     @yield('styles')
 
     <!-- Header -->
-    <header id="mainHeader" class="{{ request()->is('/') ? '' : (request()->is('beauty') ? 'header-dark-text' : 'header-light') }}">
+    @php
+        $isDarkHero = request()->is('/') || request()->is('lien-he') || request()->is('appointment/book');
+    @endphp
+    <header id="mainHeader" class="{{ $isDarkHero ? '' : (request()->is('beauty') ? 'header-dark-text' : 'header-light') }}" data-theme="{{ $isDarkHero ? 'dark-hero' : 'light-hero' }}">
         <div class="menu-icon" onclick="toggleDrawer()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 8h16M4 16h16"/></svg>
         </div>
@@ -124,7 +127,7 @@
                 <a href="#">Instagram</a>
                 <a href="#">Pinterest</a>
             </div>
-            <a href="/" style="font-family: var(--font-serif); font-size: 28px; color: #111; letter-spacing: 0.15em; text-decoration: none; position: relative; left: 0; transform: none; text-align: center;">Orlis</a>
+            <a href="/" style="font-family: var(--font-serif); font-size: 28px; color: #111; letter-spacing: 0.15em; text-decoration: none; position: absolute; left: 50%; transform: translateX(-50%); text-align: center; line-height: 0.8; bottom: 0; margin-bottom: -2px;">Orlis</a>
 
             <!-- Language popup -->
             <div class="lang-popup-wrap" id="langPopupWrap">
@@ -215,7 +218,7 @@
                                     @endif
                                 </li>
                             @endforeach
-                            <li style="margin-top: 35px; border-top: 1px solid #ddd; padding-top: 15px;"><a href="#" style="text-decoration: none; color: inherit; display: block; width: 100%;">{{ __('messages.contact_us') }}</a></li>
+                            <li style="margin-top: 35px; border-top: 1px solid #ddd; padding-top: 15px;"><a href="{{ route('contact') }}" style="text-decoration: none; color: inherit; display: block; width: 100%;">{{ __('messages.contact_us') }}</a></li>
                             <li><a href="{{ route('appointments.create') }}" style="text-decoration: none; color: inherit; display: block; width: 100%;">{{ Lang::has('messages.book_appointment') ? __('messages.book_appointment') : 'Đặt lịch hẹn' }}</a></li>
                             <li><a href="{{ route('track-order') }}" style="text-decoration: none; color: inherit; display: block; width: 100%;">{{ __('messages.track_order') }}</a></li>
                             <li class="mobile-only-item" style="border-top: 1px solid #eee; margin-top: 5px; padding-top: 10px;">
