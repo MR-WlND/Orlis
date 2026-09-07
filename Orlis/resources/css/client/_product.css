@@ -154,3 +154,38 @@
     line-height: 1.8;
 }
 
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .pdp-container {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+    .pdp-gallery {
+        padding: 80px 20px 20px;
+        gap: 20px;
+    }
+    .pdp-info {
+        position: static;
+        height: auto;
+        padding: 20px 20px 60px;
+        overflow-y: visible;
+    }
+    .pdp-title {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+    .pdp-price {
+        font-size: 15px;
+        margin-bottom: 30px;
+    }
+    .pdp-description {
+        margin-bottom: 30px;
+    }
+    .pdp-options {
+        margin-bottom: 30px;
+    }
+    .pdp-tabs {
+        gap: 15px;
+    }
+}
+

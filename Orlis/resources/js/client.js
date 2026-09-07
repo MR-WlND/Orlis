@@ -48,17 +48,10 @@ document.addEventListener('click', function(event) {
 });
 
 function initPage() {
-    // Handle scroll effect for header
-    var path = window.location.pathname;
-    if (path === '/' || path === '/beauty' || path === '/perfume' || path.includes('/catalog/nuoc-hoa')) {
-        window.addEventListener('scroll', handleHeaderScroll);
-        // Trigger once on load
-        handleHeaderScroll();
-    } else {
-        window.removeEventListener('scroll', handleHeaderScroll);
-        var header = document.getElementById('mainHeader');
-        if(header) header.classList.add('header-light');
-    }
+    // Handle scroll effect for header globally
+    window.addEventListener('scroll', handleHeaderScroll);
+    // Trigger once on load
+    handleHeaderScroll();
 
     // Init Info Slider (if exists)
     const slider = document.querySelector('.info-section');
@@ -105,8 +98,10 @@ function handleHeaderScroll() {
         if(perfumeGrid) perfumeGrid.classList.add('scrolled-down');
     } else {
         header.classList.remove('header-light');
-        if (window.location.pathname !== '/') {
+        if (header.getAttribute('data-theme') !== 'dark-hero') {
             header.classList.add('header-dark-text');
+        } else {
+            header.classList.remove('header-dark-text');
         }
         if(perfumeGrid) perfumeGrid.classList.remove('scrolled-down');
     }

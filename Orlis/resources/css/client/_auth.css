@@ -299,8 +299,8 @@
             position: relative;
             background: #ffffff;
             width: 100%;
-            max-width: 340px;
-            padding: 32px 28px;
+            max-width: 420px;
+            padding: 40px 36px;
             border-radius: 12px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             z-index: 10;

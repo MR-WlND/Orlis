@@ -63,3 +63,14 @@
     .btn-primary-sm:hover { background: #333; }
     @media(max-width: 768px) { .apt-body { grid-template-columns: 1fr; } }
 
+    /* Comprehensive Mobile Adjustments for Appointments */
+    @media (max-width: 768px) {
+        .booking-wrap { padding: 80px 20px 60px; }
+        .page-hero h1 { font-size: 28px; }
+        .page-hero p { font-size: 14px; }
+        .form-card { padding: 20px; }
+        .apt-card-head { grid-template-columns: 1fr; text-align: left; gap: 10px; }
+        .apt-foot { flex-direction: column; gap: 10px; }
+        .btn-primary-sm, .btn-danger-sm { text-align: center; width: 100%; box-sizing: border-box; }
+        .timeslot-grid { grid-template-columns: repeat(2, 1fr); }
+    }

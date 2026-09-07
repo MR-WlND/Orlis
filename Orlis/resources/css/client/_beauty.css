@@ -171,16 +171,20 @@
 
 @media (max-width: 900px) {
     .drawer.mega-expanded {
-        width: 360px;
+        width: 100%;
+        max-width: 360px;
     }
     .mega-panel {
         flex-direction: column;
         overflow-y: auto;
     }
-    .mega-sidebar { width: 100%; border-right: none; }
-    .mega-content { display: none; }
+    .mega-sidebar { width: 100%; border-right: none; padding-bottom: 20px; }
+    .mega-content { 
+        display: block; 
+        width: 100%; 
+        padding: 0 20px 40px 20px; 
+    }
 }
-
 
 .perfume-products-section {
     padding: 20px 20px 20px;
