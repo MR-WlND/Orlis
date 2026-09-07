@@ -12,7 +12,10 @@ class TicketController extends Controller
 {
     public function index()
     {
-        $tickets = Ticket::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
+        $tickets = Ticket::where('user_id', Auth::id())
+                    ->with('replies.user')
+                    ->orderBy('updated_at', 'desc')
+                    ->get();
         return view('client.tickets.index', compact('tickets'));
     }
 
@@ -24,14 +27,21 @@ class TicketController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'subject' => 'required|string|max:255',
-            'message' => 'required|string',
+            'subject' => 'required|string|max:255', // This is now the topic
+            'subject_summary' => 'required|string|max:255',
+            'order_id' => 'nullable|string|max:50',
+            'message' => 'required|string|min:20',
             'priority' => 'required|in:low,normal,high'
         ]);
 
+        $fullSubject = '[' . $request->subject . '] ' . $request->subject_summary;
+        if ($request->order_id) {
+            $fullSubject .= ' - Mã ĐH: ' . $request->order_id;
+        }
+
         $ticket = Ticket::create([
             'user_id' => Auth::id(),
-            'subject' => $request->subject,
+            'subject' => $fullSubject,
             'priority' => $request->priority,
             'status' => 'open'
         ]);

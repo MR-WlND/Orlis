@@ -9,10 +9,11 @@ class OrderStatusLog extends Model
 {
     protected $fillable = [
         'order_id',
-        'old_status',
-        'new_status',
-        'note',
-        'changed_by',
+        'from_status',
+        'to_status',
+        'reason',
+        'admin_id',
+        'user_id',
     ];
 
     public function order(): BelongsTo
@@ -22,6 +23,6 @@ class OrderStatusLog extends Model
 
     public function changedByAdmin(): BelongsTo
     {
-        return $this->belongsTo(Admin::class, 'changed_by');
+        return $this->belongsTo(Admin::class, 'admin_id');
     }
 }

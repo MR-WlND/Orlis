@@ -29,6 +29,12 @@ class WarehouseController extends Controller
             'created_by' => auth()->id()
         ]);
 
-        return back()->with('success', 'Đã xuất kho và chuyển trạng thái giao hàng thành công.');
+        return redirect()->back()->with('success', 'Đơn hàng đã được chuyển cho đơn vị vận chuyển.');
+    }
+
+    public function printPackingSlip($id)
+    {
+        $order = Order::with(['items.productVariant.product', 'user'])->findOrFail($id);
+        return view('admin.orders.packing-slip', compact('order'));
     }
 }

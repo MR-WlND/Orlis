@@ -18,6 +18,7 @@ class Admin extends Authenticatable
         'avatar',
         'role',
         'status',
+        'shipping_method_id',
     ];
 
     protected $hidden = [
@@ -34,13 +35,14 @@ class Admin extends Authenticatable
     }
 
     public const ROLES = [
-        'admin' => 'Quản trị viên',
-        'manager' => 'Quản lý',
-        'staff' => 'Nhân viên',
-        'editor' => 'Biên tập viên',
-        'warehouse_staff' => 'Quản lý kho',
-        'shipper' => 'Shipper',
-        'supplier' => 'Supplier',
+        'admin'            => 'Quản trị viên',
+        'manager'          => 'Quản lý',
+        'staff'            => 'Nhân viên',
+        'customer_service' => 'Chăm sóc khách hàng',
+        'editor'           => 'Biên tập viên',
+        'warehouse_staff'  => 'Quản lý kho',
+        'shipper'          => 'Shipper',
+        'supplier'         => 'Supplier',
     ];
 
     public function hasRole(string $role): bool
@@ -53,5 +55,10 @@ class Admin extends Authenticatable
         $roles = is_array($roles) ? $roles : [$roles];
 
         return in_array($this->role, $roles, true);
+    }
+
+    public function shippingMethod()
+    {
+        return $this->belongsTo(ShippingMethod::class);
     }
 }

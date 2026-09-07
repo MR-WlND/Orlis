@@ -33,18 +33,29 @@ class AppointmentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'store_id' => ['required', 'exists:stores,id'],
+            'store_id'         => ['required', 'exists:stores,id'],
             'appointment_date' => ['required', 'date', 'after:today'],
-            'time_slot' => ['required', 'string'],
-            'service_type' => ['required', 'in:consultation,trial,vip_service'],
-            'note' => ['nullable', 'string', 'max:500'],
+            'time_slot'        => ['required', 'string'],
+            'service_type'     => ['required', 'in:consultation,trial,vip_service'],
+            'contact_name'     => ['required', 'string', 'max:100'],
+            'contact_phone'    => ['required', 'string', 'max:20'],
+            'contact_email'    => ['required', 'email', 'max:150'],
+            'note'             => ['nullable', 'string', 'max:500'],
         ], [
-            'store_id.required' => 'Vui lòng chọn cửa hàng.',
+            'store_id.required'         => 'Vui lòng chọn cửa hàng.',
             'appointment_date.required' => 'Vui lòng chọn ngày hẹn.',
-            'appointment_date.after' => 'Ngày hẹn phải là ngày trong tương lai.',
-            'time_slot.required' => 'Vui lòng chọn khung giờ.',
-            'service_type.required' => 'Vui lòng chọn loại dịch vụ.',
+            'appointment_date.after'    => 'Ngày hẹn phải là ngày trong tương lai.',
+            'time_slot.required'        => 'Vui lòng chọn khung giờ.',
+            'service_type.required'     => 'Vui lòng chọn loại dịch vụ.',
+            'contact_name.required'     => 'Vui lòng nhập họ tên.',
+            'contact_phone.required'    => 'Vui lòng nhập số điện thoại xác nhận.',
+            'contact_email.required'    => 'Vui lòng nhập địa chỉ email.',
+            'contact_email.email'       => 'Email không hợp lệ.',
         ]);
+
+        // Build full note including contact details
+        $contactInfo = "Liên hệ: {$request->contact_name} | ĐT: {$request->contact_phone} | Email: {$request->contact_email}";
+        $fullNote = $request->note ? "{$contactInfo}\n{$request->note}" : $contactInfo;
 
         try {
             $this->appointmentService->bookAppointment(
@@ -52,8 +63,9 @@ class AppointmentController extends Controller
                 storeId: $request->store_id,
                 date: $request->appointment_date,
                 timeSlot: $request->time_slot,
+                serviceType: $request->service_type,
                 variantIds: [],
-                note: $request->note,
+                note: $fullNote,
             );
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage())->withInput();

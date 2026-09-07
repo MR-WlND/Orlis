@@ -53,6 +53,7 @@ class CheckoutController extends Controller
             'coupon_code' => ['nullable', 'string'],
             'gift_note' => ['nullable', 'string', 'max:500'],
             'save_address' => ['nullable', 'boolean'],
+            'use_points' => ['nullable', 'integer', 'min:0'],
         ], [
             'recipient_name.required' => 'Vui lòng nhập tên người nhận.',
             'recipient_phone.required' => 'Vui lòng nhập số điện thoại.',
@@ -61,6 +62,7 @@ class CheckoutController extends Controller
             'ward.required' => 'Vui lòng chọn phường/xã.',
             'detail_address.required' => 'Vui lòng nhập địa chỉ chi tiết.',
             'payment_method.required' => 'Vui lòng chọn phương thức thanh toán.',
+            'use_points.integer' => 'Số điểm sử dụng phải là số nguyên.',
         ]);
 
         // ============================================================
@@ -102,6 +104,9 @@ class CheckoutController extends Controller
                 $couponId = $coupon->id;
             }
         }
+
+        // Xử lý điểm thưởng
+        $usePoints = $request->input('use_points', 0);
 
         // Lưu địa chỉ nếu khách chọn
         $shippingAddress = [
@@ -149,6 +154,7 @@ class CheckoutController extends Controller
                 ]),
                 couponId: $couponId,
                 shippingMethodId: $request->shipping_method_id,
+                pointsUsed: (int) $usePoints
             );
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage())->withInput();

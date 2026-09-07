@@ -19,13 +19,46 @@ class CustomerController extends Controller
     {
         $user = Auth::user();
 
-        $totalOrders = Order::where('user_id', $user->id)->count();
-        $pendingOrders = Order::where('user_id', $user->id)->where('order_status', 'pending')->count();
+        $totalOrders     = Order::where('user_id', $user->id)->count();
+        $pendingOrders   = Order::where('user_id', $user->id)->where('order_status', 'pending')->count();
         $completedOrders = Order::where('user_id', $user->id)->where('order_status', 'delivered')->count();
-        $recentOrders = Order::where('user_id', $user->id)->latest()->take(3)->get();
+        $recentOrders    = Order::where('user_id', $user->id)->latest()->take(3)->get();
+
+        // Find advisor: priority order:
+        // 1. Staff (customer_service) assigned to user's latest appointment
+        // 2. Any admin with customer_service role
+        // 3. Fallback: staff / manager
+        $advisor = null;
+
+        $latestAppointment = \App\Models\Appointment::where('user_id', $user->id)
+            ->whereNotNull('staff_id')
+            ->latest()
+            ->first();
+
+        if ($latestAppointment) {
+            $candidate = \App\Models\Admin::find($latestAppointment->staff_id);
+            if ($candidate && $candidate->role === 'customer_service') {
+                $advisor = $candidate;
+            }
+        }
+
+        // Any customer_service in system
+        if (!$advisor) {
+            $advisor = \App\Models\Admin::where('role', 'customer_service')->first();
+        }
+
+        // Final fallback: staff assigned to appointment (any role)
+        if (!$advisor && isset($candidate)) {
+            $advisor = $candidate;
+        }
+
+        // Ultimate fallback
+        if (!$advisor) {
+            $advisor = \App\Models\Admin::whereIn('role', ['staff', 'manager'])->first();
+        }
 
         return view('client.customer.dashboard', compact(
-            'user', 'totalOrders', 'pendingOrders', 'completedOrders', 'recentOrders'
+            'user', 'totalOrders', 'pendingOrders', 'completedOrders', 'recentOrders', 'advisor'
         ));
     }
 

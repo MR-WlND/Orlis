@@ -23,7 +23,6 @@ use App\Http\Controllers\Client\CheckoutController;
 use App\Http\Controllers\Client\CustomerController;
 use App\Http\Controllers\Client\PostController;
 use App\Http\Controllers\Client\ProductController;
-use App\Http\Controllers\Client\ReviewController;
 use App\Http\Controllers\Client\TrackOrderController;
 use App\Http\Controllers\Client\WishlistController;
 use App\Http\Controllers\HomeController;
@@ -67,11 +66,16 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/catalog/{slug?}', [CatalogController::class, 'index'])->name('catalog');
 
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product');
-Route::post('/product/{id}/review', [ReviewController::class, 'store'])->name('product.review')->middleware('auth');
 
 Route::get('/perfume', function () {
     return view('client.perfume');
 })->name('perfume');
+
+// Contact routes
+Route::get('/lien-he', function () {
+    return view('client.contact');
+})->name('contact');
+Route::post('/lien-he', [App\Http\Controllers\Client\ContactController::class, 'send'])->name('contact.send');
 
 Route::get('/magazine', [PostController::class, 'index'])->name('magazine.index');
 Route::get('/magazine/{slug}', [PostController::class, 'show'])->name('magazine.show');
@@ -96,39 +100,64 @@ Route::middleware(['auth:admin'])->group(function () {
     Route::post('/admin/logout', [RoleLoginController::class, 'logout'])->name('admin.logout');
 });
 
-Route::middleware(['auth:admin', 'role:admin'])->group(function () {
+Route::middleware(['auth:admin', 'role:admin,manager'])->group(function () {
     Route::get('/admin', [DashboardController::class, 'index'])->name('admin.dashboard');
-
-    Route::resource('admin/users', UserController::class, ['as' => 'admin']);
-    Route::resource('admin/admins', AdminAccountController::class, ['as' => 'admin']);
     Route::resource('/admin/categories', CategoryController::class, ['as' => 'admin']);
+    Route::resource('admin/products', App\Http\Controllers\Admin\ProductController::class, ['as' => 'admin']);
+    Route::resource('admin/products.variants', ProductVariantController::class, ['as' => 'admin']);
+    Route::resource('admin/coupons', CouponController::class, ['as' => 'admin']);
+    Route::resource('admin/shipping-methods', App\Http\Controllers\Admin\ShippingMethodController::class, ['as' => 'admin']);
+});
+
+Route::middleware(['auth:admin', 'role:admin'])->group(function () {
+    Route::resource('admin/users', UserController::class, ['as' => 'admin'])->except(['index', 'show']);
+    Route::resource('admin/admins', AdminAccountController::class, ['as' => 'admin']);
+
+    Route::get('admin/settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('admin.settings.index');
+    Route::put('admin/settings', [App\Http\Controllers\Admin\SettingController::class, 'update'])->name('admin.settings.update');
+});
+
+Route::middleware(['auth:admin', 'role:admin,manager,staff'])->group(function () {
+    Route::resource('admin/users', UserController::class, ['as' => 'admin'])->only(['index', 'show']);
 
     Route::get('/admin/tickets', [TicketController::class, 'index'])->name('admin.tickets.index');
     Route::get('/admin/tickets/{ticket}', [TicketController::class, 'show'])->name('admin.tickets.show');
     Route::post('/admin/tickets/{ticket}/reply', [TicketController::class, 'reply'])->name('admin.tickets.reply');
     Route::patch('/admin/tickets/{ticket}/close', [TicketController::class, 'close'])->name('admin.tickets.close');
 
-    Route::resource('admin/banners', BannerController::class, ['as' => 'admin']);
-    Route::resource('admin/products', App\Http\Controllers\Admin\ProductController::class, ['as' => 'admin']);
-    Route::resource('admin/posts', App\Http\Controllers\Admin\PostController::class, ['as' => 'admin']);
-    Route::resource('admin/products.variants', ProductVariantController::class, ['as' => 'admin']);
-    Route::resource('admin/coupons', CouponController::class, ['as' => 'admin']);
-    Route::resource('admin/shipping-methods', App\Http\Controllers\Admin\ShippingMethodController::class, ['as' => 'admin']);
-    Route::resource('admin/reviews', App\Http\Controllers\Admin\ReviewController::class, ['as' => 'admin'])->only(['index', 'destroy']);
-    Route::patch('admin/reviews/{review}/status', [App\Http\Controllers\Admin\ReviewController::class, 'updateStatus'])->name('admin.reviews.updateStatus');
-    Route::resource('admin/orders', OrderController::class, ['as' => 'admin'])->only(['index', 'show', 'destroy']);
-    Route::patch('admin/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
     Route::resource('admin/appointments', App\Http\Controllers\Admin\AppointmentController::class, ['as' => 'admin'])->only(['index', 'show']);
     Route::patch('admin/appointments/{appointment}/staff', [App\Http\Controllers\Admin\AppointmentController::class, 'assignStaff'])->name('admin.appointments.assignStaff');
     Route::patch('admin/appointments/{appointment}/status', [App\Http\Controllers\Admin\AppointmentController::class, 'updateStatus'])->name('admin.appointments.updateStatus');
+});
+
+Route::middleware(['auth:admin', 'role:admin,manager,editor'])->group(function () {
+    Route::resource('admin/banners', BannerController::class, ['as' => 'admin']);
+});
+
+Route::middleware(['auth:admin', 'role:admin,editor'])->group(function () {
+    Route::resource('admin/posts', App\Http\Controllers\Admin\PostController::class, ['as' => 'admin']);
+});
+
+Route::middleware(['auth:admin', 'role:admin,manager,staff,warehouse_staff,shipper'])->group(function () {
+    Route::resource('admin/orders', OrderController::class, ['as' => 'admin'])->only(['index', 'show']);
+});
+
+Route::middleware(['auth:admin', 'role:admin,manager,staff'])->group(function () {
+    // POS / Telesales
+    Route::get('/admin/pos', [App\Http\Controllers\Admin\PosController::class, 'create'])->name('admin.pos.create');
+    Route::get('/admin/pos/search-products', [App\Http\Controllers\Admin\PosController::class, 'searchProducts']);
+    Route::get('/admin/pos/search-users', [App\Http\Controllers\Admin\PosController::class, 'searchUsers']);
+    Route::post('/admin/pos/store', [App\Http\Controllers\Admin\PosController::class, 'store'])->name('admin.pos.store');
+
+    Route::delete('admin/orders/{order}', [OrderController::class, 'destroy'])->name('admin.orders.destroy');
+    Route::patch('admin/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+});
+
+Route::middleware(['auth:admin', 'role:admin,manager,warehouse_staff'])->group(function () {
     Route::get('admin/inventory', [InventoryController::class, 'index'])->name('admin.inventory.index');
     Route::put('admin/inventory', [InventoryController::class, 'upsert'])->name('admin.inventory.upsert');
     Route::get('admin/inventory/variant/{variantId}', [InventoryController::class, 'showVariant'])->name('admin.inventory.variant');
     Route::post('admin/inventory/transfer', [InventoryController::class, 'transfer'])->name('admin.inventory.transfer');
-});
-
-Route::middleware(['auth:admin', 'role:manager'])->group(function () {
-    Route::get('/manager', fn () => 'Quản lý vận hành');
 });
 
 Route::middleware(['auth:admin', 'role:staff'])->group(function () {
@@ -155,12 +184,20 @@ Route::middleware(['auth'])->post('/wishlist/toggle', [WishlistController::class
 
 Route::middleware(['auth:admin', 'role:shipper'])->group(function () {
     Route::get('/shipper', [ShipperController::class, 'dashboard'])->name('shipper.dashboard');
+    Route::get('/shipper/orders', [ShipperController::class, 'orders'])->name('shipper.orders');
     Route::patch('/shipper/orders/{id}/status', [ShipperController::class, 'updateStatus'])->name('shipper.orders.updateStatus');
 });
 
 Route::middleware(['auth:admin', 'role:warehouse_staff'])->group(function () {
     Route::get('/warehouse', [WarehouseController::class, 'dashboard'])->name('warehouse.dashboard');
     Route::patch('/warehouse/orders/{id}/delivering', [WarehouseController::class, 'markAsDelivering'])->name('warehouse.orders.delivering');
+    
+    // In phiếu đóng gói
+    Route::get('/warehouse/orders/{id}/packing-slip', [WarehouseController::class, 'printPackingSlip'])->name('warehouse.orders.packing-slip');
+    
+    // Purchase Orders (Warehouse Staff)
+    Route::get('/admin/purchase_orders/create', [App\Http\Controllers\Admin\PurchaseOrderController::class, 'create'])->name('admin.purchase_orders.create');
+    Route::post('/admin/purchase_orders', [App\Http\Controllers\Admin\PurchaseOrderController::class, 'store'])->name('admin.purchase_orders.store');
 });
 
 // Ticket routes for Customer

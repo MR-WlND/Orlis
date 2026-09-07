@@ -29,6 +29,8 @@ class AppServiceProvider extends ServiceProvider
         Order::observe(OrderObserver::class);
         Product::observe(ProductObserver::class);
 
+        \Illuminate\Pagination\Paginator::useBootstrapFive();
+
         View::composer('*', function ($view) {
             $globalCategories = Category::whereNull('parent_id')
                 ->with(['children' => function ($q) {

@@ -77,27 +77,29 @@ class OrderController extends Controller
             $order->update(['order_status' => $newStatus]);
 
             OrderStatusLog::create([
-                'order_id'   => $order->id,
-                'old_status' => $oldStatus,
-                'new_status' => $newStatus,
-                'note'       => $request->note,
-                'changed_by' => auth('admin')->id(),
+                'order_id'    => $order->id,
+                'from_status' => $oldStatus,
+                'to_status'   => $newStatus,
+                'reason'      => $request->note,
+                'admin_id'    => auth('admin')->id(),
             ]);
         });
 
-        // Gửi email thông báo cho khách
-        try {
-            $customer = $order->user;
-            if ($customer && $customer->email) {
-                Mail::to($customer->email)->send(
-                    new OrderStatusUpdatedMail($order, $newStatus, $request->note)
-                );
+        // Gửi email thông báo cho khách trong background bằng defer()
+        defer(function () use ($order, $newStatus, $request) {
+            try {
+                $customer = $order->user;
+                if ($customer && $customer->email) {
+                    Mail::to($customer->email)->send(
+                        new OrderStatusUpdatedMail($order, $newStatus, $request->note)
+                    );
+                }
+            } catch (\Exception $e) {
+                Log::error('Lỗi gửi email trạng thái đơn hàng: ' . $e->getMessage());
             }
-        } catch (\Exception $e) {
-            Log::error('Lỗi gửi email trạng thái đơn hàng: ' . $e->getMessage());
-        }
+        });
 
-        return back()->with('success', 'Cập nhật trạng thái đơn hàng và gửi email thông báo thành công.');
+        return back()->with('success', 'Cập nhật trạng thái đơn hàng thành công.');
     }
 
     public function destroy(Order $order)

@@ -26,9 +26,9 @@ class CheckoutService
     /**
      * Tạo đơn hàng. Ngăn chặn Deadlock bằng cách Sorting mảng biến thể.
      */
-    public function checkout(array $cartData, int $userId, array $shippingAddress, ?int $couponId, int $shippingMethodId)
+    public function checkout(array $cartData, int $userId, array $shippingAddress, ?int $couponId, int $shippingMethodId, int $pointsUsed = 0)
     {
-        $order = DB::transaction(function () use ($cartData, $userId, $shippingAddress, $couponId, $shippingMethodId) {
+        $order = DB::transaction(function () use ($cartData, $userId, $shippingAddress, $couponId, $shippingMethodId, $pointsUsed) {
             // [DEADLOCK PREVENTION] Sort cart items theo variant_id tăng dần 
             // trước khi đẩy vào vòng lặp giữ kho bằng lockForUpdate().
             usort($cartData, function ($a, $b) {
@@ -61,7 +61,18 @@ class CheckoutService
                 $shippingFee = 0;
             }
 
-            $grandTotal = max(0, $subtotal + $shippingFee - $discountAmount);
+            // Xử lý điểm thưởng (1 điểm = 1000đ)
+            $user = User::lockForUpdate()->find($userId);
+            if ($pointsUsed > 0 && $pointsUsed <= $user->points) {
+                $pointsDiscount = $pointsUsed * 1000;
+                $user->points -= $pointsUsed;
+                $user->save();
+            } else {
+                $pointsUsed = 0;
+                $pointsDiscount = 0;
+            }
+
+            $grandTotal = max(0, $subtotal + $shippingFee - $discountAmount - $pointsDiscount);
 
             // Tạo Order
             $orderId = DB::table('orders')->insertGetId([
@@ -75,6 +86,8 @@ class CheckoutService
                 'subtotal' => $subtotal,
                 'shipping_fee' => $shippingFee,
                 'discount_amount' => $discountAmount,
+                'points_used' => $pointsUsed,
+                'points_discount' => $pointsDiscount,
                 'grand_total' => $grandTotal,
                 'order_status' => 'pending',
                 'created_at' => now(),

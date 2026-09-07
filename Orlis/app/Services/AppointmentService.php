@@ -11,7 +11,7 @@ use Exception;
 
 class AppointmentService
 {
-    public function bookAppointment(int $userId, int $storeId, string $date, string $timeSlot, array $variantIds, ?string $note = null): Appointment
+    public function bookAppointment(int $userId, int $storeId, string $date, string $timeSlot, string $serviceType, array $variantIds, ?string $note = null): Appointment
     {
         $appointmentDate = Carbon::parse($date);
         $now = Carbon::now();
@@ -64,7 +64,7 @@ class AppointmentService
         }
 
         // 3. Khởi tạo Đặt lịch trong Transaction
-        return DB::transaction(function () use ($userId, $storeId, $appointmentDate, $timeSlot, $hasItemsNeedingTransfer, $itemsData, $note) {
+        return DB::transaction(function () use ($userId, $storeId, $appointmentDate, $timeSlot, $serviceType, $hasItemsNeedingTransfer, $itemsData, $note) {
             $appointment = Appointment::create([
                 'appointment_code' => 'APT_' . strtoupper(uniqid()),
                 'user_id' => $userId,
@@ -72,6 +72,7 @@ class AppointmentService
                 'appointment_date' => $appointmentDate->toDateString(),
                 'time_slot' => $timeSlot,
                 'appointment_datetime' => $appointmentDate->toDateString() . ' ' . $timeSlot . ':00',
+                'service_type' => $serviceType,
                 'status' => 'pending',
                 'transfer_status' => $hasItemsNeedingTransfer ? 'needs_transfer' : 'available',
                 'note' => $note,

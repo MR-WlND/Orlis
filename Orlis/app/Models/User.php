@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'role', 'phone', 'avatar', 'membership_level', 'loyalty_points', 'status', 'provider', 'provider_id'])]
+#[Fillable(['name', 'email', 'password', 'role', 'phone', 'avatar', 'membership_level', 'points', 'accumulated_points', 'status', 'provider', 'provider_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -21,7 +21,6 @@ class User extends Authenticatable
 
     public const ROLES = [
         'customer' => 'Customer',
-        'guest' => 'Guest',
     ];
 
     public const MEMBERSHIPS = [
@@ -57,10 +56,6 @@ class User extends Authenticatable
         ];
     }
 
-    public function reviews(): HasMany
-    {
-        return $this->hasMany(Review::class);
-    }
 
     public function orders(): HasMany
     {
@@ -90,5 +85,23 @@ class User extends Authenticatable
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class);
+    }
+
+    public function recalculateMembership(): void
+    {
+        $points = $this->accumulated_points;
+        $newLevel = 'classic';
+        
+        if ($points >= 20000) {
+            $newLevel = 'diamond';
+        } elseif ($points >= 5000) {
+            $newLevel = 'gold';
+        } elseif ($points >= 1000) {
+            $newLevel = 'silver';
+        }
+
+        if ($this->membership_level !== $newLevel) {
+            $this->update(['membership_level' => $newLevel]);
+        }
     }
 }

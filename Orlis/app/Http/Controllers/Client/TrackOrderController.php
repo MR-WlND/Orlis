@@ -17,17 +17,23 @@ class TrackOrderController extends Controller
     {
         $request->validate([
             'order_code' => 'required|string',
-            'phone' => 'required|string'
+            'phone'      => 'required|string'
         ]);
 
-        $order = Order::with(['items.variant.product'])->where('order_code', $request->order_code)->first();
+        $order = Order::with([
+            'items.variant.product',
+            'statusLogs',
+            'shippingMethod',
+        ])->where('order_code', $request->order_code)->first();
 
         if (!$order) {
-            return back()->with('error', 'Không tìm thấy đơn hàng với mã này.');
+            return back()->with('error', 'Không tìm thấy đơn hàng với mã này. Vui lòng kiểm tra lại.');
         }
 
-        // Validate phone number inside JSON
-        $shippingPhone = $order->shipping_address['recipient_phone'] ?? '';
+        // Validate phone number
+        $shippingPhone = $order->recipient_phone
+            ?? ($order->shipping_address_snapshot['recipient_phone'] ?? '');
+
         if ($shippingPhone !== $request->phone) {
             return back()->with('error', 'Số điện thoại không khớp với thông tin đơn hàng.');
         }

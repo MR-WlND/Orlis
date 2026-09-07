@@ -10,13 +10,7 @@ use Illuminate\Validation\Rule;
 
 class AdminAccountController extends Controller
 {
-    public const ROLES = [
-        'admin' => 'Quản trị viên',
-        'manager' => 'Quản lý',
-        'staff' => 'Nhân viên',
-        'editor' => 'Biên tập viên',
-        'warehouse_staff' => 'Quản lý kho',
-    ];
+    // Use Admin::ROLES instead
 
     public function index(Request $request)
     {
@@ -46,8 +40,9 @@ class AdminAccountController extends Controller
 
     public function create()
     {
-        $roles = self::ROLES;
-        return view('admin.admins.create', compact('roles'));
+        $roles = Admin::ROLES;
+        $shippingMethods = \App\Models\ShippingMethod::all();
+        return view('admin.admins.create', compact('roles', 'shippingMethods'));
     }
 
     public function store(Request $request)
@@ -57,8 +52,9 @@ class AdminAccountController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:admins'],
             'phone' => ['nullable', 'string', 'max:20', 'unique:admins'],
             'password' => ['required', 'string', 'min:8'],
-            'role' => ['required', Rule::in(array_keys(self::ROLES))],
+            'role' => ['required', Rule::in(array_keys(Admin::ROLES))],
             'status' => ['required', 'in:0,1,2'],
+            'shipping_method_id' => ['nullable', 'exists:shipping_methods,id'],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
@@ -76,8 +72,9 @@ class AdminAccountController extends Controller
 
     public function edit(Admin $admin)
     {
-        $roles = self::ROLES;
-        return view('admin.admins.edit', compact('admin', 'roles'));
+        $roles = Admin::ROLES;
+        $shippingMethods = \App\Models\ShippingMethod::all();
+        return view('admin.admins.edit', compact('admin', 'roles', 'shippingMethods'));
     }
 
     public function update(Request $request, Admin $admin)
@@ -87,8 +84,9 @@ class AdminAccountController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('admins')->ignore($admin->id)],
             'phone' => ['nullable', 'string', 'max:20', Rule::unique('admins')->ignore($admin->id)],
             'password' => ['nullable', 'string', 'min:8'],
-            'role' => ['required', Rule::in(array_keys(self::ROLES))],
+            'role' => ['required', Rule::in(array_keys(Admin::ROLES))],
             'status' => ['required', 'in:0,1,2'],
+            'shipping_method_id' => ['nullable', 'exists:shipping_methods,id'],
         ]);
 
         if (!empty($validated['password'])) {

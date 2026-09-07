@@ -27,9 +27,7 @@ class ProductCacheService
         $cacheKey = "product_detail_{$slug}";
 
         return Cache::remember($cacheKey, now()->addDays(1), function () use ($slug) {
-            return Product::with(['category', 'reviews' => function($q) {
-                $q->where('status', 'approved');
-            }])->where('slug', $slug)->firstOrFail();
+            return Product::with(['category'])->where('slug', $slug)->firstOrFail();
         });
     }
 

@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('reviews', function (Blueprint $table) {
-            //
+        Schema::table('users', function (Blueprint $table) {
+            $table->integer('points')->default(0)->after('membership_level');
+            $table->integer('accumulated_points')->default(0)->after('points');
         });
     }
 
@@ -21,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('reviews', function (Blueprint $table) {
-            //
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn(['points', 'accumulated_points']);
         });
     }
 };

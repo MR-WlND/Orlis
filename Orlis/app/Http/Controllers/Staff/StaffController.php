@@ -10,7 +10,7 @@ class StaffController extends Controller
 {
     public function dashboard()
     {
-        $orders = Order::whereIn('order_status', ['pending', 'processing', 'shipped'])
+        $orders = Order::whereIn('order_status', ['pending', 'processing', 'shipping'])
             ->orderBy('created_at', 'desc')
             ->paginate(15);
             
@@ -25,15 +25,17 @@ class StaffController extends Controller
         if ($order->order_status === 'pending') {
             $newStatus = 'processing';
         } elseif ($order->order_status === 'processing') {
-            $newStatus = 'shipped'; // Chuyển cho kho hoặc vận chuyển
+            $newStatus = 'shipping'; // Chuyển cho kho hoặc vận chuyển
         }
 
+        $oldStatus = $order->order_status;
         $order->update(['order_status' => $newStatus]);
         
         $order->statusLogs()->create([
-            'status' => $newStatus,
-            'note' => 'Xác nhận xử lý bởi NV Bán Hàng: ' . auth()->user()->name,
-            'created_by' => auth()->id()
+            'from_status' => $oldStatus,
+            'to_status'   => $newStatus,
+            'reason'      => 'Xác nhận xử lý bởi NV Bán Hàng: ' . auth()->user()->name,
+            'admin_id'    => auth()->id()
         ]);
 
         return back()->with('success', 'Đã cập nhật trạng thái đơn hàng thành công.');

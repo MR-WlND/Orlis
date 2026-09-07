@@ -97,7 +97,7 @@ class RoleLoginController extends Controller
     {
         return match ($role) {
             'admin' => '/admin',
-            'manager' => '/manager',
+            'manager' => '/admin',
             'staff' => '/staff',
             'customer' => '/',
             'shipper' => '/shipper',
@@ -111,11 +111,12 @@ class RoleLoginController extends Controller
     public function logout(Request $request): RedirectResponse
     {
         if (Auth::guard('admin')->check()) {
+            $role = Auth::guard('admin')->user()->role;
             Auth::guard('admin')->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return redirect('/login/admin');
+            return redirect('/login/' . $role);
         }
 
         if (Auth::guard('web')->check()) {
