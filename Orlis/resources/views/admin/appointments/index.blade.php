@@ -12,78 +12,98 @@ $statusColors = ['pending' => '#faad14', 'confirmed' => '#1890ff', 'cancelled' =
 @if(session('error'))<div class="alert alert-error">{{ session('error') }}</div>@endif
 
 <div class="page-header">
-    <h2 style="font-family: var(--font-serif); font-size: 22px;">Quản lý Lịch Hẹn</h2>
+    <div class="header-text">
+        <h2 class="page-title">Quản Lý Lịch Hẹn</h2>
+        <p class="page-subtitle">Theo dõi và phân bổ nhân sự cho các lịch hẹn với khách hàng.</p>
+    </div>
 </div>
 
-<div class="stats-row">
-    <div class="stat-card"><div class="stat-label">Tổng lịch hẹn</div><div class="stat-value">{{ number_format($stats['total']) }}</div></div>
-    <div class="stat-card"><div class="stat-label">Chờ xác nhận</div><div class="stat-value" style="color:#faad14;">{{ number_format($stats['pending']) }}</div></div>
-    <div class="stat-card"><div class="stat-label">Hôm nay</div><div class="stat-value" style="color:#1890ff;">{{ number_format($stats['today']) }}</div></div>
-    <div class="stat-card"><div class="stat-label">Đã xác nhận</div><div class="stat-value" style="color:#52c41a;">{{ number_format($stats['confirmed']) }}</div></div>
+<div class="stats-row" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px;">
+    <div class="form-card" style="padding: 20px; text-align: center;">
+        <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: #888; margin-bottom: 10px;">TỔNG LỊCH HẸN</div>
+        <div style="font-family: var(--font-serif); font-size: 28px; color: #111;">{{ number_format($stats['total']) }}</div>
+    </div>
+    <div class="form-card" style="padding: 20px; text-align: center;">
+        <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: #888; margin-bottom: 10px;">CHỜ XÁC NHẬN</div>
+        <div style="font-family: var(--font-serif); font-size: 28px; color: #d93025;">{{ number_format($stats['pending']) }}</div>
+    </div>
+    <div class="form-card" style="padding: 20px; text-align: center;">
+        <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: #888; margin-bottom: 10px;">HÔM NAY</div>
+        <div style="font-family: var(--font-serif); font-size: 28px; color: #111;">{{ number_format($stats['today']) }}</div>
+    </div>
+    <div class="form-card" style="padding: 20px; text-align: center;">
+        <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: #888; margin-bottom: 10px;">ĐÃ XÁC NHẬN</div>
+        <div style="font-family: var(--font-serif); font-size: 28px; color: #111;">{{ number_format($stats['confirmed']) }}</div>
+    </div>
 </div>
 
-<form method="GET" action="{{ route('admin.appointments.index') }}" class="filter-bar">
-    <input type="text" name="search" placeholder="Mã hẹn, tên khách..." value="{{ request('search') }}" style="min-width:200px;">
-    <select name="status">
+<form method="GET" action="{{ route('admin.appointments.index') }}" style="display: flex; gap: 10px; margin-bottom: 20px;">
+    <input type="text" name="search" class="form-control" placeholder="Mã hẹn, tên khách..." value="{{ request('search') }}" style="width: 250px; background: transparent;">
+    
+    <select name="store_id" class="form-control" style="width: 200px; background: transparent;">
+        <option value="">-- Tất cả cửa hàng --</option>
+        @foreach($stores as $store)
+            <option value="{{ $store->id }}" @selected(request('store_id') == $store->id)>{{ $store->name }}</option>
+        @endforeach
+    </select>
+
+    <select name="status" class="form-control" style="width: 150px; background: transparent;">
         <option value="">-- Tất cả trạng thái --</option>
         @foreach($statuses as $key => $label)
             <option value="{{ $key }}" @selected(request('status') === $key)>{{ $label }}</option>
         @endforeach
     </select>
-    <input type="date" name="date" value="{{ request('date') }}" placeholder="Ngày hẹn">
-    <button type="submit" class="btn btn-primary">Lọc</button>
-    @if(request()->hasAny(['search', 'status', 'date']))
-        <a href="{{ route('admin.appointments.index') }}" class="btn btn-outline">Xóa lọc</a>
+    <input type="date" name="date" class="form-control" value="{{ request('date') }}" style="width: 150px; background: transparent;">
+    <button type="submit" class="btn-submit" style="width: auto; padding: 0 20px;">LỌC DỮ LIỆU</button>
+    @if(request()->hasAny(['search', 'store_id', 'status', 'date']))
+        <a href="{{ route('admin.appointments.index') }}" class="btn-cancel" style="padding: 0 20px; display: flex; align-items: center;">XÓA LỌC</a>
     @endif
 </form>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Mã hẹn</th>
-            <th>Khách hàng</th>
-            <th>Showroom</th>
-            <th>Ngày & Giờ</th>
-            <th>Nhân viên</th>
-            <th>Trạng thái</th>
-            <th>Hành động</th>
-        </tr>
-    </thead>
-    <tbody>
-        @forelse($appointments as $apt)
-        <tr>
-            <td style="font-weight:600;color:var(--accent);">{{ $apt->appointment_code }}</td>
-            <td>
-                <div>{{ $apt->user?->name }}</div>
-                <div style="font-size:11px;color:var(--text-muted);">{{ $apt->user?->phone }}</div>
-            </td>
-            <td>{{ $apt->store?->name }}</td>
-            <td>
-                <div>{{ \Carbon\Carbon::parse($apt->appointment_date)->format('d/m/Y') }}</div>
-                <div style="font-size:11px;color:var(--text-muted);">{{ $apt->time_slot }}</div>
-            </td>
-            <td>{{ $apt->staff?->name ?? '—' }}</td>
-            <td>
-                @php $color = $statusColors[$apt->status] ?? '#999'; @endphp
-                <span class="status-badge" style="color:{{ $color }};background:{{ $color }}22;">
-                    {{ $statuses[$apt->status] ?? $apt->status }}
-                </span>
-            </td>
-            <td>
-                <a href="{{ route('admin.appointments.show', $apt) }}" class="btn btn-sm btn-outline">Chi tiết</a>
-            </td>
-        </tr>
-        @empty
-        <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted);font-style:italic;">Không có lịch hẹn nào.</td></tr>
-        @endforelse
-    </tbody>
-</table>
-
-<div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
-    <div style="font-size:12px;color:var(--text-muted);">{{ $appointments->firstItem() ?? 0 }}–{{ $appointments->lastItem() ?? 0 }} / {{ $appointments->total() }}</div>
-    <div style="display:flex;gap:8px;">
-        @if(!$appointments->onFirstPage())<a href="{{ $appointments->previousPageUrl() }}" class="btn btn-outline" style="font-size:11px;padding:6px 12px;">← Trước</a>@endif
-        @if($appointments->hasMorePages())<a href="{{ $appointments->nextPageUrl() }}" class="btn btn-outline" style="font-size:11px;padding:6px 12px;">Sau →</a>@endif
-    </div>
+<div class="table-container">
+    <table class="luxury-table">
+        <thead>
+            <tr>
+                <th>MÃ HẸN</th>
+                <th>KHÁCH HÀNG</th>
+                <th>SHOWROOM</th>
+                <th>NGÀY & GIỜ</th>
+                <th>NHÂN VIÊN</th>
+                <th>TRẠNG THÁI</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($appointments as $apt)
+            <tr onclick="window.location.href='{{ route('admin.appointments.show', $apt) }}'" style="cursor: pointer;" onmouseover="this.style.backgroundColor='#fafafa'" onmouseout="this.style.backgroundColor='transparent'">
+                <td><span style="font-size: 13px; font-weight: 600;">{{ $apt->appointment_code }}</span></td>
+                <td>
+                    <div style="font-weight: 500; color: #111;">{{ $apt->user?->name }}</div>
+                    <div style="font-size: 11px; color: #666;">{{ $apt->user?->phone }}</div>
+                </td>
+                <td style="font-size: 13px;">{{ $apt->store?->name }}</td>
+                <td>
+                    <div style="font-weight: 500; color: #111;">{{ \Carbon\Carbon::parse($apt->appointment_date)->format('d/m/Y') }}</div>
+                    <div style="font-size: 11px; color: #666;">{{ $apt->time_slot }}</div>
+                </td>
+                <td style="font-size: 13px;">{{ $apt->staff?->name ?? '—' }}</td>
+                <td>
+                    @if($apt->status == 'pending') <span class="status-badge" style="background: #fff; color: #d93025; border-color: #d93025;">{{ $statuses[$apt->status] ?? $apt->status }}</span>
+                    @elseif($apt->status == 'confirmed') <span class="status-badge">{{ $statuses[$apt->status] ?? $apt->status }}</span>
+                    @else <span class="status-badge inactive">{{ $statuses[$apt->status] ?? $apt->status }}</span> @endif
+                </td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 40px; color: #999;">Không có lịch hẹn nào.</td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
 </div>
+
+@if($appointments->hasPages())
+<div style="margin-top: 20px;">
+    {{ $appointments->links('vendor.pagination.admin') }}
+</div>
+@endif
 @endsection

@@ -31,6 +31,10 @@ class AppointmentController extends Controller
             });
         }
 
+        if ($request->filled('store_id')) {
+            $query->where('store_id', $request->store_id);
+        }
+
         if ($request->filled('date')) {
             $query->whereDate('appointment_date', $request->date);
         }
@@ -51,7 +55,9 @@ class AppointmentController extends Controller
             'confirmed' => Appointment::where('status', 'confirmed')->count(),
         ];
 
-        return view('admin.appointments.index', compact('appointments', 'statuses', 'stats'));
+        $stores = \App\Models\Store::all();
+
+        return view('admin.appointments.index', compact('appointments', 'statuses', 'stats', 'stores'));
     }
 
     /**

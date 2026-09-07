@@ -83,6 +83,14 @@
                         DANH MỤC
                     </a>
                 </li>
+                
+                <!-- 5.5. Cửa hàng -->
+                <li class="menu-item">
+                    <a href="{{ route('admin.stores.index') }}" class="menu-link {{ request()->routeIs('admin.stores.*') ? 'active' : '' }}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                        CỬA HÀNG
+                    </a>
+                </li>
                 @endif
 
                 <!-- 6. Kho hàng -->
@@ -265,24 +273,26 @@
                 <div class="header-divider"></div>
 
                 <!-- User info -->
-                <div class="header-user">
-                    @php
-                        $currentUser = auth('admin')->user() ?? auth('web')->user();
-                    @endphp
-                    <div class="user-info">
-                        <span class="user-name">{{ $currentUser ? $currentUser->name : 'Quản Trị Viên' }}</span>
-                        <span class="user-location">{{ $currentUser ? (App\Models\Admin::ROLES[$currentUser->role] ?? App\Models\User::ROLES[$currentUser->role] ?? $currentUser->role) : 'Quản trị hệ thống' }}</span>
+                <a href="{{ route('admin.profile') }}" style="text-decoration: none; color: inherit; display: block;">
+                    <div class="header-user" style="cursor: pointer;">
+                        @php
+                            $currentUser = auth('admin')->user() ?? auth('web')->user();
+                        @endphp
+                        <div class="user-info">
+                            <span class="user-name">{{ $currentUser ? $currentUser->name : 'Quản Trị Viên' }}</span>
+                            <span class="user-location">{{ $currentUser ? (App\Models\Admin::ROLES[$currentUser->role] ?? App\Models\User::ROLES[$currentUser->role] ?? $currentUser->role) : 'Quản trị hệ thống' }}</span>
+                        </div>
+                        <div class="user-avatar-small">
+                            @if($currentUser && $currentUser->avatar)
+                                <img src="{{ Storage::url($currentUser->avatar) }}" alt="Avatar">
+                            @else
+                                <div class="user-avatar-initials">
+                                    {{ $currentUser ? strtoupper(substr($currentUser->name, 0, 2)) : 'AD' }}
+                                </div>
+                            @endif
+                        </div>
                     </div>
-                    <div class="user-avatar-small">
-                        @if($currentUser && $currentUser->avatar)
-                            <img src="{{ Storage::url($currentUser->avatar) }}" alt="Avatar">
-                        @else
-                            <div class="user-avatar-initials">
-                                {{ $currentUser ? strtoupper(substr($currentUser->name, 0, 2)) : 'AD' }}
-                            </div>
-                        @endif
-                    </div>
-                </div>
+                </a>
             </div>
         </header>
 

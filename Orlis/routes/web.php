@@ -98,6 +98,8 @@ Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirect'
 Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('social.callback');
 Route::middleware(['auth:admin'])->group(function () {
     Route::post('/admin/logout', [RoleLoginController::class, 'logout'])->name('admin.logout');
+    Route::get('/admin/profile', [App\Http\Controllers\Admin\ProfileController::class, 'index'])->name('admin.profile');
+    Route::put('/admin/profile', [App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('admin.profile.update');
 });
 
 Route::middleware(['auth:admin', 'role:admin,manager'])->group(function () {
@@ -107,6 +109,7 @@ Route::middleware(['auth:admin', 'role:admin,manager'])->group(function () {
     Route::resource('admin/products.variants', ProductVariantController::class, ['as' => 'admin']);
     Route::resource('admin/coupons', CouponController::class, ['as' => 'admin']);
     Route::resource('admin/shipping-methods', App\Http\Controllers\Admin\ShippingMethodController::class, ['as' => 'admin']);
+    Route::resource('admin/stores', \App\Http\Controllers\Admin\StoreController::class, ['as' => 'admin']);
 });
 
 Route::middleware(['auth:admin', 'role:admin'])->group(function () {
