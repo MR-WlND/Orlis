@@ -7,36 +7,42 @@
 @endsection
 
 @section('content')
-<div class="admin-posts-container">
-    <div class="header-actions">
-        <h2 style="margin: 0; font-size: 24px; font-family: var(--font-serif, serif); font-weight: 400;">Danh sách Tạp chí</h2>
-        <a href="{{ route('admin.posts.create') }}" style="background: #000; color: #fff; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">+ Viết bài mới</a>
+<div class="page-header">
+    <div>
+        <h2 class="page-title">Danh sách Tạp chí</h2>
+        <p class="page-subtitle">Quản lý và xuất bản các bài viết trên hệ thống Tạp chí Orlis.</p>
     </div>
+    <a href="{{ route('admin.posts.create') }}" class="btn-add-new">
+        <span style="margin-right: 8px;">+</span> VIẾT BÀI MỚI
+    </a>
+</div>
+
+<div class="table-container">
 
     @if(session('success'))
-        <div style="padding: 12px 20px; background: #e6f4ea; color: #1e8e3e; margin-bottom: 20px; border-radius: 4px;">{{ session('success') }}</div>
+        <div class="alert alert-success" style="margin-bottom: 20px;">{{ session('success') }}</div>
     @endif
 
-    <div class="filter-bar">
+    <div class="filter-bar" style="padding: 20px 30px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between;">
         <form action="{{ route('admin.posts.index') }}" method="GET" style="display: flex; width: 100%; align-items: center; justify-content: space-between; margin: 0;">
-            <div class="search-input">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm theo tiêu đề..." onchange="this.form.submit()">
+            <div class="search-input" style="display: flex; align-items: center; gap: 10px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm theo tiêu đề..." onchange="this.form.submit()" style="border: none; outline: none; font-size: 13px; font-family: inherit;">
             </div>
             
-            <div class="filter-selects">
-                <div class="filter-group">
-                    <label>Danh mục:</label>
-                    <select name="category_id" onchange="this.form.submit()">
+            <div class="filter-selects" style="display: flex; gap: 20px;">
+                <div class="filter-group" style="display: flex; align-items: center; gap: 8px;">
+                    <label style="font-size: 10px; font-weight: 600; text-transform: uppercase; color: #888;">Danh mục:</label>
+                    <select name="category_id" onchange="this.form.submit()" style="border: 1px solid #ddd; padding: 6px 12px; font-size: 13px; outline: none;">
                         <option value="">Tất cả</option>
                         @foreach(\App\Models\PostCategory::all() as $cat)
                             <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="filter-group">
-                    <label>Trạng thái:</label>
-                    <select name="status" onchange="this.form.submit()">
+                <div class="filter-group" style="display: flex; align-items: center; gap: 8px;">
+                    <label style="font-size: 10px; font-weight: 600; text-transform: uppercase; color: #888;">Trạng thái:</label>
+                    <select name="status" onchange="this.form.submit()" style="border: 1px solid #ddd; padding: 6px 12px; font-size: 13px; outline: none;">
                         <option value="">Tất cả</option>
                         <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Đã xuất bản</option>
                         <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Bản nháp</option>
@@ -47,21 +53,20 @@
         </form>
     </div>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th style="width: 80px;">Hình ảnh</th>
-                    <th>Tiêu đề</th>
-                    <th>Danh mục</th>
-                    <th>Tác giả</th>
-                    <th>Ngày tạo</th>
-                    <th>Trạng thái</th>
-                    <th style="text-align: right;">Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($posts as $post)
+    <table class="luxury-table">
+        <thead>
+            <tr>
+                <th style="width: 80px;">HÌNH ẢNH</th>
+                <th>TIÊU ĐỀ</th>
+                <th>DANH MỤC</th>
+                <th>TÁC GIẢ</th>
+                <th>NGÀY TẠO</th>
+                <th>TRẠNG THÁI</th>
+                <th style="text-align: right;">HÀNH ĐỘNG</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($posts as $post)
                 <tr>
                     <td>
                         @if($post->thumbnail)
@@ -89,12 +94,14 @@
                             @else Lưu trữ @endif
                         </span>
                     </td>
-                    <td class="action-links" style="text-align: right;">
-                        <a href="{{ route('admin.posts.edit', $post->id) }}">Sửa</a>
-                        <form action="{{ route('admin.posts.destroy', $post->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này?');">
-                            @csrf @method('DELETE')
-                            <button type="submit" style="background: none; border: none; cursor: pointer; padding: 0;">Xóa</button>
-                        </form>
+                    <td style="text-align: right;">
+                        <div class="action-links" style="display: flex; gap: 15px; justify-content: flex-end;">
+                            <a href="{{ route('admin.posts.edit', $post->id) }}" style="color: var(--text-primary); text-decoration: none; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">SỬA</a>
+                            <form action="{{ route('admin.posts.destroy', $post->id) }}" method="POST" style="margin: 0;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này?');">
+                                @csrf @method('DELETE')
+                                <button type="submit" style="background: none; border: none; color: #f5222d; cursor: pointer; padding: 0; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">XÓA</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 @empty
@@ -106,23 +113,6 @@
         </table>
     </div>
     
-    <div class="pagination-container">
-        <div class="pagination-info">
-            Hiển thị {{ $posts->firstItem() ?? 0 }} - {{ $posts->lastItem() ?? 0 }} trên tổng số {{ $posts->total() ?? 0 }} bài viết
-        </div>
-        <div class="pagination-buttons">
-            @if ($posts->onFirstPage())
-                <button class="btn-page" disabled style="opacity: 0.5; cursor: not-allowed;">TRANG TRƯỚC</button>
-            @else
-                <a href="{{ $posts->previousPageUrl() }}" class="btn-page">TRANG TRƯỚC</a>
-            @endif
+    {{ $posts->links('vendor.pagination.admin') }}
 
-            @if ($posts->hasMorePages())
-                <a href="{{ $posts->nextPageUrl() }}" class="btn-page">TIẾP THEO</a>
-            @else
-                <button class="btn-page" disabled style="opacity: 0.5; cursor: not-allowed;">TIẾP THEO</button>
-            @endif
-        </div>
-    </div>
-</div>
 @endsection

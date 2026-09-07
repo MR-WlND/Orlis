@@ -11,27 +11,24 @@ class Post extends Model
     use HasFactory;
 
     protected $fillable = [
-        'admin_id',
+        'user_id',
         'category_id',
         'department',
         'title',
         'slug',
-        'summary',
+        'excerpt',
         'content',
         'thumbnail',
         'status',
+        'tags',
         'meta_title',
         'meta_description',
-        'published_at',
-    ];
-
-    protected $casts = [
-        'published_at' => 'datetime',
+        'meta_keywords',
     ];
 
     public function author(): BelongsTo
     {
-        return $this->belongsTo(Admin::class, 'admin_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function category(): BelongsTo
