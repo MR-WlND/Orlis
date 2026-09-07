@@ -697,7 +697,7 @@
         border-collapse: collapse;
     }
     .luxury-table th, .luxury-table td {
-        padding: 12px 30px;
+        padding: 10px 10px;
         text-align: left;
         border-bottom: 1px solid var(--border-color);
         vertical-align: middle;
@@ -709,7 +709,7 @@
         text-transform: uppercase;
         letter-spacing: 2px;
         background: #fdfdfd;
-        padding: 16px 30px;
+        padding: 12px 10px;
     }
     .luxury-table tr:last-child td { border-bottom: none; }
     
@@ -1695,42 +1695,65 @@
     }
 
     .btn-cancel {
-        color: #666;
-        text-decoration: none;
-        font-size: 11px;
+        height: 42px;
+        padding: 0 40px;
+        font-size: 10px;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 1.5px;
+        background: transparent;
+        color: var(--text-primary);
+        border: 1px solid var(--text-primary);
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
+    .btn-cancel:hover { background: #f5f5f5; }
 
     .btn-draft {
-        background: transparent;
-        border: 1px solid #000;
-        color: #000;
-        padding: 8px 16px;
-        font-size: 11px;
+        height: 42px;
+        padding: 0 30px;
+        font-size: 10px;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 1.5px;
+        background: transparent;
+        color: var(--text-primary);
+        border: 1px solid var(--text-primary);
         cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
+    .btn-draft:hover { background: #f5f5f5; }
 
     .btn-publish {
-        background: #000;
-        color: #fff;
-        border: 1px solid #000;
-        padding: 8px 20px;
-        font-size: 11px;
+        height: 42px;
+        padding: 0 40px;
+        font-size: 10px;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 1.5px;
+        background: var(--text-primary);
+        color: #fff;
+        border: 1px solid var(--text-primary);
         cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
+    .btn-publish:hover { background: #333; }
 
     .card {
         background: #fff;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-        border: none;
+        border: 1px solid var(--border-color);
+        box-shadow: none;
+        border-radius: 0;
     }
 
     .main-card {

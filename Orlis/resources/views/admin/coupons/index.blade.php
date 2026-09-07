@@ -3,63 +3,70 @@
 @section('title', 'Quản lý Mã giảm giá')
 
 @section('content')
-<div style="background: #fff; border: 1px solid var(--border-color); padding: 20px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h2 style="margin: 0; font-size: 20px; font-weight: 600;">Danh sách Mã giảm giá</h2>
-        <a href="{{ route('admin.coupons.create') }}" class="btn btn-primary" style="background:#000; color:#fff; border:none; padding:8px 16px; border-radius:4px; text-decoration:none;">+ Thêm Mã mới</a>
+<div class="page-header">
+    <div>
+        <h2 class="page-title">Quản lý Mã giảm giá</h2>
+        <p class="page-subtitle">Quản lý danh sách các mã giảm giá và khuyến mãi của hệ thống.</p>
     </div>
+    <a href="{{ route('admin.coupons.create') }}" class="btn-add-new">
+        <span style="margin-right: 8px;">+</span> THÊM MÃ MỚI
+    </a>
+</div>
+
+<div class="table-container">
 
     @if(session('success'))
-        <div style="background: #e6f7ff; color: #1890ff; padding: 10px 15px; border-radius: 4px; margin-bottom: 20px; border: 1px solid #91d5ff;">
+        <div class="alert alert-success" style="margin-bottom: 20px;">
             {{ session('success') }}
         </div>
     @endif
 
-    <div style="overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left;">
-            <thead>
-                <tr style="background: #f8f9fa; border-bottom: 2px solid #eee;">
-                    <th style="padding: 12px;">ID</th>
-                    <th style="padding: 12px;">Mã Code</th>
-                    <th style="padding: 12px;">Giảm giá</th>
-                    <th style="padding: 12px;">Đã dùng</th>
-                    <th style="padding: 12px;">Giới hạn</th>
-                    <th style="padding: 12px;">Hết hạn</th>
-                    <th style="padding: 12px;">Trạng thái</th>
-                    <th style="padding: 12px; text-align: right;">Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>MÃ CODE</th>
+                <th>GIẢM GIÁ</th>
+                <th>ĐÃ DÙNG</th>
+                <th>GIỚI HẠN</th>
+                <th>HẾT HẠN</th>
+                <th>TRẠNG THÁI</th>
+                <th style="text-align: right;">HÀNH ĐỘNG</th>
+            </tr>
+        </thead>
+        <tbody>
                 @forelse($coupons as $coupon)
-                    <tr style="border-bottom: 1px solid #eee;">
-                        <td style="padding: 12px;">{{ $coupon->id }}</td>
-                        <td style="padding: 12px; font-weight: 600;">{{ $coupon->code }}</td>
-                        <td style="padding: 12px;">
+                    <tr>
+                        <td>{{ $coupon->id }}</td>
+                        <td style="font-weight: 600; color: var(--text-primary);">{{ $coupon->code }}</td>
+                        <td>
                             @if($coupon->discount_percent)
                                 {{ $coupon->discount_percent }}%
                             @elseif($coupon->discount_amount)
                                 {{ number_format($coupon->discount_amount) }}đ
                             @endif
                         </td>
-                        <td style="padding: 12px;">{{ $coupon->used_count }}</td>
-                        <td style="padding: 12px;">{{ $coupon->max_uses ?? 'Vô hạn' }}</td>
-                        <td style="padding: 12px;">
+                        <td>{{ $coupon->used_count }}</td>
+                        <td>{{ $coupon->max_uses ?? 'Vô hạn' }}</td>
+                        <td>
                             {{ $coupon->expires_at ? $coupon->expires_at->format('d/m/Y H:i') : 'Vĩnh viễn' }}
                         </td>
-                        <td style="padding: 12px;">
+                        <td>
                             @if($coupon->isValid())
-                                <span style="background: #e6f7ff; color: #1890ff; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Khả dụng</span>
+                                <span class="status-active">Khả dụng</span>
                             @else
-                                <span style="background: #fff1f0; color: #f5222d; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Hết hạn/Hết lượt</span>
+                                <span class="status-pending" style="color: #d32f2f;">Hết hạn</span>
                             @endif
                         </td>
-                        <td style="padding: 12px; text-align: right;">
-                            <a href="{{ route('admin.coupons.edit', $coupon->id) }}" style="color: #1890ff; text-decoration: none; margin-right: 10px;">Sửa</a>
-                            <form action="{{ route('admin.coupons.destroy', $coupon->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa mã giảm giá này?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" style="color: #f5222d; border: none; background: transparent; cursor: pointer; padding: 0;">Xóa</button>
-                            </form>
+                        <td style="text-align: right;">
+                            <div class="action-links" style="display: flex; gap: 15px; justify-content: flex-end;">
+                                <a href="{{ route('admin.coupons.edit', $coupon->id) }}">SỬA</a>
+                                <form action="{{ route('admin.coupons.destroy', $coupon->id) }}" method="POST" style="margin: 0;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" style="background:none; border:none; color: #f5222d; cursor:pointer; font:inherit; padding:0;" onclick="return confirm('Bạn có chắc chắn muốn xóa mã giảm giá này?');">XÓA</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @empty
@@ -67,12 +74,11 @@
                         <td colspan="8" style="padding: 20px; text-align: center; color: #888;">Chưa có mã giảm giá nào</td>
                     </tr>
                 @endforelse
-            </tbody>
-        </table>
-    </div>
-
-    <div style="margin-top: 20px;">
-        {{ $coupons->links('pagination::bootstrap-4') }}
-    </div>
+        </tbody>
+    </table>
 </div>
+
+@if($coupons->hasPages())
+    {{ $coupons->links('vendor.pagination.admin') }}
+@endif
 @endsection

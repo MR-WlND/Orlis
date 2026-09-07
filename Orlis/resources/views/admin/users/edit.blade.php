@@ -101,4 +101,10 @@
         </div>
     </div>
 </form>
+
+<form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa khách hàng này? Mọi dữ liệu liên quan có thể bị mất!');" style="margin-top: 20px; max-width: 1000px; text-align: right;">
+    @csrf
+    @method('DELETE')
+    <button type="submit" style="background: none; border: none; color: #d93025; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: underline;">Xóa khách hàng này</button>
+</form>
 @endsection

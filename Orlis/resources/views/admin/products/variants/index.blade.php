@@ -52,7 +52,7 @@
     </table>
     
     <div style="margin-top: 20px;">
-        {{ $variants->links() }}
+        {{ $variants->links('vendor.pagination.admin') }}
     </div>
 </div>
 @endsection

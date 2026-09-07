@@ -23,8 +23,8 @@
     </div>
 @endif
 
-<div class="table-container">
-    <table class="luxury-table">
+<div class="table-container" style="overflow-x: auto;">
+    <table class="luxury-table" style="min-width: 1000px;">
         <thead>
             <tr>
                 <th>HÌNH ẢNH</th>
@@ -32,7 +32,7 @@
                 <th>VỊ TRÍ</th>
                 <th>THỨ TỰ</th>
                 <th>TRẠNG THÁI</th>
-                <th>HÀNH ĐỘNG</th>
+                <th style="text-align: right;">HÀNH ĐỘNG</th>
             </tr>
         </thead>
         <tbody>
@@ -82,8 +82,8 @@
                         <span class="status-badge inactive">Đã tắt</span>
                     @endif
                 </td>
-                <td>
-                    <div class="action-links">
+                <td style="text-align: right;">
+                    <div class="action-links" style="display: flex; gap: 15px; justify-content: flex-end;">
                         <a href="{{ route('admin.banners.edit', $banner->id) }}" class="action-btn" title="Chỉnh sửa">
                             <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                         </a>

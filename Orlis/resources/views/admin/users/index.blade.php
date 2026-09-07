@@ -44,16 +44,16 @@
 </form>
 
 <div class="table-container">
-    <table>
+    <table class="luxury-table">
         <thead>
             <tr>
                 <th>NGƯỜI DÙNG</th>
                 <th>EMAIL</th>
                 <th>SỐ ĐIỆN THOẠI</th>
                 <th>CẤP ĐỘ</th>
-                <th>SỐ ĐƠN HÀNG</th>
-                <th>TRẠNG THÁI</th>
-                <th>HÀNH ĐỘNG</th>
+                <th style="text-align: center;">ĐƠN HÀNG</th>
+                <th style="text-align: center;">TRẠNG THÁI</th>
+                <th style="text-align: right;">THAO TÁC</th>
             </tr>
         </thead>
         <tbody>
@@ -66,26 +66,25 @@
                             @else
                                 <div class="table-user-avatar">{{ strtoupper(substr($user->name, 0, 2)) }}</div>
                             @endif
-                            <span class="table-user-name">{{ $user->name }}</span>
+                            <span class="table-user-name" style="font-weight: 600; font-size: 13px;">{{ $user->name }}</span>
                         </div>
                     </td>
-                    <td>{{ $user->email }}</td>
-                    <td style="white-space: nowrap;">{{ $user->phone ?? '--' }}</td>
-                    <td style="text-transform: capitalize;">{{ $user->membership_level ?? '--' }}</td>
-                    <td style="font-weight: 600; font-family: var(--font-sans);">{{ rand(1, 50) }}</td>
-                    <td style="white-space: nowrap;">
+                    <td><span style="font-size: 13px; color: #666;">{{ $user->email }}</span></td>
+                    <td style="white-space: nowrap;"><span style="font-size: 13px; font-weight: 500;">{{ $user->phone ?? '--' }}</span></td>
+                    <td style="text-transform: capitalize;"><span style="font-size: 13px;">{{ $user->membership_level ?? '--' }}</span></td>
+                    <td style="text-align: center; font-weight: 600; font-family: var(--font-sans); font-size: 13px;">{{ rand(1, 50) }}</td>
+                    <td style="text-align: center; white-space: nowrap;">
                         @if($user->status == 1)
-                            <span class="status-active">Hoạt động</span>
+                            <span class="status-badge" style="background: #e8f5e9; color: #2e7d32; border: none;">Hoạt động</span>
                         @else
-                            <span class="status-pending">Đã khóa</span>
+                            <span class="status-badge" style="background: #fce4e4; color: #c62828; border: none;">Đã khóa</span>
                         @endif
                     </td>
-                    <td style="white-space: nowrap;">
-                        <div class="action-links" style="display: flex; gap: 15px;">
-                            <a href="{{ route('admin.users.edit', $user->id) }}">SỬA</a>
-                            <form action="{{ route('admin.users.update', $user->id) }}" method="POST" style="margin:0;">
-                                @csrf
-                                @method('PUT')
+                    <td style="text-align: right; white-space: nowrap;">
+                        <div style="display: flex; gap: 12px; justify-content: flex-end; align-items: center;">
+                            <a href="{{ route('admin.users.edit', $user->id) }}" style="color: #666; font-size: 12px; font-weight: 600; text-decoration: none;">SỬA</a>
+                            <form action="{{ route('admin.users.update', $user->id) }}" method="POST" style="margin: 0;">
+                                @csrf @method('PUT')
                                 <input type="hidden" name="name" value="{{ $user->name }}">
                                 <input type="hidden" name="email" value="{{ $user->email }}">
                                 <input type="hidden" name="phone" value="{{ $user->phone }}">
@@ -93,10 +92,10 @@
                                 <input type="hidden" name="membership_level" value="{{ $user->membership_level }}">
                                 @if($user->status == 1)
                                     <input type="hidden" name="status" value="0">
-                                    <button type="submit" style="background:none; border:none; color: var(--text-secondary); cursor:pointer; font:inherit; padding:0;" onclick="return confirm('Bạn có chắc chắn muốn khóa tài khoản này không?')">KHÓA</button>
+                                    <button type="submit" style="background: none; border: none; color: #d93025; font-size: 12px; font-weight: 600; cursor: pointer; padding: 0;" onclick="return confirm('Khóa tài khoản này?')">KHÓA</button>
                                 @else
                                     <input type="hidden" name="status" value="1">
-                                    <button type="submit" style="background:none; border:none; color: #28a745; cursor:pointer; font:inherit; padding:0;" onclick="return confirm('Mở khóa tài khoản này?')">MỞ KHÓA</button>
+                                    <button type="submit" style="background: none; border: none; color: #2e7d32; font-size: 12px; font-weight: 600; cursor: pointer; padding: 0;" onclick="return confirm('Mở khóa tài khoản này?')">MỠ KHÓA</button>
                                 @endif
                             </form>
                         </div>
@@ -114,23 +113,7 @@
 </div>
 
 @if($users->hasPages())
-    <div class="pagination-container">
-        <div class="pagination-info">
-            Hiển thị {{ $users->firstItem() ?? 0 }} - {{ $users->lastItem() ?? 0 }} trên tổng số {{ $users->total() ?? 0 }} tài khoản
-        </div>
-        <div class="pagination-buttons">
-            @if ($users->onFirstPage())
-                <button class="btn-page" disabled style="opacity: 0.5; cursor: not-allowed;">TRANG TRƯỚC</button>
-            @else
-                <a href="{{ $users->previousPageUrl() }}" class="btn-page">TRANG TRƯỚC</a>
-            @endif
+    {{ $users->links('vendor.pagination.admin') }}
 
-            @if ($users->hasMorePages())
-                <a href="{{ $users->nextPageUrl() }}" class="btn-page">TIẾP THEO</a>
-            @else
-                <button class="btn-page" disabled style="opacity: 0.5; cursor: not-allowed;">TIẾP THEO</button>
-            @endif
-        </div>
-    </div>
 @endif
 @endsection
