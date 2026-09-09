@@ -48,4 +48,4 @@ EXPOSE 10000
 
 ENV PHP_CLI_SERVER_WORKERS=5
 
-CMD touch /var/www/html/database/database.sqlite && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
+CMD touch /var/www/html/database/database.sqlite && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000} --no-reload
