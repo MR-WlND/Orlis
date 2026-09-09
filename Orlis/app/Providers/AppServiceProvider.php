@@ -35,22 +35,18 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Pagination\Paginator::useBootstrapFive();
 
         View::composer('*', function ($view) {
-            $globalCategories = \Illuminate\Support\Facades\Cache::remember('global_categories', 3600, function () {
-                return Category::whereNull('parent_id')
-                    ->with(['children' => function ($q) {
-                        $q->with('children');
-                    }])
-                    ->get();
-            });
+            $globalCategories = Category::whereNull('parent_id')
+                ->with(['children' => function ($q) {
+                    $q->with('children');
+                }])
+                ->get();
 
             $view->with('globalCategories', $globalCategories);
 
-            $footerLinks = \Illuminate\Support\Facades\Cache::remember('footer_links', 3600, function () {
-                return \App\Models\FooterLink::where('is_active', true)
-                    ->orderBy('order')
-                    ->get()
-                    ->groupBy('group_name');
-            });
+            $footerLinks = \App\Models\FooterLink::where('is_active', true)
+                ->orderBy('order')
+                ->get()
+                ->groupBy('group_name');
             $view->with('footerLinks', $footerLinks);
 
             // Cart item count for header badge
