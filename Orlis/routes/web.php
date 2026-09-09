@@ -32,6 +32,11 @@ use App\Http\Controllers\Supplier\SupplierController;
 use App\Http\Controllers\Warehouse\WarehouseController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/run-seeder-once', function () {
+    \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+    return 'Database seeded successfully!';
+});
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/beauty', [HomeController::class, 'beauty'])->name('home.beauty');
 
