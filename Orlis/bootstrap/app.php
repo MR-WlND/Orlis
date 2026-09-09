@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             DepartmentMiddleware::class,
             LanguageMiddleware::class,
         ]);
+        $middleware->trustProxies(at: '*');
         $middleware->alias([
             'role' => EnsureUserHasRole::class,
         ]);
