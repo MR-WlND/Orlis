@@ -33,7 +33,8 @@ RUN composer install \
 
 RUN php artisan config:clear
 
-RUN chmod -R 775 storage bootstrap/cache
+RUN touch database/database.sqlite
+RUN chmod -R 775 storage bootstrap/cache database/database.sqlite
 
 EXPOSE 10000
 
