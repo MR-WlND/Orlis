@@ -32,22 +32,32 @@ class ProductSeeder extends Seeder
             'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=400&q=80',
         ];
 
+        $productsData = [];
+        $now = now();
+
         foreach ($categories as $category) {
             for ($i = 1; $i <= 10; $i++) {
-                $price = rand(50, 1500) * 10000; // Giá từ 500k đến 15 triệu
-                $hasSale = rand(0, 3) === 0; // Tỷ lệ 25% có sale
+                $price = rand(50, 1500) * 10000;
+                $hasSale = rand(0, 3) === 0;
                 
-                Product::create([
+                $productsData[] = [
                     'category_id' => $category->id,
                     'name' => 'Sản phẩm ' . $category->name . ' - Phiên bản ' . $i,
+                    'slug' => Str::slug('Sản phẩm ' . $category->name . ' - Phiên bản ' . $i . '-' . Str::random(5)),
                     'description' => 'Mô tả chi tiết cho sản phẩm thuộc danh mục ' . $category->name . '. Đây là sản phẩm thiết kế mang đậm phong cách sang trọng và thanh lịch.',
                     'price' => $price,
-                    'sale_price' => $hasSale ? $price * 0.8 : null, // Giảm 20%
+                    'sale_price' => $hasSale ? $price * 0.8 : null,
                     'thumbnail' => $images[array_rand($images)],
                     'is_active' => true,
-                    'is_featured' => rand(0, 5) === 0, // Tỷ lệ 20% nổi bật
-                ]);
+                    'is_featured' => rand(0, 5) === 0,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
             }
+        }
+
+        foreach (array_chunk($productsData, 100) as $chunk) {
+            Product::insert($chunk);
         }
     }
 }
