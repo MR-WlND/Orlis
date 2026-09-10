@@ -7,6 +7,7 @@ use App\Models\Banner;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class CatalogController extends Controller
 {
@@ -20,12 +21,17 @@ class CatalogController extends Controller
         $category = null;
         $isParentCategory = false;
         $subcategoriesData = [];
-        
+
         $query = Product::where('is_active', true);
+
+        // Tải trước tất cả banners 1 lần duy nhất (cache 5 phút)
+        $allBanners = Cache::remember('banners_category_header', 300, function () {
+            return Banner::active()->position('category_header')->orderBy('order')->get();
+        });
 
         // Filter by category
         if ($slug) {
-            $category = Category::with('children')->where('slug', $slug)->first();
+            $category = Category::with('children.products')->where('slug', $slug)->first();
             if ($category) {
                 $categoryIds = [];
                 $current = $category;
@@ -34,53 +40,62 @@ class CatalogController extends Controller
                     $current = $current->parent;
                 }
 
-                $bannerQuery = Banner::active()->position('category_header')->where(function($q) use ($categoryIds) {
+                // Tìm banner trong danh sách đã load sẵn (không query DB lại)
+                $categoryBanner = $allBanners->first(function ($banner) use ($categoryIds) {
                     foreach ($categoryIds as $id) {
-                        $q->orWhereJsonContains('category_ids', (string)$id);
+                        $ids = is_array($banner->category_ids) ? $banner->category_ids : json_decode($banner->category_ids ?? '[]', true);
+                        if (in_array($id, array_map('strval', $ids))) return true;
                     }
+                    return false;
                 });
-                $categoryBanner = $bannerQuery->orderBy('order')->first();
 
                 if ($category->children->count() > 0) {
                     $isParentCategory = true;
-                    // If parent category and NO search/filter, show subcategory blocks
+                    // Nếu danh mục cha và không có filter, hiện các khối danh mục con
                     if (!$request->hasAny(['search', 'min_price', 'max_price', 'sort'])) {
                         foreach ($category->children as $child) {
-                            $childBanner = Banner::active()->position('category_header')->whereJsonContains('category_ids', (string)$child->id)->first();
+                            // Tìm banner trong danh sách đã load sẵn
+                            $childBanner = $allBanners->first(function ($banner) use ($child) {
+                                $ids = is_array($banner->category_ids) ? $banner->category_ids : json_decode($banner->category_ids ?? '[]', true);
+                                return in_array((string)$child->id, array_map('strval', $ids));
+                            });
                             $subcategoriesData[] = [
                                 'category' => $child,
-                                'banner' => $childBanner,
-                                'products' => $child->products()->where('is_active', true)->take(8)->get()
+                                'banner'   => $childBanner,
+                                // Products đã eager-load từ Category::with('children.products')
+                                'products' => $child->products->where('is_active', true)->take(8),
                             ];
                         }
                     }
                 }
-                
-                // Get all descendant category IDs for product filtering
+
+                // Lấy tất cả ID danh mục con để lọc sản phẩm
                 $allCategoryIds = $this->getAllCategoryIds($category);
                 $query->whereIn('category_id', $allCategoryIds);
             }
         } else {
-            // No category selected
-            $rootCategories = Category::whereNull('parent_id')->get();
+            // Không chọn danh mục - cache root categories
+            $rootCategories = Cache::remember('root_categories_with_products', 300, function () {
+                return Category::with('products')->whereNull('parent_id')->get();
+            });
             if ($rootCategories->count() > 0 && !$request->hasAny(['search', 'min_price', 'max_price', 'sort'])) {
                 $isParentCategory = true;
                 foreach ($rootCategories as $child) {
-                    $childBanner = Banner::active()->position('category_header')->whereJsonContains('category_ids', (string)$child->id)->first();
+                    $childBanner = $allBanners->first(function ($banner) use ($child) {
+                        $ids = is_array($banner->category_ids) ? $banner->category_ids : json_decode($banner->category_ids ?? '[]', true);
+                        return in_array((string)$child->id, array_map('strval', $ids));
+                    });
                     $subcategoriesData[] = [
                         'category' => $child,
-                        'banner' => $childBanner,
-                        'products' => $child->products()->where('is_active', true)->take(8)->get()
+                        'banner'   => $childBanner,
+                        'products' => $child->products->where('is_active', true)->take(8),
                     ];
                 }
             }
         }
 
         if (!$categoryBanner) {
-            $categoryBanner = Banner::active()->position('category_header')->where('is_global', true)->orderBy('order')->first();
-        }
-        if (!$categoryBanner) {
-            $categoryBanner = Banner::active()->position('category_header')->orderBy('order')->first();
+            $categoryBanner = $allBanners->where('is_global', true)->first() ?? $allBanners->first();
         }
 
         // Apply Search
