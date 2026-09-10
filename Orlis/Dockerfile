@@ -1,7 +1,8 @@
-FROM php:8.3-cli
+FROM php:8.3-apache
 
 WORKDIR /var/www/html
 
+# Cài đặt các extension PHP cần thiết
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -22,30 +23,53 @@ RUN apt-get update && apt-get install -y \
         bcmath \
         gd \
         zip \
+        opcache \
     && rm -rf /var/lib/apt/lists/*
 
+# Bật mod_rewrite cho Apache (cần thiết cho Laravel)
+RUN a2enmod rewrite
+
+# Cài đặt Node.js
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
+# Cài đặt Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Copy toàn bộ code vào container
 COPY . .
 
+# Cài đặt các thư viện PHP (production only)
 RUN composer install \
     --no-dev \
     --optimize-autoloader \
     --no-interaction
 
-RUN npm install
-RUN npm run build
+# Build assets frontend
+RUN npm install && npm run build
 
-RUN php artisan config:clear
+# Tối ưu Laravel (cache config, routes, views)
+RUN php artisan config:clear \
+    && php artisan optimize
 
-RUN touch database/database.sqlite
-RUN chmod -R 775 storage bootstrap/cache database/database.sqlite
+# Phân quyền thư mục
+RUN touch database/database.sqlite \
+    && chmod -R 775 storage bootstrap/cache database/database.sqlite \
+    && chown -R www-data:www-data storage bootstrap/cache database/database.sqlite
 
-EXPOSE 10000
+# Cấu hình Apache trỏ vào thư mục public của Laravel
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
+    && echo '<Directory /var/www/html/public>\n\tAllowOverride All\n\tRequire all granted\n</Directory>' >> /etc/apache2/sites-available/000-default.conf
 
-ENV PHP_CLI_SERVER_WORKERS=5
+# Cấu hình OPcache để tăng tốc PHP
+RUN echo "opcache.enable=1\n\
+opcache.memory_consumption=128\n\
+opcache.interned_strings_buffer=8\n\
+opcache.max_accelerated_files=10000\n\
+opcache.revalidate_freq=0\n\
+opcache.validate_timestamps=0\n\
+opcache.fast_shutdown=1" >> /usr/local/etc/php/conf.d/opcache.ini
 
-CMD touch /var/www/html/database/database.sqlite && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-10000} --no-reload
+EXPOSE 80
+
+CMD bash -c "php artisan migrate --force && apache2-foreground"
