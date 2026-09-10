@@ -98,7 +98,7 @@ echo "ServerName localhost" >> /etc/apache2/apache2.conf\n\
 echo "=> Setting permissions..."\n\
 mkdir -p /var/www/html/storage/framework/sessions\n\
 mkdir -p /var/www/html/storage/framework/views\n\
-mkdir -p /var/www/html/storage/framework/cache\n\
+mkdir -p /var/www/html/storage/framework/cache/data\n\
 mkdir -p /var/www/html/storage/logs\n\
 echo "=> Caching config..."\n\
 php artisan config:cache\n\
