@@ -100,7 +100,6 @@ mkdir -p /var/www/html/storage/framework/sessions\n\
 mkdir -p /var/www/html/storage/framework/views\n\
 mkdir -p /var/www/html/storage/framework/cache\n\
 mkdir -p /var/www/html/storage/logs\n\
-chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database\n\
 echo "=> Caching config..."\n\
 php artisan config:cache\n\
 echo "=> Caching routes..."\n\
@@ -109,6 +108,8 @@ echo "=> Caching views..."\n\
 php artisan view:cache\n\
 echo "=> Running migrations..."\n\
 php artisan migrate --force || echo "Migration failed, skipping..."\n\
+echo "=> Fixing ownership..."\n\
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database\n\
 echo "=> Starting Apache..."\n\
 exec apache2-foreground\n\
 ' > /usr/local/bin/start.sh && chmod +x /usr/local/bin/start.sh
