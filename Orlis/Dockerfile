@@ -80,14 +80,27 @@ EXPOSE 10000
 # Tạo script khởi động để dễ dàng theo dõi log và tránh lỗi timeout
 RUN echo '#!/bin/bash\n\
 set -e\n\
-echo "=> Configuring Apache for PORT ${PORT:-10000}..."\n\
-sed -i "s/Listen 80/Listen 0.0.0.0:${PORT:-10000}/g" /etc/apache2/ports.conf\n\
-sed -i "s/:80>/:${PORT:-10000}>/g" /etc/apache2/sites-available/000-default.conf\n\
+export PORT=${PORT:-10000}\n\
+echo "=> Configuring Apache for PORT $PORT..."\n\
+echo "Listen $PORT" > /etc/apache2/ports.conf\n\
+cat <<EOF > /etc/apache2/sites-available/000-default.conf\n\
+<VirtualHost *:$PORT>\n\
+    DocumentRoot /var/www/html/public\n\
+    <Directory /var/www/html/public>\n\
+        AllowOverride All\n\
+        Require all granted\n\
+    </Directory>\n\
+    ErrorLog \${APACHE_LOG_DIR}/error.log\n\
+    CustomLog \${APACHE_LOG_DIR}/access.log combined\n\
+</VirtualHost>\n\
+EOF\n\
 echo "ServerName localhost" >> /etc/apache2/apache2.conf\n\
 echo "=> Setting permissions..."\n\
-mkdir -p /var/www/html/storage/framework/{sessions,views,cache}\n\
+mkdir -p /var/www/html/storage/framework/sessions\n\
+mkdir -p /var/www/html/storage/framework/views\n\
+mkdir -p /var/www/html/storage/framework/cache\n\
 mkdir -p /var/www/html/storage/logs\n\
-chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache\n\
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database\n\
 echo "=> Caching config..."\n\
 php artisan config:cache\n\
 echo "=> Caching routes..."\n\
