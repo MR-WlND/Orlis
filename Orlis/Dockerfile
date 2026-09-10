@@ -98,8 +98,10 @@ echo "=> Caching views..."\n\
 php artisan view:cache\n\
 echo "=> Running migrations..."\n\
 php artisan migrate --force || echo "Migration failed, skipping..."\n\
+echo "=> Creating storage link..."\n\
+php artisan storage:link || true\n\
 echo "=> Fixing ownership..."\n\
-chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database\n\
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database /var/www/html/public/storage\n\
 echo "=> Starting Apache..."\n\
 exec apache2-foreground\n\
 ' > /usr/local/bin/start.sh && chmod +x /usr/local/bin/start.sh
