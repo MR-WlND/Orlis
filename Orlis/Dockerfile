@@ -91,6 +91,7 @@ mkdir -p /var/www/html/storage/framework/views\n\
 mkdir -p /var/www/html/storage/framework/cache/data\n\
 mkdir -p /var/www/html/storage/logs\n\
 echo "=> Caching config..."\n\
+php artisan cache:clear\n\
 php artisan config:cache\n\
 echo "=> Caching routes..."\n\
 php artisan route:cache || echo "Route cache failed, skipping..."\n\
