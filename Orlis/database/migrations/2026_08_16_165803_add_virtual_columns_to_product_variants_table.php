@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,6 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Virtual columns với JSON_UNQUOTE chỉ hỗ trợ trên MySQL, bỏ qua với SQLite
+        if (DB::getDriverName() === 'sqlite') {
+            return;
+        }
+
         if (! Schema::hasColumn('product_variants', 'color')) {
             Schema::table('product_variants', function (Blueprint $table) {
                 $table->string('color', 50)->virtualAs("JSON_UNQUOTE(JSON_EXTRACT(attributes, '$.color'))")->nullable();
@@ -29,6 +35,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Virtual columns với JSON_UNQUOTE chỉ hỗ trợ trên MySQL, bỏ qua với SQLite
+        if (DB::getDriverName() === 'sqlite') {
+            return;
+        }
+
         Schema::table('product_variants', function (Blueprint $table) {
             $table->dropIndex(['color']);
             $table->dropIndex(['size']);
