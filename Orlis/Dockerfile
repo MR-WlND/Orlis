@@ -48,9 +48,10 @@ RUN composer install \
 # Build assets frontend
 RUN npm install && npm run build
 
-# Tối ưu Laravel (cache config, routes, views)
+# Xóa cache cũ (không cache tại build vì env vars chỉ có ở runtime trên Render)
 RUN php artisan config:clear \
-    && php artisan optimize
+    && php artisan route:clear \
+    && php artisan view:clear
 
 # Phân quyền thư mục
 RUN touch database/database.sqlite \
@@ -81,5 +82,8 @@ CMD bash -c "\
     sed -i \"s/Listen 80/Listen $PORT/g\" /etc/apache2/ports.conf && \
     sed -i \"s/:80>/:$PORT>/g\" /etc/apache2/sites-available/000-default.conf && \
     chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
+    php artisan config:cache && \
+    php artisan route:cache && \
+    php artisan view:cache && \
     php artisan migrate --force && \
     apache2-foreground"
