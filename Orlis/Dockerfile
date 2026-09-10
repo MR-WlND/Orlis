@@ -77,13 +77,24 @@ opcache.fast_shutdown=1" >> /usr/local/etc/php/conf.d/opcache.ini
 # Render dùng biến PORT động (thường là 10000), Apache phải lắng nghe đúng cổng đó
 EXPOSE 10000
 
-CMD bash -c "\
-    PORT=${PORT:-10000} && \
-    sed -i \"s/Listen 80/Listen $PORT/g\" /etc/apache2/ports.conf && \
-    sed -i \"s/:80>/:$PORT>/g\" /etc/apache2/sites-available/000-default.conf && \
-    chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
-    php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache && \
-    php artisan migrate --force && \
-    apache2-foreground"
+# Tạo script khởi động để dễ dàng theo dõi log và tránh lỗi timeout
+RUN echo '#!/bin/bash\n\
+set -e\n\
+echo "=> Configuring Apache for PORT ${PORT:-10000}..."\n\
+sed -i "s/Listen 80/Listen ${PORT:-10000}/g" /etc/apache2/ports.conf\n\
+sed -i "s/:80>/:${PORT:-10000}>/g" /etc/apache2/sites-available/000-default.conf\n\
+echo "=> Setting permissions..."\n\
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache\n\
+echo "=> Caching config..."\n\
+php artisan config:cache\n\
+echo "=> Caching routes..."\n\
+php artisan route:cache || echo "Route cache failed, skipping..."\n\
+echo "=> Caching views..."\n\
+php artisan view:cache\n\
+echo "=> Running migrations..."\n\
+php artisan migrate --force || echo "Migration failed, skipping..."\n\
+echo "=> Starting Apache..."\n\
+exec apache2-foreground\n\
+' > /usr/local/bin/start.sh && chmod +x /usr/local/bin/start.sh
+
+CMD ["/usr/local/bin/start.sh"]
