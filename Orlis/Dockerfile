@@ -83,17 +83,7 @@ set -e\n\
 export PORT=${PORT:-10000}\n\
 echo "=> Configuring Apache for PORT $PORT..."\n\
 echo "Listen $PORT" > /etc/apache2/ports.conf\n\
-cat <<EOF > /etc/apache2/sites-available/000-default.conf\n\
-<VirtualHost *:$PORT>\n\
-    DocumentRoot /var/www/html/public\n\
-    <Directory /var/www/html/public>\n\
-        AllowOverride All\n\
-        Require all granted\n\
-    </Directory>\n\
-    ErrorLog \${APACHE_LOG_DIR}/error.log\n\
-    CustomLog \${APACHE_LOG_DIR}/access.log combined\n\
-</VirtualHost>\n\
-EOF\n\
+sed -i "s/<VirtualHost \*:.*>/<VirtualHost \*:$PORT>/g" /etc/apache2/sites-available/000-default.conf\n\
 echo "ServerName localhost" >> /etc/apache2/apache2.conf\n\
 echo "=> Setting permissions..."\n\
 mkdir -p /var/www/html/storage/framework/sessions\n\
