@@ -61,6 +61,9 @@ RUN touch database/database.sqlite \
 RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
     && echo '<Directory /var/www/html/public>\n\tAllowOverride All\n\tRequire all granted\n</Directory>' >> /etc/apache2/sites-available/000-default.conf
 
+# Bật mod_rewrite và headers
+RUN a2enmod rewrite headers
+
 # Cấu hình OPcache để tăng tốc PHP
 RUN echo "opcache.enable=1\n\
 opcache.memory_consumption=128\n\
@@ -70,6 +73,13 @@ opcache.revalidate_freq=0\n\
 opcache.validate_timestamps=0\n\
 opcache.fast_shutdown=1" >> /usr/local/etc/php/conf.d/opcache.ini
 
-EXPOSE 80
+# Render dùng biến PORT động (thường là 10000), Apache phải lắng nghe đúng cổng đó
+EXPOSE 10000
 
-CMD bash -c "php artisan migrate --force && apache2-foreground"
+CMD bash -c "\
+    PORT=${PORT:-10000} && \
+    sed -i \"s/Listen 80/Listen $PORT/g\" /etc/apache2/ports.conf && \
+    sed -i \"s/:80>/:$PORT>/g\" /etc/apache2/sites-available/000-default.conf && \
+    chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
+    php artisan migrate --force && \
+    apache2-foreground"
