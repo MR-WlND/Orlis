@@ -81,8 +81,9 @@ EXPOSE 10000
 RUN echo '#!/bin/bash\n\
 set -e\n\
 echo "=> Configuring Apache for PORT ${PORT:-10000}..."\n\
-sed -i "s/Listen 80/Listen ${PORT:-10000}/g" /etc/apache2/ports.conf\n\
+sed -i "s/Listen 80/Listen 0.0.0.0:${PORT:-10000}/g" /etc/apache2/ports.conf\n\
 sed -i "s/:80>/:${PORT:-10000}>/g" /etc/apache2/sites-available/000-default.conf\n\
+echo "ServerName localhost" >> /etc/apache2/apache2.conf\n\
 echo "=> Setting permissions..."\n\
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache\n\
 echo "=> Caching config..."\n\
