@@ -35,14 +35,12 @@ class ProductController extends Controller
         // Lọc bỏ giá trị rỗng/null
         $images = array_filter($images);
 
-        // Lấy sản phẩm gợi ý cùng danh mục (cache 5 phút)
-        $relatedProducts = Cache::remember('related_products_' . $product->category_id . '_' . $product->id, 300, function () use ($product) {
-            return Product::where('category_id', $product->category_id)
-                ->where('id', '!=', $product->id)
-                ->where('is_active', true)
-                ->take(4)
-                ->get();
-        });
+        // Lấy sản phẩm gợi ý cùng danh mục
+        $relatedProducts = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->where('is_active', true)
+            ->take(4)
+            ->get();
 
         // Xử lý sản phẩm đã xem gần đây
         $viewed = session()->get('recently_viewed', []);

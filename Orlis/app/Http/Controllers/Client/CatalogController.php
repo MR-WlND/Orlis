@@ -24,10 +24,8 @@ class CatalogController extends Controller
 
         $query = Product::where('is_active', true);
 
-        // Tải trước tất cả banners 1 lần duy nhất (cache 5 phút)
-        $allBanners = Cache::remember('banners_category_header', 300, function () {
-            return Banner::active()->position('category_header')->orderBy('order')->get();
-        });
+        // Tải trước tất cả banners 1 lần duy nhất
+        $allBanners = Banner::active()->position('category_header')->orderBy('order')->get();
 
         // Filter by category
         if ($slug) {
@@ -75,9 +73,7 @@ class CatalogController extends Controller
             }
         } else {
             // Không chọn danh mục - cache root categories
-            $rootCategories = Cache::remember('root_categories_with_products', 300, function () {
-                return Category::with('products')->whereNull('parent_id')->get();
-            });
+            $rootCategories = Category::with('products')->whereNull('parent_id')->get();
             if ($rootCategories->count() > 0 && !$request->hasAny(['search', 'min_price', 'max_price', 'sort'])) {
                 $isParentCategory = true;
                 foreach ($rootCategories as $child) {
